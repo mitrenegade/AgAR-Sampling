@@ -22,7 +22,7 @@
         <!--View Controller-->
         <scene sceneID="YvN-om-Li5">
             <objects>
-                <viewController id="2zQ-xW-Em9" customClass="ViewController" sceneMemberID="viewController">
+                <viewController id="2zQ-xW-Em9" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="SNV-Xa-axf"/>
                         <viewControllerLayoutGuide type="bottom" id="acZ-SP-w5t"/>
@@ -38,10 +38,14 @@
                                 <color key="textColor" red="0.23137254900000001" green="0.73333333329999995" blue="0.87450980389999999" alpha="1" colorSpace="deviceRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="omG-xa-wrp">
-                                <rect key="frame" x="0.0" y="378" width="320" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="omG-xa-wrp">
+                                <rect key="frame" x="0.0" y="472" width="320" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.92549019610000005" green="0.4823529412" blue="0.1843137255" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="320" id="UUa-Fh-d1x"/>
+                                    <constraint firstAttribute="height" constant="30" id="clY-fJ-KOl"/>
+                                </constraints>
                                 <state key="normal" title="Login">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -50,10 +54,14 @@
                                     <segue destination="btE-BY-eXG" kind="push" identifier="GoToLogin" id="BBf-4X-2BV"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nlx-6s-7qO">
-                                <rect key="frame" x="0.0" y="411" width="320" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nlx-6s-7qO">
+                                <rect key="frame" x="0.0" y="505" width="320" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.75765420819999996" green="0.83657525509999997" blue="0.5626762689" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="byN-xh-u3x"/>
+                                    <constraint firstAttribute="width" constant="320" id="wsp-k8-oek"/>
+                                </constraints>
                                 <state key="normal" title="Signup">
                                     <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -64,6 +72,12 @@
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="omG-xa-wrp" firstAttribute="leading" secondItem="mqc-N8-DLY" secondAttribute="leading" id="SQs-XH-4Pt"/>
+                            <constraint firstItem="Nlx-6s-7qO" firstAttribute="leading" secondItem="mqc-N8-DLY" secondAttribute="leading" id="i0J-68-fjN"/>
+                            <constraint firstItem="acZ-SP-w5t" firstAttribute="top" secondItem="Nlx-6s-7qO" secondAttribute="bottom" constant="33" id="noS-Rw-5LT"/>
+                            <constraint firstItem="Nlx-6s-7qO" firstAttribute="top" secondItem="omG-xa-wrp" secondAttribute="bottom" constant="3" id="qBs-fs-PF2"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="zwR-wa-d0E"/>
                 </viewController>
@@ -133,6 +147,63 @@
             </objects>
             <point key="canvasLocation" x="519" y="44"/>
         </scene>
+        <!--View Controller - Item 1-->
+        <scene sceneID="3eY-U7-uSq">
+            <objects>
+                <viewController id="9eS-2b-vPh" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="KGe-U4-3CR"/>
+                        <viewControllerLayoutGuide type="bottom" id="xyP-hX-Zk2"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="guc-N6-hUD">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Item 1" id="8b5-0k-Njz"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="AO7-uZ-8RU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1570" y="44"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="NA3-LJ-R17">
+            <objects>
+                <tabBarController storyboardIdentifier="MainTabBarController" definesPresentationContext="YES" id="HsH-I2-SDC" sceneMemberID="viewController">
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="KTi-ic-tYq">
+                        <rect key="frame" x="129" y="330" width="163" height="49"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="9eS-2b-vPh" kind="relationship" relationship="viewControllers" id="guS-Pw-Fv3"/>
+                        <segue destination="iBN-VF-Xix" kind="relationship" relationship="viewControllers" id="stn-Of-lYJ"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="szW-Pe-9EH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1036" y="371"/>
+        </scene>
+        <!--View Controller - Item 2-->
+        <scene sceneID="5Ox-mD-OKL">
+            <objects>
+                <viewController id="iBN-VF-Xix" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Y3h-uQ-Gxt"/>
+                        <viewControllerLayoutGuide type="bottom" id="6IV-d0-mff"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ebR-JL-dPl">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Item 2" id="N5R-5J-1bf"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5PL-g7-tae" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1570" y="697"/>
+        </scene>
         <!--Signup View Controller-->
         <scene sceneID="wTc-3z-bDp">
             <objects>
@@ -198,7 +269,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="rRg-Zr-HCI"/>
                     <connections>
-                        <outlet property="buttonEmail" destination="Er9-Nt-pz0" id="fZb-d1-6WV"/>
+                        <outlet property="buttonLogin" destination="Er9-Nt-pz0" id="0qs-Ph-Xnt"/>
                         <outlet property="inputConfirmation" destination="e97-0T-QF4" id="4Nf-eu-b70"/>
                         <outlet property="inputPassword" destination="isN-M9-5mT" id="mOR-rz-3oc"/>
                         <outlet property="inputUsername" destination="8sn-w1-Frq" id="q0G-Af-FEG"/>

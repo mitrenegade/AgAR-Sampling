@@ -22,6 +22,10 @@
 
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
 
+    if ([PFUser currentUser]) {
+        [self goToMainView:NO];
+    }
+
     return YES;
 }
 
@@ -148,4 +152,24 @@
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
+#pragma mark navigation
+-(void)goToMainView:(BOOL)animated {
+    UITabBarController *rootController = [_storyboard instantiateViewControllerWithIdentifier:@"MainTabBarController"];
+    if (![self.window.rootViewController isKindOfClass:[rootController class]]) {
+        if (!animated) {
+            self.window.rootViewController = rootController;
+        }
+        else {
+            [UIView animateWithDuration:.5 animations:^{ // todo: animation not working
+                self.window.rootViewController.view.alpha = 0;
+            } completion:^(BOOL finished) {
+                self.window.rootViewController = rootController;
+                rootController.view.alpha = 0;
+                [UIView animateWithDuration:.5 animations:^{
+                    rootController.view.alpha = 1;
+                }];
+            }];
+        }
+    }
+}
 @end
