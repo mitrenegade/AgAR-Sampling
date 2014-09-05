@@ -23,6 +23,8 @@
 		9E0EA9AA19B8BCD60072166D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9E0EA9A819B8BCD60072166D /* InfoPlist.strings */; };
 		9E0EA9AC19B8BCD60072166D /* AgARTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0EA9AB19B8BCD60072166D /* AgARTests.m */; };
 		9ED6BF9119B9F39000EFAF4A /* iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9ED6BF9019B9F39000EFAF4A /* iPhone.storyboard */; };
+		9ED6BF9719B9F3EB00EFAF4A /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED6BF9419B9F3EB00EFAF4A /* LoginViewController.m */; };
+		9ED6BF9819B9F3EB00EFAF4A /* SignupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED6BF9619B9F3EB00EFAF4A /* SignupViewController.m */; };
 		9ED6BF9A19B9F4CB00EFAF4A /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED6BF9919B9F4CB00EFAF4A /* Parse.framework */; };
 		9ED6C01E19B9F59F00EFAF4A /* GPLocationHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED6C00119B9F59F00EFAF4A /* GPLocationHelper.m */; };
 		9ED6C02019B9F59F00EFAF4A /* NSObject+MKBlockAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED6C00719B9F59F00EFAF4A /* NSObject+MKBlockAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -78,6 +80,10 @@
 		9E0EA9A919B8BCD60072166D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9E0EA9AB19B8BCD60072166D /* AgARTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AgARTests.m; sourceTree = "<group>"; };
 		9ED6BF9019B9F39000EFAF4A /* iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = iPhone.storyboard; sourceTree = "<group>"; };
+		9ED6BF9319B9F3EB00EFAF4A /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		9ED6BF9419B9F3EB00EFAF4A /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		9ED6BF9519B9F3EB00EFAF4A /* SignupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignupViewController.h; sourceTree = "<group>"; };
+		9ED6BF9619B9F3EB00EFAF4A /* SignupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignupViewController.m; sourceTree = "<group>"; };
 		9ED6BF9919B9F4CB00EFAF4A /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		9ED6C00019B9F59F00EFAF4A /* GPLocationHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPLocationHelper.h; sourceTree = "<group>"; };
 		9ED6C00119B9F59F00EFAF4A /* GPLocationHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPLocationHelper.m; sourceTree = "<group>"; };
@@ -242,6 +248,10 @@
 		9ED6BF9219B9F3CE00EFAF4A /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				9ED6BF9319B9F3EB00EFAF4A /* LoginViewController.h */,
+				9ED6BF9419B9F3EB00EFAF4A /* LoginViewController.m */,
+				9ED6BF9519B9F3EB00EFAF4A /* SignupViewController.h */,
+				9ED6BF9619B9F3EB00EFAF4A /* SignupViewController.m */,
 			);
 			name = Login;
 			sourceTree = "<group>";
@@ -385,6 +395,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9ED6BF9719B9F3EB00EFAF4A /* LoginViewController.m in Sources */,
 				9E0EA99319B8BCD60072166D /* AppDelegate.m in Sources */,
 				9E0EA98F19B8BCD60072166D /* main.m in Sources */,
 				9ED6C02019B9F59F00EFAF4A /* NSObject+MKBlockAdditions.m in Sources */,
@@ -393,6 +404,7 @@
 				9ED6C02819B9F59F00EFAF4A /* UIImage+Resize.m in Sources */,
 				9ED6C02319B9F59F00EFAF4A /* NSManagedObject+Entity.m in Sources */,
 				9E0EA99619B8BCD60072166D /* AgAR.xcdatamodeld in Sources */,
+				9ED6BF9819B9F3EB00EFAF4A /* SignupViewController.m in Sources */,
 				9ED6C02619B9F59F00EFAF4A /* Query.m in Sources */,
 				9ED6C02419B9F59F00EFAF4A /* NSManagedObject+Query.m in Sources */,
 				9ED6C01E19B9F59F00EFAF4A /* GPLocationHelper.m in Sources */,
