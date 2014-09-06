@@ -48,6 +48,7 @@
     }
 
     self.inputType.inputAccessoryView = keyboardDoneButtonView;
+    [self pickerView:(UIPickerView *)self.inputType.inputView didSelectRow:0 inComponent:0]; // select by default
 }
 
 - (void)didReceiveMemoryWarning
