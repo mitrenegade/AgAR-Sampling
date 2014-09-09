@@ -7,6 +7,7 @@
 //
 
 #import "ProfileTableViewController.h"
+#import <Parse/Parse.h>
 
 @interface ProfileTableViewController ()
 
@@ -87,7 +88,13 @@
     int row = indexPath.row;
     switch (row) {
         case 0:
+        {
             NSLog(@"Update my info");
+            // todo: build UserInfoViewController to edit every field for a user
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"Your email is %@", _currentUser.email] message:@"Change your email? This will also update your login." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Update", nil];
+            alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+            [alert show];
+        }
             break;
 
         case 1:
@@ -100,6 +107,34 @@
 
         default:
             break;
+    }
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 0) {
+        NSLog(@"index 0 - cancel");
+    }
+    else {
+        NSLog(@"else");
+        UITextField * text = [alertView textFieldAtIndex:0];
+        _currentUser.email = text.text;
+        _currentUser.username = text.text;
+        [_currentUser saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (succeeded) {
+                NSLog(@"Saved");
+                [UIAlertView alertViewWithTitle:@"Login and email updated" message:[NSString stringWithFormat:@"Your login and email have been updated to %@", _currentUser.username]];
+            }
+            else {
+                NSString *message = nil;
+                if (error.userInfo[@"error"])
+                    message = error.userInfo[@"error"];
+                if (error.code == 101) {
+                    [_appDelegate logout];
+                    message = @"Your user could not be found. Please login again.";
+                }
+                [UIAlertView alertViewWithTitle:@"Error updating user info" message:message];
+            }
+        }];
     }
 }
 
