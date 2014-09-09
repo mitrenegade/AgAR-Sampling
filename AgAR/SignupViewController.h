@@ -9,8 +9,11 @@
 #import <UIKit/UIKit.h>
 
 @interface SignupViewController : UIViewController <UIPickerViewDataSource, UIPickerViewDelegate>
-
+{
+    UIPickerView *picker;
+}
 @property (weak, nonatomic) IBOutlet UITextField *inputUsername;
+@property (weak, nonatomic) IBOutlet UITextField *inputEmail;
 @property (weak, nonatomic) IBOutlet UITextField *inputPassword;
 @property (weak, nonatomic) IBOutlet UITextField *inputConfirmation;
 @property (weak, nonatomic) IBOutlet UITextField *inputType;
