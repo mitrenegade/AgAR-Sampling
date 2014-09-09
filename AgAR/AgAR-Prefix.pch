@@ -22,6 +22,7 @@
 #import "Util.h"
 #import "UIAlertView+MKBlockAdditions.h"
 #import "NSObject+Notify.h"
+#import "Constants.h"
 
 #define _currentUser [PFUser currentUser]
 #define _appDelegate ((AppDelegate *)[UIApplication sharedApplication].delegate)

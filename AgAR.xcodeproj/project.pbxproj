@@ -129,6 +129,7 @@
 		9ED6C03919B9F6A000EFAF4A /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		9ED6C03B19B9F6A700EFAF4A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		9ED6C03D19B9F6AB00EFAF4A /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		9EFC7F2C19BF614500E6A2AE /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -235,14 +236,14 @@
 			isa = PBXGroup;
 			children = (
 				9ED6BFFB19B9F59F00EFAF4A /* Utils */,
-				9E0EA99119B8BCD60072166D /* AppDelegate.h */,
 				3F2FC25C19BBA1DD00124ACB /* Core Data */,
+				9E0EA99119B8BCD60072166D /* AppDelegate.h */,
 				9E0EA99219B8BCD60072166D /* AppDelegate.m */,
-				9E0EA99719B8BCD60072166D /* Images.xcassets */,
-				9E0EA98919B8BCD60072166D /* Supporting Files */,
+				9EFC7F2C19BF614500E6A2AE /* Constants.h */,
 				9ED6BF9019B9F39000EFAF4A /* iPhone.storyboard */,
 				9ED6BF9219B9F3CE00EFAF4A /* Login */,
 				3F2FC24F19BB9CF700124ACB /* Controllers */,
+				9E0EA98919B8BCD60072166D /* Supporting Files */,
 			);
 			path = AgAR;
 			sourceTree = "<group>";
@@ -250,6 +251,7 @@
 		9E0EA98919B8BCD60072166D /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				9E0EA99719B8BCD60072166D /* Images.xcassets */,
 				9E0EA98A19B8BCD60072166D /* AgAR-Info.plist */,
 				9E0EA98B19B8BCD60072166D /* InfoPlist.strings */,
 				9E0EA98E19B8BCD60072166D /* main.m */,

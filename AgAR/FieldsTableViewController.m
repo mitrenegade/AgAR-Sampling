@@ -34,7 +34,7 @@
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    NSManagedObjectContext *context = _appDelegate.managedObjectContext;
+#if TESTING
     NSArray *objs =  [[self fieldFetcher] fetchedObjects];
     if ([objs count] == 0) {
         for (int j = 0; j < 3; j++) {
@@ -47,12 +47,11 @@
                 field.farmName = farm.name;
             }
         }
-    
+        [_appDelegate saveContext];
+        [[self fieldFetcher] performFetch:nil];
+        [self.tableView reloadData];
     }
-    [_appDelegate saveContext];
-    [[self fieldFetcher] performFetch:nil];
-    objs =  [[self fieldFetcher] fetchedObjects];
-    NSLog(@"Objs: %@", objs);
+#endif
 }
 
 -(Farm *)newFarm {
@@ -94,9 +93,14 @@
     // Configure the cell...
     Field *field = [[self fieldFetcher] objectAtIndexPath:indexPath];
     cell.textLabel.text = field.name;
-    cell.detailTextLabel.text = field.farm.name;
-    
+    cell.detailTextLabel.text = @"";
     return cell;
+}
+
+-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    // Return the number of rows in the section.
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[[self fieldFetcher] sections] objectAtIndex:section];
+    return [sectionInfo name];
 }
 
 -(NSFetchedResultsController *)fieldFetcher {

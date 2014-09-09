@@ -81,7 +81,8 @@
 -(void)signup {
     [self dismissKeyboard];
     PFUser *user = [PFUser user];
-    user.username = self.inputUsername.text;
+    user[@"name"] = self.inputUsername.text;
+    user.username = self.inputEmail.text;
     user.password = self.inputPassword.text;
     user.email = self.inputEmail.text;
     user[@"customerType"] = @([picker selectedRowInComponent:0]);
@@ -93,11 +94,8 @@
         }
         else {
             NSString *message = nil;
-            if (error.code == 202) {
-                message = @"Username already taken";
-            }
-            else if (error.code == 125) {
-                message = @"Invalid email";
+            if (error.userInfo[@"error"]) {
+                message = error.userInfo[@"error"];
             }
             [UIAlertView alertViewWithTitle:@"Signup failed" message:message];
         }
