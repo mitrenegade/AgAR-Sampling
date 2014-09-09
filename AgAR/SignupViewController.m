@@ -29,7 +29,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 
-    UIPickerView *picker = [[UIPickerView alloc] init];
+    picker = [[UIPickerView alloc] init];
     picker.delegate = self;
     picker.dataSource = self;
     [picker reloadAllComponents];
@@ -81,8 +81,11 @@
 -(void)signup {
     [self dismissKeyboard];
     PFUser *user = [PFUser user];
-    user.username = self.inputUsername.text;
+    user[@"name"] = self.inputUsername.text;
+    user.username = self.inputEmail.text;
     user.password = self.inputPassword.text;
+    user.email = self.inputEmail.text;
+    user[@"customerType"] = @([picker selectedRowInComponent:0]);
 
     [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
@@ -91,8 +94,8 @@
         }
         else {
             NSString *message = nil;
-            if (error.code == 202) {
-                message = @"Username already taken";
+            if (error.userInfo[@"error"]) {
+                message = error.userInfo[@"error"];
             }
             [UIAlertView alertViewWithTitle:@"Signup failed" message:message];
         }

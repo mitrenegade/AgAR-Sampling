@@ -67,13 +67,14 @@
 
     [PFUser logInWithUsernameInBackground:self.inputUsername.text password:self.inputPassword.text block:^(PFUser *user, NSError *error) {
         if (user) {
-            [UIAlertView alertViewWithTitle:@"Welcome to AgAR" message:[NSString stringWithFormat:@"Good to see you, %@", user.username]];
+            NSString *name = user[@"name"]?:user.username;
+            [UIAlertView alertViewWithTitle:@"Welcome to AgAR" message:[NSString stringWithFormat:@"Good to see you, %@", name]];
             [_appDelegate goToMainView:YES];
         }
         else {
             NSString *message = nil;
-            if (error.code == 101) {
-                message = @"Invalid username or password";
+            if (error.userInfo[@"error"]) {
+                message = error.userInfo[@"error"];
             }
             [UIAlertView alertViewWithTitle:@"Login failed" message:message];
         }
