@@ -12,4 +12,9 @@
 {
     NSFetchedResultsController *fieldFetcher;
 }
+
+@property (nonatomic) BOOL isSetupMode;
+
+-(IBAction)didClickBack:(id)sender;
+
 @end

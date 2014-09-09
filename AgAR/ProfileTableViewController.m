@@ -8,6 +8,7 @@
 
 #import "ProfileTableViewController.h"
 #import <Parse/Parse.h>
+#import "FieldsTableViewController.h"
 
 @interface ProfileTableViewController ()
 
@@ -99,6 +100,7 @@
 
         case 1:
             NSLog(@"Edit my fields");
+            [self performSegueWithIdentifier:@"ProfileToEditFields" sender:self];
             break;
 
         case 2:
@@ -176,15 +178,16 @@
 }
 */
 
-/*
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     // Get the new view controller using [segue destinationViewController].
+    UINavigationController *nav = [segue destinationViewController];
+    FieldsTableViewController *controller = nav.viewControllers[0];
+    [controller setIsSetupMode:YES];
     // Pass the selected object to the new view controller.
 }
-*/
 
 @end
