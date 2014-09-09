@@ -172,4 +172,29 @@
         }
     }
 }
+
+-(void)goToLoginView:(BOOL)animated {
+    UINavigationController *rootController = [_storyboard instantiateViewControllerWithIdentifier:@"OnboardingNavigationController"];
+    if (![self.window.rootViewController isKindOfClass:[rootController class]]) {
+        if (!animated) {
+            self.window.rootViewController = rootController;
+        }
+        else {
+            [UIView animateWithDuration:.5 animations:^{ // todo: animation not working
+                self.window.rootViewController.view.alpha = 0;
+            } completion:^(BOOL finished) {
+                self.window.rootViewController = rootController;
+                rootController.view.alpha = 0;
+                [UIView animateWithDuration:.5 animations:^{
+                    rootController.view.alpha = 1;
+                }];
+            }];
+        }
+    }
+}
+
+-(void)logout {
+    [PFUser logOut];
+    [self goToLoginView:YES];
+}
 @end
