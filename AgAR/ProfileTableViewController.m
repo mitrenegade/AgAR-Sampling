@@ -60,7 +60,9 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
-    
+    cell.textLabel.font = FONT_REGULAR(14);
+    cell.textLabel.textColor = [UIColor blackColor];
+
     // Configure the cell...
     NSString *title;
     int row = indexPath.row;

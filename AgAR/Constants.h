@@ -11,4 +11,8 @@
 
 #define TESTING 1
 
+#define FONT_REGULAR(x) [UIFont fontWithName:@"AvenirNext-Regular" size:(x)]
+#define FONT_MEDIUM(x) [UIFont fontWithName:@"AvenirNext-Medium" size:(x)]
+#define FONT_LIGHT(x) [UIFont fontWithName:@"AvenirNext-UltraLight" size:(x)]
+
 #endif

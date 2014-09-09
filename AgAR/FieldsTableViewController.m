@@ -110,15 +110,24 @@
         id <NSFetchedResultsSectionInfo> sectionInfo = [[[self fieldFetcher] sections] objectAtIndex:section];
         if (row < [sectionInfo numberOfObjects]) {
             Field *field = [[self fieldFetcher] objectAtIndexPath:indexPath];
+            cell.textLabel.font = FONT_REGULAR(14);
+            cell.textLabel.textColor = [UIColor blackColor];
             cell.textLabel.text = field.name;
             cell.detailTextLabel.text = @"";
+            cell.accessoryType = UITableViewCellAccessoryNone;
         }
         else {
+            cell.textLabel.font = FONT_LIGHT(12);
+            cell.textLabel.textColor = [UIColor darkGrayColor];
             cell.textLabel.text = @"Add a new field";
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }
     }
     else {
+        cell.textLabel.font = FONT_LIGHT(12);
+        cell.textLabel.textColor = [UIColor darkGrayColor];
         cell.textLabel.text = @"Add a new farm";
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     return cell;
 }
@@ -146,6 +155,32 @@
     [fieldFetcher performFetch:nil];
     
     return fieldFetcher;
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+
+    // Configure the cell...
+    int row = indexPath.row;
+    int section = indexPath.section;
+    NSArray *sections = [[self fieldFetcher] sections];
+    if (indexPath.section < [sections count]) {
+        id <NSFetchedResultsSectionInfo> sectionInfo = [[[self fieldFetcher] sections] objectAtIndex:section];
+        if (row < [sectionInfo numberOfObjects]) {
+            if (self.isSetupMode) {
+                [UIAlertView alertViewWithTitle:@"Edit field" message:@"Clicking this row will edit the field"];
+            }
+            else {
+                [UIAlertView alertViewWithTitle:@"Go to map" message:@"Clicking this row will go to the map"];
+            }
+        }
+        else {
+            [UIAlertView alertViewWithTitle:@"Add a field" message:@"Clocking this row will add a new field"];
+        }
+    }
+    else {
+        [UIAlertView alertViewWithTitle:@"Add a farm" message:@"Clocking this row will add a new farm"];
+    }
 }
 
 /*
