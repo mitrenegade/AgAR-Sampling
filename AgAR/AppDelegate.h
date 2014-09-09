@@ -20,5 +20,5 @@
 - (NSURL *)applicationDocumentsDirectory;
 
 -(void)goToMainView:(BOOL)animated;
-
+-(void)logout;
 @end

@@ -51,6 +51,7 @@
 		9ED6C03A19B9F6A000EFAF4A /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED6C03919B9F6A000EFAF4A /* StoreKit.framework */; };
 		9ED6C03C19B9F6A700EFAF4A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED6C03B19B9F6A700EFAF4A /* SystemConfiguration.framework */; };
 		9ED6C03E19B9F6AB00EFAF4A /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED6C03D19B9F6AB00EFAF4A /* Social.framework */; };
+		9EFC7F2F19BF696400E6A2AE /* ProfileTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFC7F2E19BF696400E6A2AE /* ProfileTableViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -130,6 +131,8 @@
 		9ED6C03B19B9F6A700EFAF4A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		9ED6C03D19B9F6AB00EFAF4A /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		9EFC7F2C19BF614500E6A2AE /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		9EFC7F2D19BF696400E6A2AE /* ProfileTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileTableViewController.h; sourceTree = "<group>"; };
+		9EFC7F2E19BF696400E6A2AE /* ProfileTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileTableViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,6 +177,8 @@
 			children = (
 				3F2FC25019BB9D3B00124ACB /* FieldsTableViewController.h */,
 				3F2FC25119BB9D3B00124ACB /* FieldsTableViewController.m */,
+				9EFC7F2D19BF696400E6A2AE /* ProfileTableViewController.h */,
+				9EFC7F2E19BF696400E6A2AE /* ProfileTableViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -431,6 +436,7 @@
 				9ED6BF9719B9F3EB00EFAF4A /* LoginViewController.m in Sources */,
 				9E0EA99319B8BCD60072166D /* AppDelegate.m in Sources */,
 				9E0EA98F19B8BCD60072166D /* main.m in Sources */,
+				9EFC7F2F19BF696400E6A2AE /* ProfileTableViewController.m in Sources */,
 				9ED6C02019B9F59F00EFAF4A /* NSObject+MKBlockAdditions.m in Sources */,
 				3F2FC25219BB9D3B00124ACB /* FieldsTableViewController.m in Sources */,
 				9ED6C02719B9F59F00EFAF4A /* UIImage+Alpha.m in Sources */,

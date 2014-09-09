@@ -7,7 +7,7 @@
         <!--Navigation Controller-->
         <scene sceneID="i8Z-qi-C4h">
             <objects>
-                <navigationController definesPresentationContext="YES" id="j1r-3K-huU" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="OnboardingNavigationController" definesPresentationContext="YES" id="j1r-3K-huU" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="fKq-do-yBU">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -206,23 +206,24 @@
                             <outlet property="delegate" destination="uLl-z7-7t1" id="bKJ-gj-bDx"/>
                         </connections>
                     </tableView>
+                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <tabBarItem key="tabBarItem" title="Fields" id="gmg-oc-OjZ"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Iax-Jg-B9o" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1566" y="157"/>
         </scene>
-        <!--Table View Controller - Profile-->
+        <!--Profile Table View Controller - Profile-->
         <scene sceneID="47J-wC-dyv">
             <objects>
-                <tableViewController id="VjR-DP-uLb" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="RhX-Sk-hVQ">
+                <tableViewController id="VjR-DP-uLb" customClass="ProfileTableViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="RhX-Sk-hVQ">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="C7t-j3-Pwl">
-                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" id="C7t-j3-Pwl">
+                                <rect key="frame" x="0.0" y="55" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="C7t-j3-Pwl" id="7zw-I6-fpx">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -235,7 +236,9 @@
                             <outlet property="delegate" destination="VjR-DP-uLb" id="tqg-pa-L8N"/>
                         </connections>
                     </tableView>
+                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <tabBarItem key="tabBarItem" title="Profile" id="jSa-hA-9s1"/>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Z21-SM-zCg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
