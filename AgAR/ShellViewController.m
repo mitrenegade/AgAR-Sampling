@@ -33,6 +33,8 @@
     tabView.frame = CGRectMake(0, self.view.frame.size.height-60, 320, 60);
     tabView.backgroundColor = [UIColor greenColor];
     [self.view addSubview:tabView];
+
+    [tabView setup];
 }
 
 -(void)viewWillAppear:(BOOL)animated {

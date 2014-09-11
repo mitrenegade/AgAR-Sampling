@@ -23,6 +23,7 @@ typedef enum TabButtonEnum {
     IBOutlet UIButton *buttonFields;
     IBOutlet UIButton *buttonAction;
     IBOutlet UIButton *buttonProfile;
+    NSArray *tabButtons;
 
     int lastTab;
 }

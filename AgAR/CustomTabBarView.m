@@ -7,7 +7,10 @@
 //
 
 #import "CustomTabBarView.h"
+#import "UIActionSheet+MKBlockAdditions.h"
 
+#define BUTTON_COLOR_UNSELECTED [UIColor whiteColor]
+#define BUTTON_COLOR_SELECTED [UIColor colorWithWhite:243.0/255.0 alpha:1]
 @implementation CustomTabBarView
 
 - (id)initWithFrame:(CGRect)frame
@@ -22,7 +25,6 @@
         mainView.frame = self.bounds;
 
         [self addSubview:mainView];
-        [self setup];
     }
     return self;
 }
@@ -36,20 +38,31 @@
     opaqueBackground.backgroundColor = [[UIColor blackColor] CGColor];
     [self.layer addSublayer:opaqueBackground];
     opaqueBackground.opacity = 0;
+
+    tabButtons = @[buttonFields, buttonAction, buttonProfile];
+
+    lastTab = [[NSUserDefaults standardUserDefaults] integerForKey:@"tab:lastOpen"];
+    [self didClickButton:tabButtons[lastTab]];
 }
 
 -(IBAction)didClickButton:(id)sender {
     int pos = ((UIButton *)sender).tag;
-    // when center button is pressed, programmatically send the tab bar that command
-    [buttonFields setSelected:pos==TabButtonFields];
-    [buttonProfile setSelected:pos==TabButtonProfile];
-
-    if (pos == TabButtonFields || pos == TabButtonProfile)
+    if (pos == TabButtonFields || pos == TabButtonProfile) {
+        [buttonFields setBackgroundColor:pos==TabButtonFields?BUTTON_COLOR_SELECTED:BUTTON_COLOR_UNSELECTED];
+        [buttonProfile setBackgroundColor:pos==TabButtonProfile?BUTTON_COLOR_SELECTED:BUTTON_COLOR_UNSELECTED];
         [self.delegate setSelectedIndex:pos]; // switch to the correct view
 
-    lastTab = pos;
-    [[NSUserDefaults standardUserDefaults] setObject:@(lastTab) forKey:@"tab:lastOpen"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+        lastTab = pos;
+        [[NSUserDefaults standardUserDefaults] setInteger:lastTab forKey:@"tab:lastOpen"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    else if (pos == TabButtonAction) {
+        [UIActionSheet actionSheetWithTitle:nil message:nil buttons:@[@"Do this", @"Do that"] showInView:self.superview onDismiss:^(int buttonIndex) {
+            NSLog(@"Button index: %d", buttonIndex);
+        } onCancel:^{
+            // no nil cancel block
+        }];
+    }
 }
 
 /*
