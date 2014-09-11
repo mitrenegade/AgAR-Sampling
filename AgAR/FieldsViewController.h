@@ -18,6 +18,7 @@
     IBOutlet MKMapView *mapView;
     IBOutlet UILabel *labelFarm;
     IBOutlet UIButton *buttonEdit;
+    IBOutlet UIImageView *centerPin;
 
     BOOL shouldCenterOnUser;
     BOOL isEditMode;

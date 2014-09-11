@@ -11,6 +11,7 @@
 #import "Farm.h"
 #import "Polyline+TransformableAttributes.h"
 #import "UIActionSheet+MKBlockAdditions.h"
+#import "Annotation.h"
 
 @interface FieldsViewController ()
 
@@ -45,17 +46,16 @@
     }
 #endif
 
+    [centerPin setHidden:YES];
+
     if (self.currentFarm) {
-        CLLocationCoordinate2D currentLocation = CLLocationCoordinate2DMake([self.currentFarm.latitude doubleValue], [self.currentFarm.longitude doubleValue]);
-        [self centerOnCoordinate:currentLocation];
+        [self setCurrentFarm:currentFarm]; // forces reload
         labelFarm.text = currentFarm.name;
     }
     else {
         shouldCenterOnUser = YES;
         labelFarm.text = @"No farm selected";
     }
-
-    [self reloadMap];
 }
 
 -(Farm *)newFarm {
@@ -75,37 +75,59 @@
 }
 
 -(void)reloadMap {
-    Field *field = [[[self fieldFetcher] fetchedObjects] firstObject];
-    if (field.boundary) {
-        MKPolyline *line = [field.boundary polyLine];
-        [mapView addOverlay:line];
+    // jumps to middle of farm
+    CLLocationCoordinate2D currentLocation = CLLocationCoordinate2DMake([self.currentFarm.latitude doubleValue], [self.currentFarm.longitude doubleValue]);
+    [self centerOnCoordinate:currentLocation];
+
+    // todo: set bounds based on all fields
+    [self drawFields];
+}
+
+-(void)drawFields {
+    // todo: only remove field overlays
+    [mapView removeOverlays:mapView.overlays];
+
+    NSArray *fields = [[self fieldFetcher] fetchedObjects];
+    for (Field *field in fields) {
+        if (field.boundary) {
+            MKPolyline *line = [field.boundary polyLine];
+            [mapView addOverlay:line];
+        }
     }
 }
 
 #pragma mark editing
 -(IBAction)didClickEdit:(id)sender {
-    // for now, use actionsheet
-    if ([[[self farmFetcher] fetchedObjects] count] == 0) {
-        [UIActionSheet actionSheetWithTitle:nil message:nil buttons:@[@"Add a farm"] showInView:_appDelegate.window onDismiss:^(int buttonIndex) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Please enter farm name" message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Create farm", nil];
-            alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-            alert.tag = 1;
-            [alert show];
-        } onCancel:^{
-
-        }];
+    if (buttonEdit.isSelected) {
+        // cancel edit
+        [buttonEdit setSelected:NO];
+        [centerPin setHidden:YES];
+        [self reloadMap];
     }
-    else if ([[[self fieldFetcher] fetchedObjects] count] == 0) {
-        [UIActionSheet actionSheetWithTitle:nil message:nil buttons:@[@"Edit farm", @"Add a field"] showInView:_appDelegate.window onDismiss:^(int buttonIndex) {
-            if (buttonIndex == 0) {
-                [self editFarm];
-            }
-            else if (buttonIndex == 1) {
-                [self addField];
-            }
-        } onCancel:^{
+    else {
+        // for now, use actionsheet
+        if ([[[self farmFetcher] fetchedObjects] count] == 0) {
+            [UIActionSheet actionSheetWithTitle:nil message:nil buttons:@[@"Add a farm"] showInView:_appDelegate.window onDismiss:^(int buttonIndex) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Please enter farm name" message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Create farm", nil];
+                alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+                alert.tag = 2;
+                [alert show];
+            } onCancel:^{
 
-        }];
+            }];
+        }
+        else if ([[[self fieldFetcher] fetchedObjects] count] == 0) {
+            [UIActionSheet actionSheetWithTitle:nil message:nil buttons:@[@"Edit farm", @"Add a field"] showInView:_appDelegate.window onDismiss:^(int buttonIndex) {
+                if (buttonIndex == 0) {
+                    [self editFarm];
+                }
+                else if (buttonIndex == 1) {
+                    [self addField];
+                }
+            } onCancel:^{
+                
+            }];
+        }
     }
 }
 
@@ -129,16 +151,33 @@
 }
 
 -(void)editFarm {
-
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Please enter farm name" message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Update farm", nil];
+    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    alert.tag = 1;
+    [alert show];
 }
 
 -(void)addField {
-
+    // todo: add boundaries
+    [buttonEdit setSelected:YES];
+    [centerPin setHidden:NO];
+    [UIAlertView alertViewWithTitle:@"Set the center of your field" message:@"Please drag the map until the center of the map is at the center of the field."];
 }
 
 -(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
     if (alertView.tag == 1) {
-        // create farm
+        // edit farm name
+        NSString *name = [[alertView textFieldAtIndex:0] text];
+        if (name.length == 0) {
+            [UIAlertView alertViewWithTitle:@"Invalid farm name" message:@"You must enter a valid name."];
+            return;
+        }
+        self.currentFarm.name = name;
+        [_appDelegate.managedObjectContext save:nil];
+        labelFarm.text = currentFarm.name;
+    }
+    if (alertView.tag == 2) {
+        // create new farm
         NSLog(@"Button index: %d", buttonIndex);
         if (buttonIndex == 1) {
             NSString *name = [[alertView textFieldAtIndex:0] text];
@@ -167,7 +206,26 @@
     MKCoordinateRegion adjustedRegion = [mapView regionThatFits:viewRegion];
     [mapView setRegion:adjustedRegion animated:YES];
 }
-
+/*
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
+    static NSString *identifier = @"MyLocation";
+        MKAnnotationView *annotationView = (MKAnnotationView *) [mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
+        UIImage *image = [UIImage imageNamed: @"pin"];
+        annotationView.image = image;
+//        UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+//        [annotationView addSubview:imageView];
+    Annotation *location = [[Annotation alloc] init];
+    location setCoordinate:<#(CLLocationCoordinate2D)#>
+        annotationView.annotation = location;
+        annotationView.draggable = YES;
+        annotationView.enabled = YES;
+        annotationView.canShowCallout = NO;
+        annotationView.selected = YES;
+        return annotationView;
+    }
+    return nil;
+}
+*/
 -(void) mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view {
     /*
      if (view.annotation == gymCenter) {
@@ -191,11 +249,13 @@
         return fieldFetcher;
 
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Field"];
-    NSSortDescriptor *sortDescriptor1 = [[NSSortDescriptor alloc] initWithKey:@"farmName" ascending:YES];
-    NSSortDescriptor *sortDescriptor2 = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
-    [request setSortDescriptors:@[sortDescriptor1, sortDescriptor2]];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+    [request setSortDescriptors:@[sortDescriptor]];
 
-    fieldFetcher = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:_appDelegate.managedObjectContext sectionNameKeyPath:@"farmName" cacheName:nil];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"farmName = %@", self.currentFarm.name];
+    [request setPredicate:predicate];
+
+    fieldFetcher = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:_appDelegate.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
     [fieldFetcher performFetch:nil];
 
     return fieldFetcher;
@@ -229,5 +289,10 @@
 }
 -(void)setCurrentFarm:(Farm *)_currentFarm {
     currentFarm = _currentFarm;
+
+    fieldFetcher = nil;
+    [fieldFetcher performFetch:nil];
+
+    [self reloadMap];
 }
 @end

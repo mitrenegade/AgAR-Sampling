@@ -193,23 +193,29 @@
                                 <state key="normal" image="edit">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <state key="selected" image="cancel"/>
                                 <connections>
                                     <action selector="didClickEdit:" destination="PyK-Gf-tdj" eventType="touchUpInside" id="6MV-zJ-dGT"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oxc-fT-4Ca">
-                                <rect key="frame" x="84" y="26" width="153" height="40"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="200" translatesAutoresizingMaskIntoConstraints="NO" id="oxc-fT-4Ca">
+                                <rect key="frame" x="60" y="8" width="200" height="75"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="pin" translatesAutoresizingMaskIntoConstraints="NO" id="ysK-Aj-pJ6">
+                                <rect key="frame" x="145" y="244" width="30" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Fields" id="WJp-1a-Kgx"/>
                     <connections>
                         <outlet property="buttonEdit" destination="5Ds-dF-vaI" id="x7R-BA-sHl"/>
+                        <outlet property="centerPin" destination="ysK-Aj-pJ6" id="gxt-ST-00p"/>
                         <outlet property="labelFarm" destination="oxc-fT-4Ca" id="SWN-nJ-hyg"/>
                         <outlet property="mapView" destination="1LX-16-5Ns" id="vlc-3k-YYr"/>
                     </connections>
@@ -389,7 +395,9 @@
         </scene>
     </scenes>
     <resources>
+        <image name="cancel" width="30" height="30"/>
         <image name="edit" width="60" height="60"/>
+        <image name="pin" width="30" height="30"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

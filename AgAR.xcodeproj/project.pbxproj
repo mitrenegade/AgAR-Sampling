@@ -32,6 +32,7 @@
 		9E85D1D519C1FA7800C6C1E9 /* Field.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E85D1D419C1FA7800C6C1E9 /* Field.m */; };
 		9E85D1D819C20A0400C6C1E9 /* Farm.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E85D1D719C20A0400C6C1E9 /* Farm.m */; };
 		9E85D1DA19C20D7E00C6C1E9 /* LocationNC.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 9E85D1D919C20D7E00C6C1E9 /* LocationNC.gpx */; };
+		9E85D1DE19C212C300C6C1E9 /* Annotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E85D1DD19C212C300C6C1E9 /* Annotation.m */; };
 		9ED6BF9119B9F39000EFAF4A /* iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9ED6BF9019B9F39000EFAF4A /* iPhone.storyboard */; };
 		9ED6BF9719B9F3EB00EFAF4A /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED6BF9419B9F3EB00EFAF4A /* LoginViewController.m */; };
 		9ED6BF9819B9F3EB00EFAF4A /* SignupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED6BF9619B9F3EB00EFAF4A /* SignupViewController.m */; };
@@ -107,6 +108,8 @@
 		9E85D1D619C20A0400C6C1E9 /* Farm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Farm.h; sourceTree = "<group>"; };
 		9E85D1D719C20A0400C6C1E9 /* Farm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Farm.m; sourceTree = "<group>"; };
 		9E85D1D919C20D7E00C6C1E9 /* LocationNC.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = LocationNC.gpx; sourceTree = "<group>"; };
+		9E85D1DC19C212C300C6C1E9 /* Annotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Annotation.h; sourceTree = "<group>"; };
+		9E85D1DD19C212C300C6C1E9 /* Annotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Annotation.m; sourceTree = "<group>"; };
 		9ED6BF9019B9F39000EFAF4A /* iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = iPhone.storyboard; sourceTree = "<group>"; };
 		9ED6BF9319B9F3EB00EFAF4A /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		9ED6BF9419B9F3EB00EFAF4A /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
@@ -198,9 +201,6 @@
 				9E85D1C319C1DC1A00C6C1E9 /* ShellViewController.m */,
 				3F2FC25019BB9D3B00124ACB /* FieldsViewController.h */,
 				3F2FC25119BB9D3B00124ACB /* FieldsViewController.m */,
-				9E85D1BD19C1D89400C6C1E9 /* CustomTabBarView.h */,
-				9E85D1BE19C1D89400C6C1E9 /* CustomTabBarView.m */,
-				9E85D1C019C1D92500C6C1E9 /* CustomTabBarView.xib */,
 				9EFC7F2D19BF696400E6A2AE /* ProfileTableViewController.h */,
 				9EFC7F2E19BF696400E6A2AE /* ProfileTableViewController.m */,
 			);
@@ -277,6 +277,7 @@
 				9ED6BF9019B9F39000EFAF4A /* iPhone.storyboard */,
 				9ED6BF9219B9F3CE00EFAF4A /* Login */,
 				3F2FC24F19BB9CF700124ACB /* Tab Controllers */,
+				9E85D1DB19C212A900C6C1E9 /* Views */,
 				9E0EA98919B8BCD60072166D /* Supporting Files */,
 			);
 			path = AgAR;
@@ -311,6 +312,18 @@
 				9E0EA9A819B8BCD60072166D /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		9E85D1DB19C212A900C6C1E9 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				9E85D1BD19C1D89400C6C1E9 /* CustomTabBarView.h */,
+				9E85D1BE19C1D89400C6C1E9 /* CustomTabBarView.m */,
+				9E85D1C019C1D92500C6C1E9 /* CustomTabBarView.xib */,
+				9E85D1DC19C212C300C6C1E9 /* Annotation.h */,
+				9E85D1DD19C212C300C6C1E9 /* Annotation.m */,
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 		9ED6BF9219B9F3CE00EFAF4A /* Login */ = {
@@ -469,6 +482,7 @@
 				9ED6BF9719B9F3EB00EFAF4A /* LoginViewController.m in Sources */,
 				9E0EA99319B8BCD60072166D /* AppDelegate.m in Sources */,
 				9E85D1C419C1DC1A00C6C1E9 /* ShellViewController.m in Sources */,
+				9E85D1DE19C212C300C6C1E9 /* Annotation.m in Sources */,
 				9E0EA98F19B8BCD60072166D /* main.m in Sources */,
 				9EFC7F2F19BF696400E6A2AE /* ProfileTableViewController.m in Sources */,
 				9ED6C02019B9F59F00EFAF4A /* NSObject+MKBlockAdditions.m in Sources */,
