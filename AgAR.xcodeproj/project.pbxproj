@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		3F2FC25219BB9D3B00124ACB /* FieldsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F2FC25119BB9D3B00124ACB /* FieldsViewController.m */; };
-		3F2FC25F19BBA1F500124ACB /* Farm.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F2FC25E19BBA1F500124ACB /* Farm.m */; };
 		9E0EA98119B8BCD60072166D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E0EA98019B8BCD60072166D /* Foundation.framework */; };
 		9E0EA98319B8BCD60072166D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E0EA98219B8BCD60072166D /* CoreGraphics.framework */; };
 		9E0EA98519B8BCD60072166D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E0EA98419B8BCD60072166D /* UIKit.framework */; };
@@ -31,6 +30,8 @@
 		9E85D1C919C1F9AD00C6C1E9 /* Polyline+TransformableAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E85D1C819C1F9AD00C6C1E9 /* Polyline+TransformableAttributes.m */; };
 		9E85D1CF19C1FA5D00C6C1E9 /* Polyline.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E85D1CE19C1FA5D00C6C1E9 /* Polyline.m */; };
 		9E85D1D519C1FA7800C6C1E9 /* Field.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E85D1D419C1FA7800C6C1E9 /* Field.m */; };
+		9E85D1D819C20A0400C6C1E9 /* Farm.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E85D1D719C20A0400C6C1E9 /* Farm.m */; };
+		9E85D1DA19C20D7E00C6C1E9 /* LocationNC.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 9E85D1D919C20D7E00C6C1E9 /* LocationNC.gpx */; };
 		9ED6BF9119B9F39000EFAF4A /* iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9ED6BF9019B9F39000EFAF4A /* iPhone.storyboard */; };
 		9ED6BF9719B9F3EB00EFAF4A /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED6BF9419B9F3EB00EFAF4A /* LoginViewController.m */; };
 		9ED6BF9819B9F3EB00EFAF4A /* SignupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED6BF9619B9F3EB00EFAF4A /* SignupViewController.m */; };
@@ -73,8 +74,6 @@
 /* Begin PBXFileReference section */
 		3F2FC25019BB9D3B00124ACB /* FieldsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FieldsViewController.h; sourceTree = "<group>"; };
 		3F2FC25119BB9D3B00124ACB /* FieldsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FieldsViewController.m; sourceTree = "<group>"; };
-		3F2FC25D19BBA1F500124ACB /* Farm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Farm.h; sourceTree = "<group>"; };
-		3F2FC25E19BBA1F500124ACB /* Farm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Farm.m; sourceTree = "<group>"; };
 		9E0EA97D19B8BCD60072166D /* AgAR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AgAR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E0EA98019B8BCD60072166D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9E0EA98219B8BCD60072166D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -105,6 +104,9 @@
 		9E85D1CE19C1FA5D00C6C1E9 /* Polyline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Polyline.m; sourceTree = "<group>"; };
 		9E85D1D319C1FA7800C6C1E9 /* Field.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Field.h; sourceTree = "<group>"; };
 		9E85D1D419C1FA7800C6C1E9 /* Field.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Field.m; sourceTree = "<group>"; };
+		9E85D1D619C20A0400C6C1E9 /* Farm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Farm.h; sourceTree = "<group>"; };
+		9E85D1D719C20A0400C6C1E9 /* Farm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Farm.m; sourceTree = "<group>"; };
+		9E85D1D919C20D7E00C6C1E9 /* LocationNC.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = LocationNC.gpx; sourceTree = "<group>"; };
 		9ED6BF9019B9F39000EFAF4A /* iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = iPhone.storyboard; sourceTree = "<group>"; };
 		9ED6BF9319B9F3EB00EFAF4A /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		9ED6BF9419B9F3EB00EFAF4A /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
@@ -212,9 +214,9 @@
 				9E85D1D419C1FA7800C6C1E9 /* Field.m */,
 				9E85D1CD19C1FA5D00C6C1E9 /* Polyline.h */,
 				9E85D1CE19C1FA5D00C6C1E9 /* Polyline.m */,
+				9E85D1D619C20A0400C6C1E9 /* Farm.h */,
+				9E85D1D719C20A0400C6C1E9 /* Farm.m */,
 				9E0EA99419B8BCD60072166D /* AgAR.xcdatamodeld */,
-				3F2FC25D19BBA1F500124ACB /* Farm.h */,
-				3F2FC25E19BBA1F500124ACB /* Farm.m */,
 				9E85D1C719C1F9AD00C6C1E9 /* Polyline+TransformableAttributes.h */,
 				9E85D1C819C1F9AD00C6C1E9 /* Polyline+TransformableAttributes.m */,
 			);
@@ -283,6 +285,7 @@
 		9E0EA98919B8BCD60072166D /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				9E85D1D919C20D7E00C6C1E9 /* LocationNC.gpx */,
 				9E0EA99719B8BCD60072166D /* Images.xcassets */,
 				9E0EA98A19B8BCD60072166D /* AgAR-Info.plist */,
 				9E0EA98B19B8BCD60072166D /* InfoPlist.strings */,
@@ -440,6 +443,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9E0EA98D19B8BCD60072166D /* InfoPlist.strings in Resources */,
+				9E85D1DA19C20D7E00C6C1E9 /* LocationNC.gpx in Resources */,
 				9E0EA99819B8BCD60072166D /* Images.xcassets in Resources */,
 				9ED6BF9119B9F39000EFAF4A /* iPhone.storyboard in Resources */,
 				9E85D1C119C1D92500C6C1E9 /* CustomTabBarView.xib in Resources */,
@@ -476,8 +480,8 @@
 				9ED6C02819B9F59F00EFAF4A /* UIImage+Resize.m in Sources */,
 				9ED6C02319B9F59F00EFAF4A /* NSManagedObject+Entity.m in Sources */,
 				9E0EA99619B8BCD60072166D /* AgAR.xcdatamodeld in Sources */,
+				9E85D1D819C20A0400C6C1E9 /* Farm.m in Sources */,
 				9E85D1BF19C1D89400C6C1E9 /* CustomTabBarView.m in Sources */,
-				3F2FC25F19BBA1F500124ACB /* Farm.m in Sources */,
 				9ED6BF9819B9F3EB00EFAF4A /* SignupViewController.m in Sources */,
 				9ED6C02619B9F59F00EFAF4A /* Query.m in Sources */,
 				9ED6C02419B9F59F00EFAF4A /* NSManagedObject+Query.m in Sources */,

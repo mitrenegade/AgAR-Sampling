@@ -10,6 +10,7 @@
 #import "Field.h"
 #import "Farm.h"
 #import "Polyline+TransformableAttributes.h"
+#import "UIActionSheet+MKBlockAdditions.h"
 
 @interface FieldsViewController ()
 
@@ -44,7 +45,15 @@
     }
 #endif
 
-    shouldCenterOnUser = YES;
+    if (self.currentFarm) {
+        CLLocationCoordinate2D currentLocation = CLLocationCoordinate2DMake([self.currentFarm.latitude doubleValue], [self.currentFarm.longitude doubleValue]);
+        [self centerOnCoordinate:currentLocation];
+        labelFarm.text = currentFarm.name;
+    }
+    else {
+        shouldCenterOnUser = YES;
+        labelFarm.text = @"No farm selected";
+    }
 
     [self reloadMap];
 }
@@ -65,21 +74,6 @@
     // Dispose of any resources that can be recreated.
 }
 
--(NSFetchedResultsController *)fieldFetcher {
-    if (fieldFetcher)
-        return fieldFetcher;
-    
-    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Field"];
-    NSSortDescriptor *sortDescriptor1 = [[NSSortDescriptor alloc] initWithKey:@"farmName" ascending:YES];
-    NSSortDescriptor *sortDescriptor2 = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
-    [request setSortDescriptors:@[sortDescriptor1, sortDescriptor2]];
-    
-    fieldFetcher = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:_appDelegate.managedObjectContext sectionNameKeyPath:@"farmName" cacheName:nil];
-    [fieldFetcher performFetch:nil];
-    
-    return fieldFetcher;
-}
-
 -(void)reloadMap {
     Field *field = [[[self fieldFetcher] fetchedObjects] firstObject];
     if (field.boundary) {
@@ -88,6 +82,72 @@
     }
 }
 
+#pragma mark editing
+-(IBAction)didClickEdit:(id)sender {
+    // for now, use actionsheet
+    if ([[[self farmFetcher] fetchedObjects] count] == 0) {
+        [UIActionSheet actionSheetWithTitle:nil message:nil buttons:@[@"Add a farm"] showInView:_appDelegate.window onDismiss:^(int buttonIndex) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Please enter farm name" message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Create farm", nil];
+            alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+            alert.tag = 1;
+            [alert show];
+        } onCancel:^{
+
+        }];
+    }
+    else if ([[[self fieldFetcher] fetchedObjects] count] == 0) {
+        [UIActionSheet actionSheetWithTitle:nil message:nil buttons:@[@"Edit farm", @"Add a field"] showInView:_appDelegate.window onDismiss:^(int buttonIndex) {
+            if (buttonIndex == 0) {
+                [self editFarm];
+            }
+            else if (buttonIndex == 1) {
+                [self addField];
+            }
+        } onCancel:^{
+
+        }];
+    }
+}
+
+-(void)addFarm:(NSString *)name {
+    if (name.length == 0) {
+        [UIAlertView alertViewWithTitle:@"Invalid farm name" message:@"You must enter a name for your new farm."];
+        return;
+    }
+
+    Farm *farm = [self newFarm];
+    farm.name = name;
+
+    CLLocationCoordinate2D currentCoordinate = mapView.userLocation.coordinate;
+    farm.latitude = @(currentCoordinate.latitude);
+    farm.longitude = @(currentCoordinate.longitude);
+
+    [_appDelegate.managedObjectContext save:nil];
+
+    [[self farmFetcher] performFetch:nil];
+    [self setCurrentFarm:farm];
+}
+
+-(void)editFarm {
+
+}
+
+-(void)addField {
+
+}
+
+-(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    if (alertView.tag == 1) {
+        // create farm
+        NSLog(@"Button index: %d", buttonIndex);
+        if (buttonIndex == 1) {
+            NSString *name = [[alertView textFieldAtIndex:0] text];
+            [self addFarm:name];
+        }
+    }
+}
+
+#pragma mark MKMapViewDelegate
 - (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay {
     MKPolylineView *polylineView = [[MKPolylineView alloc] initWithPolyline:overlay];
     polylineView.strokeColor = [UIColor redColor];
@@ -96,15 +156,14 @@
     return polylineView;
 }
 
-#pragma mark MKMapViewDelegate
--(void) mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
+-(void) mapView:(MKMapView *)_mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
     if (shouldCenterOnUser) {
-        [self centerOnUser];
+        [self centerOnCoordinate:mapView.userLocation.coordinate];
     }
 }
 
--(void)centerOnUser{
-    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(mapView.userLocation.coordinate, 0.05*METERS_PER_MILE, 0.05*METERS_PER_MILE);
+-(void)centerOnCoordinate:(CLLocationCoordinate2D)coordinate{
+    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(coordinate, 0.05*METERS_PER_MILE, 0.05*METERS_PER_MILE);
     MKCoordinateRegion adjustedRegion = [mapView regionThatFits:viewRegion];
     [mapView setRegion:adjustedRegion animated:YES];
 }
@@ -126,4 +185,49 @@
      */
 }
 
+#pragma mark Fetcher
+-(NSFetchedResultsController *)fieldFetcher {
+    if (fieldFetcher)
+        return fieldFetcher;
+
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Field"];
+    NSSortDescriptor *sortDescriptor1 = [[NSSortDescriptor alloc] initWithKey:@"farmName" ascending:YES];
+    NSSortDescriptor *sortDescriptor2 = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+    [request setSortDescriptors:@[sortDescriptor1, sortDescriptor2]];
+
+    fieldFetcher = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:_appDelegate.managedObjectContext sectionNameKeyPath:@"farmName" cacheName:nil];
+    [fieldFetcher performFetch:nil];
+
+    return fieldFetcher;
+}
+
+-(NSFetchedResultsController *)farmFetcher {
+    if (farmFetcher)
+        return farmFetcher;
+
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Farm"];
+    NSSortDescriptor *sortDescriptor1 = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+    [request setSortDescriptors:@[sortDescriptor1]];
+
+    farmFetcher = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:_appDelegate.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+    [farmFetcher performFetch:nil];
+
+    return farmFetcher;
+}
+
+#pragma mark custom setter/getter for Farm
+-(Farm *)currentFarm {
+    if (currentFarm)
+        return currentFarm;
+
+    NSArray *farms = [[self farmFetcher] fetchedObjects];
+    if ([farms count]) {
+        currentFarm = [farms firstObject];
+    }
+
+    return currentFarm;
+}
+-(void)setCurrentFarm:(Farm *)_currentFarm {
+    currentFarm = _currentFarm;
+}
 @end

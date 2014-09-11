@@ -9,12 +9,23 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 
-@interface FieldsViewController : UIViewController <MKMapViewDelegate>
+@class Farm;
+@interface FieldsViewController : UIViewController <MKMapViewDelegate, UIAlertViewDelegate>
 {
     NSFetchedResultsController *fieldFetcher;
+    NSFetchedResultsController *farmFetcher;
+
     IBOutlet MKMapView *mapView;
+    IBOutlet UILabel *labelFarm;
+    IBOutlet UIButton *buttonEdit;
 
     BOOL shouldCenterOnUser;
+    BOOL isEditMode;
+
+    Farm *currentFarm;
 }
+@property (nonatomic, readonly) Farm *currentFarm;
+
+-(IBAction)didClickEdit:(id)sender;
 
 @end
