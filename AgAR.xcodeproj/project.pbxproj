@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3F2FC25219BB9D3B00124ACB /* FieldsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F2FC25119BB9D3B00124ACB /* FieldsTableViewController.m */; };
+		3F2FC25219BB9D3B00124ACB /* FieldsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F2FC25119BB9D3B00124ACB /* FieldsViewController.m */; };
 		3F2FC25F19BBA1F500124ACB /* Farm.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F2FC25E19BBA1F500124ACB /* Farm.m */; };
 		3F2FC26519BBA68300124ACB /* Field.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F2FC26419BBA68300124ACB /* Field.m */; };
 		9E0EA98119B8BCD60072166D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E0EA98019B8BCD60072166D /* Foundation.framework */; };
@@ -28,6 +28,7 @@
 		9E85D1BF19C1D89400C6C1E9 /* CustomTabBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E85D1BE19C1D89400C6C1E9 /* CustomTabBarView.m */; };
 		9E85D1C119C1D92500C6C1E9 /* CustomTabBarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9E85D1C019C1D92500C6C1E9 /* CustomTabBarView.xib */; };
 		9E85D1C419C1DC1A00C6C1E9 /* ShellViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E85D1C319C1DC1A00C6C1E9 /* ShellViewController.m */; };
+		9E85D1C619C1F48400C6C1E9 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E85D1C519C1F48400C6C1E9 /* MapKit.framework */; };
 		9ED6BF9119B9F39000EFAF4A /* iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9ED6BF9019B9F39000EFAF4A /* iPhone.storyboard */; };
 		9ED6BF9719B9F3EB00EFAF4A /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED6BF9419B9F3EB00EFAF4A /* LoginViewController.m */; };
 		9ED6BF9819B9F3EB00EFAF4A /* SignupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED6BF9619B9F3EB00EFAF4A /* SignupViewController.m */; };
@@ -68,8 +69,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3F2FC25019BB9D3B00124ACB /* FieldsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FieldsTableViewController.h; sourceTree = "<group>"; };
-		3F2FC25119BB9D3B00124ACB /* FieldsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FieldsTableViewController.m; sourceTree = "<group>"; };
+		3F2FC25019BB9D3B00124ACB /* FieldsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FieldsViewController.h; sourceTree = "<group>"; };
+		3F2FC25119BB9D3B00124ACB /* FieldsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FieldsViewController.m; sourceTree = "<group>"; };
 		3F2FC25D19BBA1F500124ACB /* Farm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Farm.h; sourceTree = "<group>"; };
 		3F2FC25E19BBA1F500124ACB /* Farm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Farm.m; sourceTree = "<group>"; };
 		3F2FC26319BBA68300124ACB /* Field.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Field.h; sourceTree = "<group>"; };
@@ -97,6 +98,7 @@
 		9E85D1C019C1D92500C6C1E9 /* CustomTabBarView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomTabBarView.xib; sourceTree = "<group>"; };
 		9E85D1C219C1DC1A00C6C1E9 /* ShellViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShellViewController.h; sourceTree = "<group>"; };
 		9E85D1C319C1DC1A00C6C1E9 /* ShellViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShellViewController.m; sourceTree = "<group>"; };
+		9E85D1C519C1F48400C6C1E9 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		9ED6BF9019B9F39000EFAF4A /* iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = iPhone.storyboard; sourceTree = "<group>"; };
 		9ED6BF9319B9F3EB00EFAF4A /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		9ED6BF9419B9F3EB00EFAF4A /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E85D1C619C1F48400C6C1E9 /* MapKit.framework in Frameworks */,
 				9ED6C03E19B9F6AB00EFAF4A /* Social.framework in Frameworks */,
 				9ED6C03C19B9F6A700EFAF4A /* SystemConfiguration.framework in Frameworks */,
 				9ED6C03A19B9F6A000EFAF4A /* StoreKit.framework in Frameworks */,
@@ -185,8 +188,8 @@
 			children = (
 				9E85D1C219C1DC1A00C6C1E9 /* ShellViewController.h */,
 				9E85D1C319C1DC1A00C6C1E9 /* ShellViewController.m */,
-				3F2FC25019BB9D3B00124ACB /* FieldsTableViewController.h */,
-				3F2FC25119BB9D3B00124ACB /* FieldsTableViewController.m */,
+				3F2FC25019BB9D3B00124ACB /* FieldsViewController.h */,
+				3F2FC25119BB9D3B00124ACB /* FieldsViewController.m */,
 				9E85D1BD19C1D89400C6C1E9 /* CustomTabBarView.h */,
 				9E85D1BE19C1D89400C6C1E9 /* CustomTabBarView.m */,
 				9E85D1C019C1D92500C6C1E9 /* CustomTabBarView.xib */,
@@ -230,6 +233,7 @@
 		9E0EA97F19B8BCD60072166D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9E85D1C519C1F48400C6C1E9 /* MapKit.framework */,
 				9ED6C03D19B9F6AB00EFAF4A /* Social.framework */,
 				9ED6C03B19B9F6A700EFAF4A /* SystemConfiguration.framework */,
 				9ED6C03919B9F6A000EFAF4A /* StoreKit.framework */,
@@ -453,7 +457,7 @@
 				9E0EA98F19B8BCD60072166D /* main.m in Sources */,
 				9EFC7F2F19BF696400E6A2AE /* ProfileTableViewController.m in Sources */,
 				9ED6C02019B9F59F00EFAF4A /* NSObject+MKBlockAdditions.m in Sources */,
-				3F2FC25219BB9D3B00124ACB /* FieldsTableViewController.m in Sources */,
+				3F2FC25219BB9D3B00124ACB /* FieldsViewController.m in Sources */,
 				9ED6C02719B9F59F00EFAF4A /* UIImage+Alpha.m in Sources */,
 				9ED6C02919B9F59F00EFAF4A /* UIImage+RoundedCorner.m in Sources */,
 				9ED6C02819B9F59F00EFAF4A /* UIImage+Resize.m in Sources */,

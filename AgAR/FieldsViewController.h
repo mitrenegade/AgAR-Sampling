@@ -1,5 +1,5 @@
 //
-//  FieldsTableViewController.h
+//  FieldsViewController.h
 //  AgAR
 //
 //  Created by Jingqing Ren on 9/6/14.
@@ -7,14 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MapKit/MapKit.h>
 
-@interface FieldsTableViewController : UITableViewController
+@interface FieldsViewController : UIViewController <MKMapViewDelegate>
 {
     NSFetchedResultsController *fieldFetcher;
+    IBOutlet MKMapView *mapView;
+
+    BOOL shouldCenterOnUser;
 }
-
-@property (nonatomic) BOOL isSetupMode;
-
--(IBAction)didClickBack:(id)sender;
 
 @end

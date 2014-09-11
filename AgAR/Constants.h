@@ -15,4 +15,6 @@
 #define FONT_MEDIUM(x) [UIFont fontWithName:@"AvenirNext-Medium" size:(x)]
 #define FONT_LIGHT(x) [UIFont fontWithName:@"AvenirNext-UltraLight" size:(x)]
 
+#define METERS_PER_MILE 1609.344
+
 #endif
