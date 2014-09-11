@@ -8,7 +8,6 @@
 
 #import "ProfileTableViewController.h"
 #import <Parse/Parse.h>
-#import "FieldsTableViewController.h"
 
 @interface ProfileTableViewController ()
 

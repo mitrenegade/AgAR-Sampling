@@ -2,18 +2,18 @@
 //  Field.h
 //  AgAR
 //
-//  Created by Jingqing Ren on 9/6/14.
+//  Created by Bobby Ren on 9/11/14.
 //  Copyright (c) 2014 BobbyRen. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import "Area.h"
 
 @class Farm;
 
-@interface Field : NSManagedObject
+@interface Field : Area
 
-@property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * farmName;
 @property (nonatomic, retain) Farm *farm;
 
