@@ -187,6 +187,17 @@
                                     <outlet property="delegate" destination="PyK-Gf-tdj" id="WON-rH-5x9"/>
                                 </connections>
                             </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="45c-ZN-4xt">
+                                <rect key="frame" x="260" y="74" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="check">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="selected" image="cancel"/>
+                                <connections>
+                                    <action selector="didClickCheck:" destination="PyK-Gf-tdj" eventType="touchUpInside" id="7Bk-8G-2bU"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Ds-dF-vaI">
                                 <rect key="frame" x="260" y="26" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -214,6 +225,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Fields" id="WJp-1a-Kgx"/>
                     <connections>
+                        <outlet property="buttonCheck" destination="45c-ZN-4xt" id="Qyo-lQ-Wc7"/>
                         <outlet property="buttonEdit" destination="5Ds-dF-vaI" id="x7R-BA-sHl"/>
                         <outlet property="centerPin" destination="ysK-Aj-pJ6" id="gxt-ST-00p"/>
                         <outlet property="labelFarm" destination="oxc-fT-4Ca" id="SWN-nJ-hyg"/>
@@ -396,6 +408,7 @@
     </scenes>
     <resources>
         <image name="cancel" width="30" height="30"/>
+        <image name="check" width="30" height="30"/>
         <image name="edit" width="60" height="60"/>
         <image name="pin" width="30" height="30"/>
     </resources>

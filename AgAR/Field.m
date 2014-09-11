@@ -8,14 +8,11 @@
 
 #import "Field.h"
 #import "Farm.h"
-#import "Polyline.h"
 
 
 @implementation Field
 
 @dynamic farmName;
-@dynamic name;
 @dynamic farm;
-@dynamic boundary;
 
 @end

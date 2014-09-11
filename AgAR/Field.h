@@ -8,14 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import "Area.h"
 
-@class Farm, Polyline;
+@class Farm;
 
-@interface Field : NSManagedObject
+@interface Field : Area
 
 @property (nonatomic, retain) NSString * farmName;
-@property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) Farm *farm;
-@property (nonatomic, retain) Polyline *boundary;
 
 @end

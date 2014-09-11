@@ -7,14 +7,14 @@
 //
 
 #import "Polyline.h"
-#import "Field.h"
+#import "Area.h"
 
 
 @implementation Polyline
 
+@dynamic closed;
 @dynamic coordinates;
 @dynamic coordinates_data;
-@dynamic closed;
-@dynamic field;
+@dynamic area;
 
 @end

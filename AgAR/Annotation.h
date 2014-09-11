@@ -8,9 +8,15 @@
 
 #import <MapKit/MapKit.h>
 
-@interface Annotation : NSObject <MKAnnotation>
-{
-    CLLocationCoordinate2D coordinate;
-}
+typedef enum AnnotationTypeEnum {
+    AnnotationTypeFarmCenter,
+    AnnotationTypeFieldCenter,
+    AnnotationTypeBorder
+} AnnotationType;
 
+@interface Annotation : NSObject <MKAnnotation>
+
+@property (nonatomic) CLLocationCoordinate2D coordinate;
+@property (nonatomic) AnnotationType type;
+@property (nonatomic) NSString *title;
 @end

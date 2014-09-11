@@ -12,9 +12,6 @@
 
 @implementation Farm
 
-@dynamic name;
-@dynamic longitude;
-@dynamic latitude;
 @dynamic fields;
 
 @end

@@ -9,13 +9,13 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class Field;
+@class Area;
 
 @interface Polyline : NSManagedObject
 
+@property (nonatomic, retain) NSNumber * closed;
 @property (nonatomic, retain) id coordinates;
 @property (nonatomic, retain) NSData * coordinates_data;
-@property (nonatomic, retain) NSNumber * closed;
-@property (nonatomic, retain) Field *field;
+@property (nonatomic, retain) Area *area;
 
 @end

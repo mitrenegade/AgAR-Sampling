@@ -8,14 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import "Area.h"
 
 @class Field;
 
-@interface Farm : NSManagedObject
+@interface Farm : Area
 
-@property (nonatomic, retain) NSString * name;
-@property (nonatomic, retain) NSNumber * longitude;
-@property (nonatomic, retain) NSNumber * latitude;
 @property (nonatomic, retain) NSSet *fields;
 @end
 
