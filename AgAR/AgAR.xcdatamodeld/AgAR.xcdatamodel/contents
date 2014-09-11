@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13C64" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13E28" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Farm" representedClassName="Farm" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="fields" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Field" inverseName="farm" inverseEntity="Field" syncable="YES"/>
@@ -7,10 +7,18 @@
     <entity name="Field" representedClassName="Field" syncable="YES">
         <attribute name="farmName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="boundary" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Polyline" inverseName="field" inverseEntity="Polyline" syncable="YES"/>
         <relationship name="farm" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Farm" inverseName="fields" inverseEntity="Farm" syncable="YES"/>
     </entity>
+    <entity name="Polyline" representedClassName="Polyline" syncable="YES">
+        <attribute name="closed" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="coordinates" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="coordinates_data" optional="YES" attributeType="Binary" syncable="YES"/>
+        <relationship name="field" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Field" inverseName="boundary" inverseEntity="Field" syncable="YES"/>
+    </entity>
     <elements>
-        <element name="Field" positionX="-63" positionY="-18" width="128" height="88"/>
         <element name="Farm" positionX="-54" positionY="0" width="128" height="73"/>
+        <element name="Field" positionX="-63" positionY="-18" width="128" height="103"/>
+        <element name="Polyline" positionX="-54" positionY="18" width="128" height="103"/>
     </elements>
 </model>

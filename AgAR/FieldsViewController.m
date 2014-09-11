@@ -9,6 +9,7 @@
 #import "FieldsViewController.h"
 #import "Field.h"
 #import "Farm.h"
+#import "Polyline+TransformableAttributes.h"
 
 @interface FieldsViewController ()
 
@@ -25,7 +26,7 @@
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-#if TESTING
+#if TESTING && 0
     NSArray *objs =  [[self fieldFetcher] fetchedObjects];
     if ([objs count] == 0) {
         for (int j = 0; j < 3; j++) {
@@ -44,6 +45,8 @@
 #endif
 
     shouldCenterOnUser = YES;
+
+    [self reloadMap];
 }
 
 -(Farm *)newFarm {
@@ -75,6 +78,22 @@
     [fieldFetcher performFetch:nil];
     
     return fieldFetcher;
+}
+
+-(void)reloadMap {
+    Field *field = [[[self fieldFetcher] fetchedObjects] firstObject];
+    if (field.boundary) {
+        MKPolyline *line = [field.boundary polyLine];
+        [mapView addOverlay:line];
+    }
+}
+
+- (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay {
+    MKPolylineView *polylineView = [[MKPolylineView alloc] initWithPolyline:overlay];
+    polylineView.strokeColor = [UIColor redColor];
+    polylineView.lineWidth = 1.0;
+
+    return polylineView;
 }
 
 #pragma mark MKMapViewDelegate

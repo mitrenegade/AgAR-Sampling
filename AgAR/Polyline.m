@@ -1,21 +1,20 @@
 //
-//  Field.m
+//  Polyline.m
 //  AgAR
 //
 //  Created by Bobby Ren on 9/11/14.
 //  Copyright (c) 2014 BobbyRen. All rights reserved.
 //
 
-#import "Field.h"
-#import "Farm.h"
 #import "Polyline.h"
+#import "Field.h"
 
 
-@implementation Field
+@implementation Polyline
 
-@dynamic farmName;
-@dynamic name;
-@dynamic farm;
-@dynamic boundary;
+@dynamic coordinates;
+@dynamic coordinates_data;
+@dynamic closed;
+@dynamic field;
 
 @end
