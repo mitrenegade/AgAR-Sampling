@@ -25,6 +25,9 @@
 		9E0EA9A219B8BCD60072166D /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E0EA98619B8BCD60072166D /* CoreData.framework */; };
 		9E0EA9AA19B8BCD60072166D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9E0EA9A819B8BCD60072166D /* InfoPlist.strings */; };
 		9E0EA9AC19B8BCD60072166D /* AgARTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0EA9AB19B8BCD60072166D /* AgARTests.m */; };
+		9E85D1BF19C1D89400C6C1E9 /* CustomTabBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E85D1BE19C1D89400C6C1E9 /* CustomTabBarView.m */; };
+		9E85D1C119C1D92500C6C1E9 /* CustomTabBarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9E85D1C019C1D92500C6C1E9 /* CustomTabBarView.xib */; };
+		9E85D1C419C1DC1A00C6C1E9 /* ShellViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E85D1C319C1DC1A00C6C1E9 /* ShellViewController.m */; };
 		9ED6BF9119B9F39000EFAF4A /* iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9ED6BF9019B9F39000EFAF4A /* iPhone.storyboard */; };
 		9ED6BF9719B9F3EB00EFAF4A /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED6BF9419B9F3EB00EFAF4A /* LoginViewController.m */; };
 		9ED6BF9819B9F3EB00EFAF4A /* SignupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED6BF9619B9F3EB00EFAF4A /* SignupViewController.m */; };
@@ -89,6 +92,11 @@
 		9E0EA9A719B8BCD60072166D /* AgARTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AgARTests-Info.plist"; sourceTree = "<group>"; };
 		9E0EA9A919B8BCD60072166D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9E0EA9AB19B8BCD60072166D /* AgARTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AgARTests.m; sourceTree = "<group>"; };
+		9E85D1BD19C1D89400C6C1E9 /* CustomTabBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTabBarView.h; sourceTree = "<group>"; };
+		9E85D1BE19C1D89400C6C1E9 /* CustomTabBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTabBarView.m; sourceTree = "<group>"; };
+		9E85D1C019C1D92500C6C1E9 /* CustomTabBarView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomTabBarView.xib; sourceTree = "<group>"; };
+		9E85D1C219C1DC1A00C6C1E9 /* ShellViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShellViewController.h; sourceTree = "<group>"; };
+		9E85D1C319C1DC1A00C6C1E9 /* ShellViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShellViewController.m; sourceTree = "<group>"; };
 		9ED6BF9019B9F39000EFAF4A /* iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = iPhone.storyboard; sourceTree = "<group>"; };
 		9ED6BF9319B9F3EB00EFAF4A /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		9ED6BF9419B9F3EB00EFAF4A /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
@@ -172,15 +180,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3F2FC24F19BB9CF700124ACB /* Controllers */ = {
+		3F2FC24F19BB9CF700124ACB /* Tab Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				9E85D1C219C1DC1A00C6C1E9 /* ShellViewController.h */,
+				9E85D1C319C1DC1A00C6C1E9 /* ShellViewController.m */,
 				3F2FC25019BB9D3B00124ACB /* FieldsTableViewController.h */,
 				3F2FC25119BB9D3B00124ACB /* FieldsTableViewController.m */,
+				9E85D1BD19C1D89400C6C1E9 /* CustomTabBarView.h */,
+				9E85D1BE19C1D89400C6C1E9 /* CustomTabBarView.m */,
+				9E85D1C019C1D92500C6C1E9 /* CustomTabBarView.xib */,
 				9EFC7F2D19BF696400E6A2AE /* ProfileTableViewController.h */,
 				9EFC7F2E19BF696400E6A2AE /* ProfileTableViewController.m */,
 			);
-			name = Controllers;
+			name = "Tab Controllers";
 			sourceTree = "<group>";
 		};
 		3F2FC25C19BBA1DD00124ACB /* Core Data */ = {
@@ -247,7 +260,7 @@
 				9EFC7F2C19BF614500E6A2AE /* Constants.h */,
 				9ED6BF9019B9F39000EFAF4A /* iPhone.storyboard */,
 				9ED6BF9219B9F3CE00EFAF4A /* Login */,
-				3F2FC24F19BB9CF700124ACB /* Controllers */,
+				3F2FC24F19BB9CF700124ACB /* Tab Controllers */,
 				9E0EA98919B8BCD60072166D /* Supporting Files */,
 			);
 			path = AgAR;
@@ -415,6 +428,7 @@
 				9E0EA98D19B8BCD60072166D /* InfoPlist.strings in Resources */,
 				9E0EA99819B8BCD60072166D /* Images.xcassets in Resources */,
 				9ED6BF9119B9F39000EFAF4A /* iPhone.storyboard in Resources */,
+				9E85D1C119C1D92500C6C1E9 /* CustomTabBarView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -435,6 +449,7 @@
 			files = (
 				9ED6BF9719B9F3EB00EFAF4A /* LoginViewController.m in Sources */,
 				9E0EA99319B8BCD60072166D /* AppDelegate.m in Sources */,
+				9E85D1C419C1DC1A00C6C1E9 /* ShellViewController.m in Sources */,
 				9E0EA98F19B8BCD60072166D /* main.m in Sources */,
 				9EFC7F2F19BF696400E6A2AE /* ProfileTableViewController.m in Sources */,
 				9ED6C02019B9F59F00EFAF4A /* NSObject+MKBlockAdditions.m in Sources */,
@@ -444,6 +459,7 @@
 				9ED6C02819B9F59F00EFAF4A /* UIImage+Resize.m in Sources */,
 				9ED6C02319B9F59F00EFAF4A /* NSManagedObject+Entity.m in Sources */,
 				9E0EA99619B8BCD60072166D /* AgAR.xcdatamodeld in Sources */,
+				9E85D1BF19C1D89400C6C1E9 /* CustomTabBarView.m in Sources */,
 				3F2FC25F19BBA1F500124ACB /* Farm.m in Sources */,
 				9ED6BF9819B9F3EB00EFAF4A /* SignupViewController.m in Sources */,
 				9ED6C02619B9F59F00EFAF4A /* Query.m in Sources */,
