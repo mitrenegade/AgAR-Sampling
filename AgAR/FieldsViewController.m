@@ -81,8 +81,9 @@
     [mapView removeAnnotations:mapView.annotations];
 
     // add farm pin
-    Annotation *farmAnnotation = [[Annotation alloc] init];
     CLLocationCoordinate2D farmCenter = CLLocationCoordinate2DMake([self.currentFarm.latitude doubleValue], [self.currentFarm.longitude doubleValue]);
+    Annotation *farmAnnotation = [[Annotation alloc] init];
+    farmAnnotation.type = AnnotationTypeFarmCenter;
     [farmAnnotation setCoordinate:farmCenter];
     [mapView addAnnotation:farmAnnotation];
 
@@ -91,6 +92,7 @@
     [self centerOnCoordinate:currentLocation];
 
     // todo: set bounds based on all fields
+    [self.fieldFetcher performFetch:nil];
     [self drawFields];
 }
 
@@ -100,6 +102,7 @@
         // draw field pin
         CLLocationCoordinate2D fieldCenter = CLLocationCoordinate2DMake([field.latitude doubleValue], [field.longitude doubleValue]);
         Annotation *fieldAnnotation = [[Annotation alloc] init];
+        fieldAnnotation.type = AnnotationTypeFieldCenter;
         fieldAnnotation.coordinate = fieldCenter;
         [mapView addAnnotation:fieldAnnotation];
 
@@ -132,7 +135,7 @@
 
             }];
         }
-        else if ([[[self fieldFetcher] fetchedObjects] count] == 0) {
+        else /* if ([[[self fieldFetcher] fetchedObjects] count] == 0) */ {
             [UIActionSheet actionSheetWithTitle:nil message:nil buttons:@[@"Edit farm", @"Add a field"] showInView:_appDelegate.window onDismiss:^(int buttonIndex) {
                 if (buttonIndex == 0) {
                     [self editFarm];
@@ -199,9 +202,11 @@
     field.latitude = @(currentCoordinate.latitude);
     field.longitude = @(currentCoordinate.longitude);
     field.farm = [self currentFarm];
+    field.farmName = self.currentFarm.name;
 
     [_appDelegate.managedObjectContext save:nil];
-    
+
+    [self reloadMap];
 }
 
 -(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
