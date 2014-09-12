@@ -10,6 +10,7 @@
 #import <MapKit/MapKit.h>
 
 @class Farm;
+@class Field;
 @interface FieldsViewController : UIViewController <MKMapViewDelegate, UIAlertViewDelegate>
 {
     NSFetchedResultsController *fieldFetcher;
@@ -22,9 +23,17 @@
     IBOutlet UIImageView *centerPin;
 
     BOOL shouldCenterOnUser;
-    BOOL isEditMode;
+    BOOL isEditingFarm;
+    NSString *farmName;
+    BOOL isEditingField;
+
+    CLLocationCoordinate2D fieldCoordinates[1000];
+    int fieldCoordinateCount;
+
+    BOOL isDrawingMode;
 
     Farm *currentFarm;
+    Field *currentField; // being edited for coordinates
 }
 @property (nonatomic, readonly) Farm *currentFarm;
 
