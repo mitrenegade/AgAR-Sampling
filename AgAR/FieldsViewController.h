@@ -11,6 +11,7 @@
 
 @class Farm;
 @class Field;
+@class Polyline;
 @interface FieldsViewController : UIViewController <MKMapViewDelegate, UIAlertViewDelegate>
 {
     NSFetchedResultsController *fieldFetcher;
