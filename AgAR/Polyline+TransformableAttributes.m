@@ -12,6 +12,7 @@
 
 #pragma mark Transformables
 -(NSArray *)coordinates {
+    // returns an NSArray of CLLocation objects
     if (!self.coordinates_data)
         return nil;
 
@@ -19,8 +20,20 @@
 }
 
 -(void)setCoordinates:(id)coordinates {
+    // coordinates should be an NSArray of CLLocation objects
     NSData *coordinates_data = [NSKeyedArchiver archivedDataWithRootObject:coordinates];
     [self setValue:coordinates_data forKey:@"coordinates_data"];
+}
+
+-(void)setCoordinatesFromCoordinates:(CLLocationCoordinate2D *)coordinates totalPoints:(int)ct {
+    // coordinates is CLLocationCoordinate2D[ct]
+    NSMutableArray *array = [NSMutableArray arrayWithCapacity:ct];
+    for (int i=0; i<ct; i++) {
+        CLLocationCoordinate2D coord = coordinates[i];
+        CLLocation *loc = [[CLLocation alloc] initWithLatitude:coord.latitude longitude:coord.longitude];
+        [array addObject:loc];
+    }
+    [self setCoordinates:array];
 }
 
 -(MKPolyline *)polyLine {

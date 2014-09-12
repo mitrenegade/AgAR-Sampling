@@ -20,5 +20,5 @@ static char const * const MKPolylineTagKey = "MKPolylineTagKey";
 -(void)setCoordinates:(id)coordinates;
 
 -(MKPolyline *)polyLine;
-
+-(void)setCoordinatesFromCoordinates:(CLLocationCoordinate2D *)coordinates totalPoints:(int)ct;
 @end
