@@ -58,11 +58,6 @@
         shouldCenterOnUser = YES;
         labelFarm.text = @"No farm selected";
     }
-
-    /*
-    UITapGestureRecognizer *maptap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleMapGesture:)];
-    [mapView addGestureRecognizer:maptap];
-     */
 }
 
 -(Farm *)newFarm {
@@ -91,6 +86,13 @@
     [mapView removeAnnotations:mapView.annotations];
 
     if (isEditingField) {
+        // add field pin
+        CLLocationCoordinate2D fieldCenter = CLLocationCoordinate2DMake([currentField.latitude doubleValue], [currentField.longitude doubleValue]);
+        Annotation *fieldAnnotation = [[Annotation alloc] init];
+        fieldAnnotation.type = AnnotationTypeFieldCenter;
+        [fieldAnnotation setCoordinate:fieldCenter];
+        [mapView addAnnotation:fieldAnnotation];
+
         // jumps to middle of field
         CLLocationCoordinate2D currentLocation = CLLocationCoordinate2DMake([currentField.latitude doubleValue], [currentField.longitude doubleValue]);
         [self centerOnCoordinate:currentLocation];
@@ -145,6 +147,8 @@
         isEditingFarm = NO;
         isDrawingMode = NO;
 
+        currentField = nil;
+
         [self reloadMap];
     }
     else {
@@ -191,14 +195,25 @@
                 [self addField];
             }
             else {
-                // boundary set
-                // cancel edit
+                // boundary set, stop drawing
+                isDrawingMode = NO;
+                isEditingField = NO;
+
                 [buttonEdit setSelected:NO];
                 [centerPin setHidden:YES];
                 [buttonCheck setHidden:YES];
+                for (UIGestureRecognizer *gesture in mapView.gestureRecognizers)
+                    [mapView removeGestureRecognizer:gesture];
 
-                isEditingField = NO;
-                [self updateFieldBoundary];
+                if (!currentField.boundary) {
+                    currentField.boundary = [self newPolyline];
+                }
+                // close the loop
+                fieldCoordinates[fieldCoordinateCount++] = fieldCoordinates[0];
+                [currentField.boundary setCoordinatesFromCoordinates:fieldCoordinates totalPoints:fieldCoordinateCount];
+                [_appDelegate saveContext];
+
+                [self reloadMap];
             }
         }
         else if (isEditingFarm) {
@@ -255,20 +270,9 @@
 
     // start drawing
     // todo: make mouse look different to look like a boundary drawing
-}
-
--(void)updateFieldBoundary {
-    Polyline *polyline = currentField.boundary;
-    if (!polyline) {
-        polyline = [self newPolyline];
-        currentField.boundary = polyline;
-    }
-    [polyline setCoordinatesFromCoordinates:fieldCoordinates totalPoints:fieldCoordinateCount];
-    [_appDelegate saveContext];
-
-    isDrawingMode = NO;
+    UITapGestureRecognizer *maptap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleMapGesture:)];
+    [mapView addGestureRecognizer:maptap];
     fieldCoordinateCount = 0;
-    [self reloadMap];
 }
 
 -(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
@@ -305,12 +309,25 @@
 }
 
 #pragma mark MKMapViewDelegate
+/*
 - (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay {
     MKPolylineView *polylineView = [[MKPolylineView alloc] initWithPolyline:overlay];
     polylineView.strokeColor = [UIColor redColor];
-    polylineView.lineWidth = 1.0;
+    polylineView.lineWidth = 4.0;
 
     return polylineView;
+}
+ */
+
+-(MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id<MKOverlay>)overlay {
+    if ([overlay isKindOfClass:[MKPolyline class]]) {
+        MKPolylineRenderer *renderer = [[MKPolylineRenderer alloc] initWithPolyline:overlay];
+        renderer.strokeColor = [UIColor redColor];
+        renderer.lineWidth = 4;
+        renderer.lineCap = kCGLineCapRound;
+        return renderer;
+    }
+    return nil;
 }
 
 -(void) mapView:(MKMapView *)_mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
@@ -435,14 +452,17 @@
 }
 
 #pragma mark Gesture
-/*
 -(void)handleMapGesture:(UITapGestureRecognizer *)gesture {
     CGPoint touch = [gesture locationInView:mapView];
     CLLocationCoordinate2D coord = [mapView convertPoint:touch toCoordinateFromView:mapView];
-    coordinates[coordinateCount++] = coord;
+    fieldCoordinates[fieldCoordinateCount++] = coord;
+    if (fieldCoordinateCount == 1) {
+        // add a second point to show the first point as a dot
+        fieldCoordinates[fieldCoordinateCount++] = coord;
+    }
 
+    MKPolyline *polyline = [MKPolyline polylineWithCoordinates:fieldCoordinates count:fieldCoordinateCount];
     [mapView removeOverlays:mapView.overlays];
     [mapView addOverlay:polyline];
 }
- */
 @end
