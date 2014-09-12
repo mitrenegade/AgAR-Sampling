@@ -89,8 +89,9 @@
 
     [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
-            [UIAlertView alertViewWithTitle:@"Welcome to AgAR" message:[NSString stringWithFormat:@"Your login is %@", user.username]];
-            [_appDelegate goToMainView:YES];
+            [UIAlertView alertViewWithTitle:@"Welcome to AgAR" message:[NSString stringWithFormat:@"Your login is %@", user.username] cancelButtonTitle:@"Close" otherButtonTitles:nil onDismiss:nil onCancel:^{
+                [_appDelegate goToMainView:YES];
+            }];
         }
         else {
             NSString *message = nil;

@@ -68,7 +68,6 @@
     [PFUser logInWithUsernameInBackground:self.inputUsername.text password:self.inputPassword.text block:^(PFUser *user, NSError *error) {
         if (user) {
             NSString *name = user[@"name"]?:user.username;
-            [UIAlertView alertViewWithTitle:@"Welcome to AgAR" message:[NSString stringWithFormat:@"Good to see you, %@", name]];
             [_appDelegate goToMainView:YES];
         }
         else {
