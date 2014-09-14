@@ -234,6 +234,9 @@
     else if (sender == buttonTrash) {
         [self didClickTrash];
     }
+    else if (sender == buttonDraw) {
+        [self didClickDraw];
+    }
 }
 
 -(void)didClickEdit {
@@ -356,7 +359,7 @@
             }
             [_appDelegate.managedObjectContext deleteObject:currentField];
             [_appDelegate.managedObjectContext save:nil];
-            
+
             [[self fieldFetcher] performFetch:nil];
 
             currentField = nil;
@@ -366,6 +369,37 @@
             [self reloadMap];
         } onCancel:nil];
     }
+}
+
+-(void)didClickDraw {
+    if (isEditingField) {
+        if (currentField.boundary) {
+            [UIAlertView alertViewWithTitle:@"Redraw boundary" message:@"Are you sure you want to delete the current field's boundary and redraw it?" cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Redraw"] onDismiss:^(int buttonIndex) {
+                [_appDelegate.managedObjectContext deleteObject:currentField.boundary];
+                currentField.boundary = nil;
+                [self startDrawingBoundary];
+            } onCancel:nil];
+        }
+        else {
+            [self startDrawingBoundary];
+        }
+    }
+}
+
+-(void)startDrawingBoundary {
+    [self hideAllButtons];
+    [buttonCheck setHidden:NO];
+    [buttonCancel setHidden:NO];
+
+    [UIAlertView alertViewWithTitle:@"Add field boundary" message:@"Use the mouse to click on points along your field's boundary. Click the check mark to save."];
+    isDrawingMode = YES;
+    [self reloadMap];
+
+    // start drawing
+    // todo: make mouse look different to look like a boundary drawing
+    UITapGestureRecognizer *maptap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleMapGesture:)];
+    [mapView addGestureRecognizer:maptap];
+    fieldCoordinateCount = 0;
 }
 
 -(void)addFarm:(NSString *)name {
@@ -402,20 +436,11 @@
     currentField.farmName = self.currentFarm.name;
 
     [_appDelegate.managedObjectContext save:nil];
-
-    [UIAlertView alertViewWithTitle:@"Add field boundary" message:@"Use the mouse to click on points along your field's boundary. Click the check mark to save."];
-    isDrawingMode = YES;
-    [centerPin setHidden:YES];
     [[self fieldFetcher] performFetch:nil];
 
     [self addAnnotationForField:currentField];
-    [self reloadMap];
-
-    // start drawing
-    // todo: make mouse look different to look like a boundary drawing
-    UITapGestureRecognizer *maptap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleMapGesture:)];
-    [mapView addGestureRecognizer:maptap];
-    fieldCoordinateCount = 0;
+    [centerPin setHidden:YES];
+    [self startDrawingBoundary];
 }
 
 -(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
