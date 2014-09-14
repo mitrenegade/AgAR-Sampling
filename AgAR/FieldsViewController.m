@@ -137,7 +137,7 @@
 
 #pragma mark editing
 -(IBAction)didClickEdit:(id)sender {
-    if (buttonEdit.isSelected) {
+    if (isEditingFarm || isEditingField) {
         // cancel edit
         [buttonEdit setSelected:NO];
         [centerPin setHidden:YES];
@@ -146,6 +146,11 @@
         isEditingField = NO;
         isEditingFarm = NO;
         isDrawingMode = NO;
+
+        for (UIGestureRecognizer *gesture in mapView.gestureRecognizers) {
+            [mapView removeGestureRecognizer: gesture];
+        }
+        fieldCoordinateCount = 0;
 
         currentField = nil;
 
