@@ -13,6 +13,7 @@
 #import "Polyline+TransformableAttributes.h"
 #import "UIActionSheet+MKBlockAdditions.h"
 #import "Annotation.h"
+#import "MKPolyline+Info.h"
 
 @interface FieldsViewController ()
 
@@ -86,23 +87,18 @@
     [mapView removeAnnotations:mapView.annotations];
 
     if (isEditingField) {
-        // add field pin
-        CLLocationCoordinate2D fieldCenter = CLLocationCoordinate2DMake([currentField.latitude doubleValue], [currentField.longitude doubleValue]);
-        Annotation *fieldAnnotation = [[Annotation alloc] init];
-        fieldAnnotation.type = AnnotationTypeFieldCenter;
-        [fieldAnnotation setCoordinate:fieldCenter];
-        [mapView addAnnotation:fieldAnnotation];
-
         // jumps to middle of field
         CLLocationCoordinate2D currentLocation = CLLocationCoordinate2DMake([currentField.latitude doubleValue], [currentField.longitude doubleValue]);
         [self centerOnCoordinate:currentLocation];
+
+        [self drawFields];
     }
     else {
         if (self.currentFarm) {
             // add farm pin
             CLLocationCoordinate2D farmCenter = CLLocationCoordinate2DMake([self.currentFarm.latitude doubleValue], [self.currentFarm.longitude doubleValue]);
             Annotation *farmAnnotation = [[Annotation alloc] init];
-            farmAnnotation.type = AnnotationTypeFarmCenter;
+            farmAnnotation.type = AnnotationTypeCurrentFarmCenter;
             [farmAnnotation setCoordinate:farmCenter];
             [mapView addAnnotation:farmAnnotation];
 
@@ -123,13 +119,28 @@
         // draw field pin
         CLLocationCoordinate2D fieldCenter = CLLocationCoordinate2DMake([field.latitude doubleValue], [field.longitude doubleValue]);
         Annotation *fieldAnnotation = [[Annotation alloc] init];
-        fieldAnnotation.type = AnnotationTypeFieldCenter;
         fieldAnnotation.coordinate = fieldCenter;
+        if (!currentField) {
+            fieldAnnotation.type = AnnotationTypeOtherFieldCenter;
+            fieldAnnotation.title = @"Field center";
+        }
+        else {
+            if (field == currentField) {
+                fieldAnnotation.type = AnnotationTypeCurrentFieldCenter;
+                fieldAnnotation.title = @"Current field";
+            }
+            else {
+                fieldAnnotation.type = AnnotationTypeOtherFieldCenter;
+                fieldAnnotation.title = @"";
+            }
+        }
         [mapView addAnnotation:fieldAnnotation];
 
         // draw field boundary
         if (field.boundary) {
             MKPolyline *line = [field.boundary polyLine];
+            if (isDrawingMode)
+                [line setStatus:BoundaryStatusDimmed];
             [mapView addOverlay:line];
         }
     }
@@ -193,7 +204,7 @@
 }
 
 -(IBAction)didClickCheck:(id)sender {
-    if (buttonEdit.isSelected) {
+    if (isEditingField || isEditingFarm) {
         if (isEditingField) {
             if (!isDrawingMode) {
                 // field center set, start creating boundary
@@ -218,6 +229,7 @@
                 [currentField.boundary setCoordinatesFromCoordinates:fieldCoordinates totalPoints:fieldCoordinateCount];
                 [_appDelegate saveContext];
 
+                currentField = nil;
                 [self reloadMap];
             }
         }
@@ -271,6 +283,7 @@
     [UIAlertView alertViewWithTitle:@"Add field boundary" message:@"Use the mouse to click on points along your field's boundary. Click the check mark to save."];
     isDrawingMode = YES;
     [centerPin setHidden:YES];
+    [[self fieldFetcher] performFetch:nil];
     [self reloadMap];
 
     // start drawing
@@ -326,9 +339,16 @@
 
 -(MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id<MKOverlay>)overlay {
     if ([overlay isKindOfClass:[MKPolyline class]]) {
+        MKPolyline *polyline = (MKPolyline *)overlay;
         MKPolylineRenderer *renderer = [[MKPolylineRenderer alloc] initWithPolyline:overlay];
-        renderer.strokeColor = [UIColor redColor];
         renderer.lineWidth = 4;
+        if ([polyline status] == BoundaryStatusNormal)
+            renderer.strokeColor = [UIColor redColor];
+        else if ([polyline status] == BoundaryStatusNew)
+            renderer.strokeColor = [UIColor greenColor];
+        else if ([polyline status] == BoundaryStatusDimmed)
+            renderer.strokeColor = [UIColor grayColor];
+
         renderer.lineCap = kCGLineCapRound;
         return renderer;
     }
@@ -371,15 +391,19 @@
         annotationView.canShowCallout = YES;
         UILabel *label = (UILabel *)[annotationView viewWithTag:1];
         Annotation *a = (Annotation *)annotation;
-        if (a.type == AnnotationTypeFarmCenter) {
-            ((MKPinAnnotationView*)annotationView).pinColor = MKPinAnnotationColorGreen;
-            a.title = currentFarm.name;
+        if (a.type == AnnotationTypeCurrentFarmCenter) {
+            ((MKPinAnnotationView*)annotationView).pinColor = MKPinAnnotationColorPurple;
             label.text = @"Farm center";
         }
-        else {
+        else if (a.type == AnnotationTypeCurrentFieldCenter) {
             ((MKPinAnnotationView*)annotationView).pinColor = MKPinAnnotationColorRed;
-            a.title = @"Field center";
-            label.text = a.title;
+            if (a.title)
+                label.text = a.title;
+        }
+        else if (a.type == AnnotationTypeOtherFieldCenter) {
+            ((MKPinAnnotationView*)annotationView).pinColor = MKPinAnnotationColorGreen;
+            if (a.title)
+                label.text = a.title;
         }
         return annotationView;
     }
@@ -466,8 +490,11 @@
         fieldCoordinates[fieldCoordinateCount++] = coord;
     }
 
-    MKPolyline *polyline = [MKPolyline polylineWithCoordinates:fieldCoordinates count:fieldCoordinateCount];
     [mapView removeOverlays:mapView.overlays];
+    [self drawFields];
+
+    MKPolyline *polyline = [MKPolyline polylineWithCoordinates:fieldCoordinates count:fieldCoordinateCount];
+    [polyline setStatus:BoundaryStatusNew];
     [mapView addOverlay:polyline];
 }
 @end

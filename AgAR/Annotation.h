@@ -9,8 +9,10 @@
 #import <MapKit/MapKit.h>
 
 typedef enum AnnotationTypeEnum {
-    AnnotationTypeFarmCenter,
-    AnnotationTypeFieldCenter,
+    AnnotationTypeCurrentFarmCenter,
+    AnnotationTypeOtherFarmCenter,
+    AnnotationTypeCurrentFieldCenter,
+    AnnotationTypeOtherFieldCenter,
     AnnotationTypeBorder
 } AnnotationType;
 
