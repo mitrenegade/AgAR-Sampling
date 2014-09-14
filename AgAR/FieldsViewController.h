@@ -35,7 +35,10 @@
 
     Farm *currentFarm;
     Field *currentField; // being edited for coordinates
+
+    NSMutableArray *annotations;
 }
+
 @property (nonatomic, readonly) Farm *currentFarm;
 
 -(IBAction)didClickEdit:(id)sender;

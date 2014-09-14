@@ -19,4 +19,7 @@
 }
 */
 
+-(NSString *)title {
+    return self.titleString;
+}
 @end
