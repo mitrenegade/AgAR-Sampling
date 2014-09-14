@@ -19,9 +19,13 @@
 
     IBOutlet MKMapView *mapView;
     IBOutlet UILabel *labelFarm;
-    IBOutlet UIButton *buttonEdit;
-    IBOutlet UIButton *buttonCheck;
     IBOutlet UIImageView *centerPin;
+
+    IBOutlet UIButton *buttonEdit;
+    IBOutlet UIButton *buttonCancel;
+    IBOutlet UIButton *buttonCheck;
+    IBOutlet UIButton *buttonDraw;
+    IBOutlet UIButton *buttonTrash;
 
     BOOL shouldCenterOnUser;
     BOOL isEditingFarm;
@@ -41,6 +45,5 @@
 
 @property (nonatomic, readonly) Farm *currentFarm;
 
--(IBAction)didClickEdit:(id)sender;
--(IBAction)didClickCheck:(id)sender;
+-(IBAction)didClickButton:(id)sender;
 @end

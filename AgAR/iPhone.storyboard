@@ -195,18 +195,47 @@
                                 </state>
                                 <state key="selected" image="cancel"/>
                                 <connections>
-                                    <action selector="didClickCheck:" destination="PyK-Gf-tdj" eventType="touchUpInside" id="7Bk-8G-2bU"/>
+                                    <action selector="didClickButton:" destination="PyK-Gf-tdj" eventType="touchUpInside" id="7Rp-8x-AQy"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Ds-dF-vaI">
                                 <rect key="frame" x="260" y="26" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="map">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="didClickButton:" destination="PyK-Gf-tdj" eventType="touchUpInside" id="3Jy-hz-XTB"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NO6-vS-dhd">
+                                <rect key="frame" x="260" y="122" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="cancel">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="didClickButton:" destination="PyK-Gf-tdj" eventType="touchUpInside" id="2Ld-CM-frP"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w53-l3-9vB">
+                                <rect key="frame" x="260" y="170" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="edit">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <state key="selected" image="cancel"/>
                                 <connections>
-                                    <action selector="didClickEdit:" destination="PyK-Gf-tdj" eventType="touchUpInside" id="6MV-zJ-dGT"/>
+                                    <action selector="didClickButton:" destination="PyK-Gf-tdj" eventType="touchUpInside" id="48y-8D-L2d"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MN3-bO-qR6">
+                                <rect key="frame" x="260" y="218" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="trash">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="didClickButton:" destination="PyK-Gf-tdj" eventType="touchUpInside" id="DT0-S0-8zJ"/>
                                 </connections>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="200" translatesAutoresizingMaskIntoConstraints="NO" id="oxc-fT-4Ca">
@@ -225,8 +254,11 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Fields" id="WJp-1a-Kgx"/>
                     <connections>
+                        <outlet property="buttonCancel" destination="NO6-vS-dhd" id="hDW-8c-ig5"/>
                         <outlet property="buttonCheck" destination="45c-ZN-4xt" id="Qyo-lQ-Wc7"/>
+                        <outlet property="buttonDraw" destination="w53-l3-9vB" id="xE6-Qh-Mhm"/>
                         <outlet property="buttonEdit" destination="5Ds-dF-vaI" id="x7R-BA-sHl"/>
+                        <outlet property="buttonTrash" destination="MN3-bO-qR6" id="hcT-K8-dez"/>
                         <outlet property="centerPin" destination="ysK-Aj-pJ6" id="gxt-ST-00p"/>
                         <outlet property="labelFarm" destination="oxc-fT-4Ca" id="SWN-nJ-hyg"/>
                         <outlet property="mapView" destination="1LX-16-5Ns" id="vlc-3k-YYr"/>
@@ -410,7 +442,9 @@
         <image name="cancel" width="30" height="30"/>
         <image name="check" width="30" height="30"/>
         <image name="edit" width="60" height="60"/>
+        <image name="map" width="60" height="60"/>
         <image name="pin" width="30" height="30"/>
+        <image name="trash" width="30" height="30"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

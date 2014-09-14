@@ -50,6 +50,9 @@
 
     [centerPin setHidden:YES];
     [buttonCheck setHidden:YES];
+    [buttonCancel setHidden:YES];
+    [buttonDraw setHidden:YES];
+    [buttonTrash setHidden:YES];
 
     annotations = [NSMutableArray array];
 
@@ -212,28 +215,20 @@
 }
 
 #pragma mark editing
--(IBAction)didClickEdit:(id)sender {
-    if (isEditingFarm || isEditingField) {
-        // cancel edit
-        [buttonEdit setSelected:NO];
-        [centerPin setHidden:YES];
-        [buttonCheck setHidden:YES];
-
-        isEditingField = NO;
-        isEditingFarm = NO;
-        isDrawingMode = NO;
-
-        for (UIGestureRecognizer *gesture in mapView.gestureRecognizers) {
-            [mapView removeGestureRecognizer: gesture];
-        }
-        fieldCoordinateCount = 0;
-
-        currentField = nil;
-        [self.fieldFetcher performFetch:nil];
-
-        [self reloadMap];
+-(IBAction)didClickButton:(id)sender {
+    if (sender == buttonEdit) {
+        [self didClickEdit];
     }
-    else {
+    else if (sender == buttonCheck) {
+        [self didClickCheck];
+    }
+    else if (sender == buttonCancel) {
+        [self didClickCancel];
+    }
+}
+
+-(void)didClickEdit {
+    if (!isEditingField && !isEditingFarm) {
         // for now, use actionsheet
         if ([[[self farmFetcher] fetchedObjects] count] == 0) {
             [UIActionSheet actionSheetWithTitle:nil message:nil buttons:@[@"Add a farm"] showInView:_appDelegate.window onDismiss:^(int buttonIndex) {
@@ -257,9 +252,10 @@
                 else if (buttonIndex == 1) {
                     // add a field
                     isEditingField = YES;
-                    [buttonEdit setSelected:YES];
+                    [buttonEdit setHidden:YES];
                     [centerPin setHidden:NO];
                     [buttonCheck setHidden:NO];
+                    [buttonCancel setHidden:NO];
                     [UIAlertView alertViewWithTitle:@"Set the location of your field" message:@"Move the map until the blue pin matches the center of your field, then click the check mark"];
                 }
             } onCancel:^{
@@ -269,7 +265,7 @@
     }
 }
 
--(IBAction)didClickCheck:(id)sender {
+-(void)didClickCheck {
     if (isEditingField || isEditingFarm) {
         if (isEditingField) {
             if (!isDrawingMode) {
@@ -281,9 +277,10 @@
                 isDrawingMode = NO;
                 isEditingField = NO;
 
-                [buttonEdit setSelected:NO];
+                [buttonEdit setHidden:NO];
                 [centerPin setHidden:YES];
                 [buttonCheck setHidden:YES];
+                [buttonCancel setHidden:YES];
                 for (UIGestureRecognizer *gesture in mapView.gestureRecognizers)
                     [mapView removeGestureRecognizer:gesture];
 
@@ -291,7 +288,9 @@
                     currentField.boundary = [self newPolyline];
                 }
                 // close the loop
-                fieldCoordinates[fieldCoordinateCount++] = fieldCoordinates[0];
+                if (fieldCoordinateCount > 0) {
+                    fieldCoordinates[fieldCoordinateCount++] = fieldCoordinates[0];
+                }
                 [currentField.boundary setCoordinatesFromCoordinates:fieldCoordinates totalPoints:fieldCoordinateCount];
                 [_appDelegate saveContext];
 
@@ -302,13 +301,38 @@
         }
         else if (isEditingFarm) {
             // end edit
-            [buttonEdit setSelected:NO];
+            [buttonEdit setHidden:NO];
             [centerPin setHidden:YES];
             [buttonCheck setHidden:YES];
+            [buttonCancel setHidden:YES];
 
             isEditingFarm = NO;
             [self addFarm:farmName];
         }
+    }
+}
+
+-(void)didClickCancel {
+    if (isEditingFarm || isEditingField) {
+        // cancel edit
+        [buttonEdit setHidden:NO];
+        [centerPin setHidden:YES];
+        [buttonCheck setHidden:YES];
+        [buttonCancel setHidden:YES];
+
+        isEditingField = NO;
+        isEditingFarm = NO;
+        isDrawingMode = NO;
+
+        for (UIGestureRecognizer *gesture in mapView.gestureRecognizers) {
+            [mapView removeGestureRecognizer: gesture];
+        }
+        fieldCoordinateCount = 0;
+
+        currentField = nil;
+        [self.fieldFetcher performFetch:nil];
+
+        [self reloadMap];
     }
 }
 
