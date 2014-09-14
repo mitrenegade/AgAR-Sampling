@@ -49,10 +49,8 @@
 #endif
 
     [centerPin setHidden:YES];
-    [buttonCheck setHidden:YES];
-    [buttonCancel setHidden:YES];
-    [buttonDraw setHidden:YES];
-    [buttonTrash setHidden:YES];
+    [self hideAllButtons];
+    [buttonCreate setHidden:NO];
 
     annotations = [NSMutableArray array];
 
@@ -70,6 +68,14 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(void)hideAllButtons {
+    [buttonCreate setHidden:YES];
+    [buttonCheck setHidden:YES];
+    [buttonCancel setHidden:YES];
+    [buttonDraw setHidden:YES];
+    [buttonTrash setHidden:YES];
 }
 
 -(Farm *)newFarm {
@@ -216,7 +222,7 @@
 
 #pragma mark editing
 -(IBAction)didClickButton:(id)sender {
-    if (sender == buttonEdit) {
+    if (sender == buttonCreate) {
         [self didClickEdit];
     }
     else if (sender == buttonCheck) {
@@ -224,6 +230,9 @@
     }
     else if (sender == buttonCancel) {
         [self didClickCancel];
+    }
+    else if (sender == buttonTrash) {
+        [self didClickTrash];
     }
 }
 
@@ -252,7 +261,7 @@
                 else if (buttonIndex == 1) {
                     // add a field
                     isEditingField = YES;
-                    [buttonEdit setHidden:YES];
+                    [self hideAllButtons];
                     [centerPin setHidden:NO];
                     [buttonCheck setHidden:NO];
                     [buttonCancel setHidden:NO];
@@ -277,10 +286,9 @@
                 isDrawingMode = NO;
                 isEditingField = NO;
 
-                [buttonEdit setHidden:NO];
                 [centerPin setHidden:YES];
-                [buttonCheck setHidden:YES];
-                [buttonCancel setHidden:YES];
+                [self hideAllButtons];
+                [buttonCreate setHidden:NO];
                 for (UIGestureRecognizer *gesture in mapView.gestureRecognizers)
                     [mapView removeGestureRecognizer:gesture];
 
@@ -301,10 +309,9 @@
         }
         else if (isEditingFarm) {
             // end edit
-            [buttonEdit setHidden:NO];
             [centerPin setHidden:YES];
-            [buttonCheck setHidden:YES];
-            [buttonCancel setHidden:YES];
+            [self hideAllButtons];
+            [buttonCreate setHidden:NO];
 
             isEditingFarm = NO;
             [self addFarm:farmName];
@@ -315,10 +322,9 @@
 -(void)didClickCancel {
     if (isEditingFarm || isEditingField) {
         // cancel edit
-        [buttonEdit setHidden:NO];
         [centerPin setHidden:YES];
-        [buttonCheck setHidden:YES];
-        [buttonCancel setHidden:YES];
+        [self hideAllButtons];
+        [buttonCreate setHidden:NO];
 
         isEditingField = NO;
         isEditingFarm = NO;
@@ -333,6 +339,32 @@
         [self.fieldFetcher performFetch:nil];
 
         [self reloadMap];
+    }
+}
+
+-(void)didClickTrash {
+    if (isEditingField) {
+        // delete current field
+        [UIAlertView alertViewWithTitle:@"Delete field" message:@"Are you sure you want to delete the current field?" cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Delete"] onDismiss:^(int buttonIndex) {
+
+            for (Annotation *a in annotations) {
+                if (a.object == currentField)
+                    [annotations removeObject:a];
+            }
+            if (currentField.boundary) {
+                [_appDelegate.managedObjectContext deleteObject:currentField.boundary];
+            }
+            [_appDelegate.managedObjectContext deleteObject:currentField];
+            [_appDelegate.managedObjectContext save:nil];
+            
+            [[self fieldFetcher] performFetch:nil];
+
+            currentField = nil;
+            isEditingField = NO;
+            [self hideAllButtons];
+            [buttonCreate setHidden:NO];
+            [self reloadMap];
+        } onCancel:nil];
     }
 }
 
@@ -412,7 +444,7 @@
         }
         isEditingFarm = YES;
         farmName = name;
-        [buttonEdit setSelected:YES];
+        [self hideAllButtons];
         [centerPin setHidden:NO];
         [buttonCheck setHidden:NO];
         [UIAlertView alertViewWithTitle:@"Set the location of your farm" message:@"Move the map until the blue pin matches the center of your farm, then click the check mark"];
@@ -507,6 +539,10 @@
     if (annotation.type == AnnotationTypeCurrentFarmCenter) {
         currentField = nil;
         isEditingField = NO;
+
+        [self hideAllButtons];
+        [buttonCreate setHidden:NO];
+
         [self reloadMap];
         return;
     }
@@ -518,6 +554,10 @@
             isDrawingMode = NO;
             currentField = annotation.object;
             [self reloadMap];
+
+            [self hideAllButtons];
+            [buttonDraw setHidden:NO];
+            [buttonTrash setHidden:NO];
         }
     }
     else {
@@ -526,6 +566,9 @@
             isEditingField = NO;
             isDrawingMode = NO;
             currentField = nil;
+
+            [self hideAllButtons];
+            [buttonCreate setHidden:NO];
             [self reloadMap];
         }
         else {

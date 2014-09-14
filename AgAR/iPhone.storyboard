@@ -256,8 +256,8 @@
                     <connections>
                         <outlet property="buttonCancel" destination="NO6-vS-dhd" id="hDW-8c-ig5"/>
                         <outlet property="buttonCheck" destination="45c-ZN-4xt" id="Qyo-lQ-Wc7"/>
+                        <outlet property="buttonCreate" destination="5Ds-dF-vaI" id="cpN-hl-7lA"/>
                         <outlet property="buttonDraw" destination="w53-l3-9vB" id="xE6-Qh-Mhm"/>
-                        <outlet property="buttonEdit" destination="5Ds-dF-vaI" id="x7R-BA-sHl"/>
                         <outlet property="buttonTrash" destination="MN3-bO-qR6" id="hcT-K8-dez"/>
                         <outlet property="centerPin" destination="ysK-Aj-pJ6" id="gxt-ST-00p"/>
                         <outlet property="labelFarm" destination="oxc-fT-4Ca" id="SWN-nJ-hyg"/>
