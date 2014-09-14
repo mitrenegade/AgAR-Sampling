@@ -158,13 +158,21 @@
 -(void)addAnnotationForField:(Field *)field {
     // draw field pin
     CLLocationCoordinate2D fieldCenter = CLLocationCoordinate2DMake([field.latitude doubleValue], [field.longitude doubleValue]);
-    Annotation *fieldAnnotation = [[Annotation alloc] init];
+    Annotation *fieldAnnotation;
+    for (Annotation *a in annotations) {
+        if (a.object == field) {
+            fieldAnnotation = a;
+        }
+    }
+    if (!fieldAnnotation) {
+        fieldAnnotation = [[Annotation alloc] init];
+        [annotations addObject:fieldAnnotation];
+    }
+
     fieldAnnotation.coordinate = fieldCenter;
     fieldAnnotation.object = field;
     fieldAnnotation.type = AnnotationTypeOtherFieldCenter;
     [mapView addAnnotation:fieldAnnotation];
-
-    [annotations addObject:fieldAnnotation];
 
     // update annotation status and title
     [self updateStatusForAnnotation:fieldAnnotation];
@@ -350,10 +358,16 @@
         // delete current field
         [UIAlertView alertViewWithTitle:@"Delete field" message:@"Are you sure you want to delete the current field?" cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Delete"] onDismiss:^(int buttonIndex) {
 
+            Annotation *toDelete = nil;
             for (Annotation *a in annotations) {
-                if (a.object == currentField)
-                    [annotations removeObject:a];
+                if (a.object == currentField) {
+                    toDelete = a;
+                    break;
+                }
             }
+            if (toDelete)
+                [annotations removeObject:toDelete];
+
             if (currentField.boundary) {
                 [_appDelegate.managedObjectContext deleteObject:currentField.boundary];
             }
