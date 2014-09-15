@@ -23,6 +23,7 @@
 		9E0EA9A219B8BCD60072166D /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E0EA98619B8BCD60072166D /* CoreData.framework */; };
 		9E0EA9AA19B8BCD60072166D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9E0EA9A819B8BCD60072166D /* InfoPlist.strings */; };
 		9E0EA9AC19B8BCD60072166D /* AgARTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0EA9AB19B8BCD60072166D /* AgARTests.m */; };
+		9E6B9AF419C5496500B47D22 /* MKPolyline+Info.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E6B9AF319C5496500B47D22 /* MKPolyline+Info.m */; };
 		9E85D1BF19C1D89400C6C1E9 /* CustomTabBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E85D1BE19C1D89400C6C1E9 /* CustomTabBarView.m */; };
 		9E85D1C119C1D92500C6C1E9 /* CustomTabBarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9E85D1C019C1D92500C6C1E9 /* CustomTabBarView.xib */; };
 		9E85D1C419C1DC1A00C6C1E9 /* ShellViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E85D1C319C1DC1A00C6C1E9 /* ShellViewController.m */; };
@@ -94,6 +95,8 @@
 		9E0EA9A719B8BCD60072166D /* AgARTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AgARTests-Info.plist"; sourceTree = "<group>"; };
 		9E0EA9A919B8BCD60072166D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9E0EA9AB19B8BCD60072166D /* AgARTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AgARTests.m; sourceTree = "<group>"; };
+		9E6B9AF219C5496500B47D22 /* MKPolyline+Info.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MKPolyline+Info.h"; sourceTree = "<group>"; };
+		9E6B9AF319C5496500B47D22 /* MKPolyline+Info.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MKPolyline+Info.m"; sourceTree = "<group>"; };
 		9E85D1BD19C1D89400C6C1E9 /* CustomTabBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTabBarView.h; sourceTree = "<group>"; };
 		9E85D1BE19C1D89400C6C1E9 /* CustomTabBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTabBarView.m; sourceTree = "<group>"; };
 		9E85D1C019C1D92500C6C1E9 /* CustomTabBarView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomTabBarView.xib; sourceTree = "<group>"; };
@@ -327,6 +330,8 @@
 				9E85D1C019C1D92500C6C1E9 /* CustomTabBarView.xib */,
 				9E85D1DC19C212C300C6C1E9 /* Annotation.h */,
 				9E85D1DD19C212C300C6C1E9 /* Annotation.m */,
+				9E6B9AF219C5496500B47D22 /* MKPolyline+Info.h */,
+				9E6B9AF319C5496500B47D22 /* MKPolyline+Info.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -486,6 +491,7 @@
 				9E85D1EA19C2189700C6C1E9 /* Area.m in Sources */,
 				9ED6BF9719B9F3EB00EFAF4A /* LoginViewController.m in Sources */,
 				9E0EA99319B8BCD60072166D /* AppDelegate.m in Sources */,
+				9E6B9AF419C5496500B47D22 /* MKPolyline+Info.m in Sources */,
 				9E85D1F019C2190D00C6C1E9 /* Field.m in Sources */,
 				9E85D1C419C1DC1A00C6C1E9 /* ShellViewController.m in Sources */,
 				9E85D1DE19C212C300C6C1E9 /* Annotation.m in Sources */,

@@ -9,8 +9,10 @@
 #import <MapKit/MapKit.h>
 
 typedef enum AnnotationTypeEnum {
-    AnnotationTypeFarmCenter,
-    AnnotationTypeFieldCenter,
+    AnnotationTypeCurrentFarmCenter,
+    AnnotationTypeOtherFarmCenter,
+    AnnotationTypeCurrentFieldCenter,
+    AnnotationTypeOtherFieldCenter,
     AnnotationTypeBorder
 } AnnotationType;
 
@@ -18,5 +20,6 @@ typedef enum AnnotationTypeEnum {
 
 @property (nonatomic) CLLocationCoordinate2D coordinate;
 @property (nonatomic) AnnotationType type;
-@property (nonatomic) NSString *title;
+@property (nonatomic) NSString *titleString;
+@property (nonatomic) id object;
 @end
