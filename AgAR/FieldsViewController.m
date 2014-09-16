@@ -62,6 +62,14 @@
         shouldCenterOnUser = YES;
         labelFarm.text = @"No farm selected";
     }
+
+    /*
+    sidebar = [_storyboard instantiateViewControllerWithIdentifier:@"SideBarViewController"];
+    CGRect frame = CGRectMake(320-SIDEBAR_WIDTH, 0, SIDEBAR_WIDTH, self.view.frame.size.height);
+    sidebar.view.frame = frame;
+    sidebar.delegate = self;
+    [self.view.superview addSubview:sidebar.view];
+     */
 }
 
 - (void)didReceiveMemoryWarning
@@ -244,6 +252,9 @@
     }
     else if (sender == buttonDraw) {
         [self didClickDraw];
+    }
+    else if (sender == buttonCog) {
+        [self toggleSidebar];
     }
 }
 
@@ -666,5 +677,30 @@
     MKPolyline *polyline = [MKPolyline polylineWithCoordinates:fieldCoordinates count:fieldCoordinateCount];
     [polyline setStatus:BoundaryStatusNew];
     [mapView addOverlay:polyline];
+}
+
+#pragma mark sidebar
+-(void)toggleSidebar {
+    CGRect frame = viewBG.frame;
+    if (frame.origin.x == 0) {
+        frame.origin.x = -SIDEBAR_WIDTH;
+    }
+    else {
+        frame.origin.x = 0;
+    }
+    [UIView animateWithDuration:.25 animations:^{
+        viewBG.frame = frame;
+    }];
+}
+
+-(void)closeSidebar {
+    [self toggleSidebar];
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([[segue identifier] isEqualToString:@"SideBarSegue"]) {
+        sidebar = (SideBarViewController *)[segue destinationViewController];
+        sidebar.delegate = self;
+    }
 }
 @end

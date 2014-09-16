@@ -17,4 +17,5 @@
 
 #define METERS_PER_MILE 1609.344
 
+#define SIDEBAR_WIDTH 120
 #endif

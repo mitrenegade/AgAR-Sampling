@@ -8,15 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
+#import "SideBarViewController.h"
 
 @class Farm;
 @class Field;
 @class Polyline;
-@interface FieldsViewController : UIViewController <MKMapViewDelegate, UIAlertViewDelegate>
+@interface FieldsViewController : UIViewController <MKMapViewDelegate, UIAlertViewDelegate, SideBarDelegate>
 {
     NSFetchedResultsController *fieldFetcher;
     NSFetchedResultsController *farmFetcher;
 
+    IBOutlet UIView *viewBG;
     IBOutlet MKMapView *mapView;
     IBOutlet UILabel *labelFarm;
     IBOutlet UIImageView *centerPin;
@@ -26,6 +28,7 @@
     IBOutlet UIButton *buttonCheck;
     IBOutlet UIButton *buttonDraw;
     IBOutlet UIButton *buttonTrash;
+    IBOutlet UIButton *buttonCog;
 
     BOOL shouldCenterOnUser;
     BOOL isEditingFarm;
@@ -41,6 +44,8 @@
     Field *currentField; // being edited for coordinates
 
     NSMutableArray *annotations;
+
+    SideBarViewController *sidebar;
 }
 
 @property (nonatomic, readonly) Farm *currentFarm;
