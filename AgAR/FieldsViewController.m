@@ -354,29 +354,13 @@
             [UIAlertView alertViewWithTitle:@"Redraw boundary" message:@"Are you sure you want to delete the current field's boundary and redraw it?" cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Redraw"] onDismiss:^(int buttonIndex) {
                 [_appDelegate.managedObjectContext deleteObject:currentField.boundary];
                 currentField.boundary = nil;
-                [self startDrawingBoundary];
+                [self addBoundary];
             } onCancel:nil];
         }
         else {
-            [self startDrawingBoundary];
+            [self addBoundary];
         }
     }
-}
-
--(void)startDrawingBoundary {
-    [self hideAllButtons];
-    [buttonCheck setHidden:NO];
-    [buttonCancel setHidden:NO];
-
-    [UIAlertView alertViewWithTitle:@"Add field boundary" message:@"Use the mouse to click on points along your field's boundary. Click the check mark to save."];
-    isDrawingMode = YES;
-    [self reloadMap];
-
-    // start drawing
-    // todo: make mouse look different to look like a boundary drawing
-    UITapGestureRecognizer *maptap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleMapGesture:)];
-    [mapView addGestureRecognizer:maptap];
-    fieldCoordinateCount = 0;
 }
 
 -(void)createFarm:(NSString *)name {
@@ -417,7 +401,7 @@
 
     [self addAnnotationForField:currentField];
     [centerPin setHidden:YES];
-    [self startDrawingBoundary];
+    [self addBoundary];
 }
 
 #pragma mark MKMapViewDelegate
@@ -681,11 +665,12 @@
 }
 
 -(void)deleteFarm {
-    [UIAlertView alertViewWithTitle:@"Are you sure" message:[NSString stringWithFormat:@"Do you really want to delete the farm %@?", currentFarm.name] cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Delete"] onDismiss:^(int buttonIndex) {
+    [UIAlertView alertViewWithTitle:@"Are you sure?" message:[NSString stringWithFormat:@"Do you really want to delete the farm %@?", currentFarm.name] cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Delete"] onDismiss:^(int buttonIndex) {
         [_appDelegate.managedObjectContext deleteObject:currentFarm];
         currentFarm = nil;
         [_appDelegate saveContext];
 
+        isEditingFarm = NO;
         [annotations removeAllObjects];
         [self reloadMap];
     } onCancel:nil];
@@ -702,15 +687,48 @@
 }
 
 -(void)editField {
-
+    if (currentField) {
+        // todo: move field and boundaries
+    }
+    else {
+        // todo: add message to select a field to edit with the pointer
+    }
 }
 
 -(void)deleteField {
+    if (currentField) {
+        [UIAlertView alertViewWithTitle:@"Are you sure?" message:@"Do you really want to delete the currently selected field?" cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Delete"] onDismiss:^(int buttonIndex) {
+            [_appDelegate.managedObjectContext deleteObject:currentField];
+            currentField = nil;
+            [_appDelegate saveContext];
+
+            isEditingField = NO;
+            [annotations removeAllObjects];
+            [self addAnnotationForFarm:self.currentFarm];
+            [self drawFields];
+            [self reloadMap];
+        } onCancel:nil];
+    }
+    else {
+        // todo: display a message to select a field to delete with the pointer
+    }
 
 }
 
 -(void)addBoundary {
+    [self hideAllButtons];
+    [buttonCheck setHidden:NO];
+    [buttonCancel setHidden:NO];
 
+    [UIAlertView alertViewWithTitle:@"Add field boundary" message:@"Use the mouse to click on points along your field's boundary. Click the check mark to save."];
+    isDrawingMode = YES;
+    [self reloadMap];
+
+    // start drawing
+    // todo: make mouse look different to look like a boundary drawing
+    UITapGestureRecognizer *maptap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleMapGesture:)];
+    [mapView addGestureRecognizer:maptap];
+    fieldCoordinateCount = 0;
 }
 
 -(void)editBoundary {
@@ -718,7 +736,16 @@
 }
 
 -(void)deleteBoundary {
+    [UIAlertView alertViewWithTitle:@"Are you sure?" message:@"Do you really want to delete the current field's boundary?" cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Delete"] onDismiss:^(int buttonIndex) {
+        [_appDelegate.managedObjectContext deleteObject:currentField.boundary];
+        currentField.boundary = nil;
+        [_appDelegate saveContext];
 
+        [annotations removeAllObjects];
+        [self addAnnotationForFarm:self.currentFarm];
+        [self drawFields];
+        [self reloadMap];
+    } onCancel:nil];
 }
 
 -(void)addGrid {

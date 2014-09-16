@@ -91,6 +91,8 @@ static NSDictionary *actionsForOption;
     if (indexPath.row == 0) {
         label.text = @"Close";
         icon.image = [UIImage imageNamed:@"arrowLeft"];
+
+        // todo: also add center and deselect options
     }
     else {
         label.text = options[indexPath.row-1];
