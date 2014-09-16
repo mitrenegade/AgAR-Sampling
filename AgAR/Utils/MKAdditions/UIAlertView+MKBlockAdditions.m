@@ -39,6 +39,39 @@ static NSMutableArray * alertQueue;
     return objc_getAssociatedObject(self, &CANCEL_IDENTIFER);
 }
 
++ (UIAlertView*) alertViewWithInputWithTitle:(NSString*) title
+                            message:(NSString*) message
+                  cancelButtonTitle:(NSString*) cancelButtonTitle
+                  otherButtonTitles:(NSArray*) otherButtons
+                          onDismiss:(DismissBlock) dismissed
+                           onCancel:(CancelBlock) cancelled {
+
+
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                    message:message
+                                                   delegate:[self class]
+                                          cancelButtonTitle:cancelButtonTitle
+                                          otherButtonTitles:nil];
+    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+
+    [alert setDismissBlock:dismissed];
+    [alert setCancelBlock:cancelled];
+
+    for(NSString *buttonTitle in otherButtons)
+        [alert addButtonWithTitle:buttonTitle];
+
+    if (!alertQueue) {
+        alertQueue = [NSMutableArray array];
+        [alertQueue retain];
+    }
+    if ([alertQueue count] == 0) {
+        [alert show];
+        [alertQueue addObject:alert];
+    }
+    else
+        [alertQueue addObject:alert];
+    return alert;
+}
 
 + (UIAlertView*) alertViewWithTitle:(NSString*) title                    
                     message:(NSString*) message 
@@ -101,7 +134,6 @@ static NSMutableArray * alertQueue;
         [alertQueue addObject:alert];
     return alert;
 }
-
 
 + (void)alertView:(UIAlertView*) alertView didDismissWithButtonIndex:(NSInteger) buttonIndex {
     

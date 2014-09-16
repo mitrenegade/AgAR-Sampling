@@ -24,6 +24,13 @@
                           onDismiss:(DismissBlock) dismissed                   
                            onCancel:(CancelBlock) cancelled;
 
++ (UIAlertView*) alertViewWithInputWithTitle:(NSString*) title
+                                     message:(NSString*) message
+                           cancelButtonTitle:(NSString*) cancelButtonTitle
+                           otherButtonTitles:(NSArray*) otherButtons
+                                   onDismiss:(DismissBlock) dismissed
+                                    onCancel:(CancelBlock) cancelled;
+
 @property (nonatomic, copy) DismissBlock dismissBlock;
 @property (nonatomic, copy) CancelBlock cancelBlock;
 
