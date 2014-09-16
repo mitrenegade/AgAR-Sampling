@@ -236,63 +236,15 @@
     }
 }
 
-#pragma mark editing
 -(IBAction)didClickButton:(id)sender {
-    if (sender == buttonCreate) {
-        [self didClickEdit];
-    }
-    else if (sender == buttonCheck) {
+    if (sender == buttonCheck) {
         [self didClickCheck];
     }
     else if (sender == buttonCancel) {
         [self didClickCancel];
     }
-    else if (sender == buttonTrash) {
-        [self didClickTrash];
-    }
-    else if (sender == buttonDraw) {
-        [self didClickDraw];
-    }
-    else if (sender == buttonCog) {
+    else if (sender == buttonSidebar) {
         [self toggleSidebar];
-    }
-}
-
--(void)didClickEdit {
-    if (!isEditingField && !isEditingFarm) {
-        // for now, use actionsheet
-        if ([[[self farmFetcher] fetchedObjects] count] == 0) {
-            [UIActionSheet actionSheetWithTitle:nil message:nil buttons:@[@"Add a farm"] showInView:_appDelegate.window onDismiss:^(int buttonIndex) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Please enter farm name" message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Create farm", nil];
-                alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-                alert.tag = 2;
-                [alert show];
-            } onCancel:^{
-
-            }];
-        }
-        else /* if ([[[self fieldFetcher] fetchedObjects] count] == 0) */ {
-            [UIActionSheet actionSheetWithTitle:nil message:nil buttons:@[@"Edit farm", @"Add a field"] showInView:_appDelegate.window onDismiss:^(int buttonIndex) {
-                if (buttonIndex == 0) {
-                    // update farm
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Please enter farm name" message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Update farm", nil];
-                    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-                    alert.tag = 1;
-                    [alert show];
-                }
-                else if (buttonIndex == 1) {
-                    // add a field
-                    isEditingField = YES;
-                    [self hideAllButtons];
-                    [centerPin setHidden:NO];
-                    [buttonCheck setHidden:NO];
-                    [buttonCancel setHidden:NO];
-                    [UIAlertView alertViewWithTitle:@"Set the location of your field" message:@"Move the map until the blue pin matches the center of your field, then click the check mark"];
-                }
-            } onCancel:^{
-                
-            }];
-        }
     }
 }
 
@@ -301,7 +253,7 @@
         if (isEditingField) {
             if (!isDrawingMode) {
                 // field center set, start creating boundary
-                [self addField];
+                [self createField];
             }
             else {
                 // boundary set, stop drawing
@@ -336,7 +288,7 @@
             [buttonCreate setHidden:NO];
 
             isEditingFarm = NO;
-            [self addFarm:farmName];
+            [self createFarm:farmName];
         }
     }
 }
@@ -427,7 +379,7 @@
     fieldCoordinateCount = 0;
 }
 
--(void)addFarm:(NSString *)name {
+-(void)createFarm:(NSString *)name {
     if (name.length == 0) {
         [UIAlertView alertViewWithTitle:@"Invalid farm name" message:@"You must enter a name for your new farm."];
         return;
@@ -446,7 +398,7 @@
     [self setCurrentFarm:farm];
 }
 
--(void)addField {
+-(void)createField {
     if (!self.currentFarm) {
         [UIAlertView alertViewWithTitle:@"Invalid farm" message:@"Uh oh, for some reason there is no current farm. Please add a farm first."];
         return;
@@ -466,39 +418,6 @@
     [self addAnnotationForField:currentField];
     [centerPin setHidden:YES];
     [self startDrawingBoundary];
-}
-
--(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 0) {
-        // cancel
-        return;
-    }
-
-    if (alertView.tag == 1) {
-        // edit farm name
-        NSString *name = [[alertView textFieldAtIndex:0] text];
-        if (name.length == 0) {
-            [UIAlertView alertViewWithTitle:@"Invalid farm name" message:@"You must enter a valid name."];
-            return;
-        }
-        currentFarm.name = name;
-        [_appDelegate saveContext];
-    }
-    if (alertView.tag == 2) {
-        // create new farm
-        // edit farm name
-        NSString *name = [[alertView textFieldAtIndex:0] text];
-        if (name.length == 0) {
-            [UIAlertView alertViewWithTitle:@"Invalid farm name" message:@"You must enter a valid name."];
-            return;
-        }
-        isEditingFarm = YES;
-        farmName = name;
-        [self hideAllButtons];
-        [centerPin setHidden:NO];
-        [buttonCheck setHidden:NO];
-        [UIAlertView alertViewWithTitle:@"Set the location of your farm" message:@"Move the map until the blue pin matches the center of your farm, then click the check mark"];
-    }
 }
 
 #pragma mark MKMapViewDelegate
@@ -679,17 +598,28 @@
     [mapView addOverlay:polyline];
 }
 
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([[segue identifier] isEqualToString:@"SideBarSegue"]) {
+        sidebar = (SideBarViewController *)[segue destinationViewController];
+        [sidebar setupWithOptions:nil actions:nil];
+        sidebar.delegate = self;
+    }
+}
+
 #pragma mark sidebar
 -(void)toggleSidebar {
     CGRect frame = viewBG.frame;
     if (frame.origin.x == 0) {
         frame.origin.x = -SIDEBAR_WIDTH;
+        [self setupSidebar]; // setup sidebar
     }
     else {
         frame.origin.x = 0;
     }
     [UIView animateWithDuration:.25 animations:^{
         viewBG.frame = frame;
+        [buttonSidebar setAlpha:(frame.origin.x==0)?1:0];
+    } completion:^(BOOL finished) {
     }];
 }
 
@@ -697,10 +627,109 @@
     [self toggleSidebar];
 }
 
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([[segue identifier] isEqualToString:@"SideBarSegue"]) {
-        sidebar = (SideBarViewController *)[segue destinationViewController];
-        sidebar.delegate = self;
+-(void)setupSidebar{
+    if (!currentFarm) {
+        [sidebar setupWithMode:SideBarModeEmpty];
     }
+    else if (![currentFarm.fields count]) {
+        [sidebar setupWithMode:SideBarModeFarmOnly];
+    }
+    else if (!currentField) {
+        [sidebar setupWithMode:SideBarModeFieldUnselected];
+    }
+    else if (!currentField.boundary) {
+        [sidebar setupWithMode:SideBarModeFieldSelected];
+    }
+    else if (currentField.boundary) { //(!currentField.grid) {
+        [sidebar setupWithMode:SideBarModeBoundarySelected];
+    }
+    else {
+        [sidebar setupWithMode:SideBarModeGridSelected];
+    }
+}
+
+#pragma mark Sidebar delegate
+-(void)addFarm {
+    UIAlertView __block *alertView = [UIAlertView alertViewWithInputWithTitle:@"Please enter farm name" message:nil cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Create farm"] onDismiss:^(int buttonIndex) {
+        // create new farm
+        // edit farm name
+        NSString *name = [[alertView textFieldAtIndex:0] text];
+        if (name.length == 0) {
+            [UIAlertView alertViewWithTitle:@"Invalid farm name" message:@"You must enter a valid name."];
+            return;
+        }
+        isEditingFarm = YES;
+        farmName = name;
+        [self hideAllButtons];
+        [centerPin setHidden:NO];
+        [buttonCheck setHidden:NO];
+        [UIAlertView alertViewWithTitle:@"Set the location of your farm" message:@"Move the map until the blue pin matches the center of your farm, then click the check mark"];
+    } onCancel:nil];
+}
+
+-(void)editFarm {
+    UIAlertView __block *alertView = [UIAlertView alertViewWithInputWithTitle:@"Please enter farm name" message:nil cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Create farm"] onDismiss:^(int buttonIndex) {
+        // edit farm name
+        NSString *name = [[alertView textFieldAtIndex:0] text];
+        if (name.length == 0) {
+            [UIAlertView alertViewWithTitle:@"Invalid farm name" message:@"You must enter a valid name."];
+            return;
+        }
+        currentFarm.name = name;
+        [_appDelegate saveContext];
+    } onCancel:nil];
+}
+
+-(void)deleteFarm {
+    [UIAlertView alertViewWithTitle:@"Are you sure" message:[NSString stringWithFormat:@"Do you really want to delete the farm %@?", currentFarm.name] cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Delete"] onDismiss:^(int buttonIndex) {
+        [_appDelegate.managedObjectContext deleteObject:currentFarm];
+        currentFarm = nil;
+        [_appDelegate saveContext];
+
+        [annotations removeAllObjects];
+        [self reloadMap];
+    } onCancel:nil];
+}
+
+-(void)addField {
+    // add a field
+    isEditingField = YES;
+    [self hideAllButtons];
+    [centerPin setHidden:NO];
+    [buttonCheck setHidden:NO];
+    [buttonCancel setHidden:NO];
+    [UIAlertView alertViewWithTitle:@"Set the location of your field" message:@"Move the map until the blue pin matches the center of your field, then click the check mark"];
+}
+
+-(void)editField {
+
+}
+
+-(void)deleteField {
+
+}
+
+-(void)addBoundary {
+
+}
+
+-(void)editBoundary {
+
+}
+
+-(void)deleteBoundary {
+
+}
+
+-(void)addGrid {
+
+}
+
+-(void)editGrid {
+
+}
+
+-(void)deleteGrid {
+
 }
 @end

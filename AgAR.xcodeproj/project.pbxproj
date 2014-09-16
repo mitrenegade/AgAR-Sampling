@@ -280,7 +280,6 @@
 		9E0EA98819B8BCD60072166D /* AgAR */ = {
 			isa = PBXGroup;
 			children = (
-				9E6B9AF519C74EA800B47D22 /* Side navigation */,
 				9ED6BFFB19B9F59F00EFAF4A /* Utils */,
 				3F2FC25C19BBA1DD00124ACB /* Core Data */,
 				9E0EA99119B8BCD60072166D /* AppDelegate.h */,
@@ -289,6 +288,7 @@
 				9ED6BF9019B9F39000EFAF4A /* iPhone.storyboard */,
 				9ED6BF9219B9F3CE00EFAF4A /* Login */,
 				3F2FC24F19BB9CF700124ACB /* Tab Controllers */,
+				9E6B9AF519C74EA800B47D22 /* Side navigation */,
 				9E85D1DB19C212A900C6C1E9 /* Views */,
 				9E0EA98919B8BCD60072166D /* Supporting Files */,
 			);

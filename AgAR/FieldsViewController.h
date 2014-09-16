@@ -28,7 +28,7 @@
     IBOutlet UIButton *buttonCheck;
     IBOutlet UIButton *buttonDraw;
     IBOutlet UIButton *buttonTrash;
-    IBOutlet UIButton *buttonCog;
+    IBOutlet UIButton *buttonSidebar;
 
     BOOL shouldCenterOnUser;
     BOOL isEditingFarm;
