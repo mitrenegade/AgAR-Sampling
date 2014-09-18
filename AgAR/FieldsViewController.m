@@ -14,6 +14,7 @@
 #import "UIActionSheet+MKBlockAdditions.h"
 #import "Annotation.h"
 #import "MKPolyline+Info.h"
+#import "ZSPinAnnotationView.h"
 
 @interface FieldsViewController ()
 
@@ -144,7 +145,7 @@
         [mapView addAnnotation:annotation];
     }
 
-    if (isEditingField) {
+    if (isEditingField && currentField) {
         // jumps to middle of field
         CLLocationCoordinate2D currentLocation = CLLocationCoordinate2DMake([currentField.latitude doubleValue], [currentField.longitude doubleValue]);
         [self centerOnCoordinate:currentLocation];
@@ -411,11 +412,11 @@
         MKPolylineRenderer *renderer = [[MKPolylineRenderer alloc] initWithPolyline:overlay];
         renderer.lineWidth = 4;
         if ([polyline status] == BoundaryStatusNormal)
-            renderer.strokeColor = [UIColor redColor];
+            renderer.strokeColor = BoundaryColorNormal;
         else if ([polyline status] == BoundaryStatusNew)
-            renderer.strokeColor = [UIColor greenColor];
+            renderer.strokeColor = BoundaryColorSelected;
         else if ([polyline status] == BoundaryStatusDimmed)
-            renderer.strokeColor = [UIColor grayColor];
+            renderer.strokeColor = BoundaryColorEditing;
 
         renderer.lineCap = kCGLineCapRound;
         return renderer;
@@ -440,13 +441,12 @@
     if ([annotation isKindOfClass:[Annotation class]]) {
         Annotation *a = (Annotation *)annotation;
 
-        MKPinAnnotationView * annotationView = (MKAnnotationView *) [mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
+        ZSPinAnnotationView * annotationView = (ZSPinAnnotationView *) [mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
         if (annotationView == nil) {
-            annotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:identifier];
+            annotationView = [[ZSPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:identifier];
             UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 80, 30)];
             label.font = FONT_REGULAR(12);
             label.textAlignment = NSTextAlignmentCenter;
-            label.center = CGPointMake(annotationView.frame.size.width/2, annotationView.frame.size.height+5);
             [label setTag:1];
             [annotationView addSubview:label];
         }
@@ -454,21 +454,32 @@
         annotationView.draggable = NO;
         annotationView.enabled = YES;
         annotationView.canShowCallout = NO;
+
         UILabel *label = (UILabel *)[annotationView viewWithTag:1];
         if (a.type == AnnotationTypeCurrentFarmCenter) {
-            ((MKPinAnnotationView*)annotationView).pinColor = MKPinAnnotationColorPurple;
+            annotationView.annotationType = ZSPinAnnotationTypeStandard;
+            annotationView.annotationColor = AnnotationColorCurrentFarm;
+            if (isEditingField)
+                annotationView.annotationColor = AnnotationColorDim;
             label.text = @"Farm center";
         }
         else if (a.type == AnnotationTypeCurrentFieldCenter) {
-            ((MKPinAnnotationView*)annotationView).pinColor = MKPinAnnotationColorRed;
+            annotationView.annotationType = ZSPinAnnotationTypeTag;
+            annotationView.annotationColor = AnnotationColorCurrentField;
             if (a.titleString)
                 label.text = a.titleString;
         }
         else if (a.type == AnnotationTypeOtherFieldCenter) {
-            ((MKPinAnnotationView*)annotationView).pinColor = MKPinAnnotationColorGreen;
+            annotationView.annotationType = ZSPinAnnotationTypeStandard;
+            annotationView.annotationColor = AnnotationColorOtherField;
+            if (isEditingField)
+                annotationView.annotationColor = AnnotationColorDim;
             if (a.titleString)
                 label.text = a.titleString;
         }
+
+        // must set label center last after view frame is set
+        label.center = CGPointMake(annotationView.frame.size.width/2, annotationView.frame.size.height/2+15);
         return annotationView;
     }
     return nil;
@@ -684,6 +695,8 @@
     [buttonCheck setHidden:NO];
     [buttonCancel setHidden:NO];
     [UIAlertView alertViewWithTitle:@"Set the location of your field" message:@"Move the map until the blue pin matches the center of your field, then click the check mark"];
+
+    [self reloadMap];
 }
 
 -(void)editField {

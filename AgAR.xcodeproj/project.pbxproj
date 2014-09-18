@@ -25,6 +25,7 @@
 		9E0EA9AC19B8BCD60072166D /* AgARTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0EA9AB19B8BCD60072166D /* AgARTests.m */; };
 		9E6B9AF419C5496500B47D22 /* MKPolyline+Info.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E6B9AF319C5496500B47D22 /* MKPolyline+Info.m */; };
 		9E6B9B0019C7599E00B47D22 /* SideBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E6B9AFF19C7599E00B47D22 /* SideBarViewController.m */; };
+		9E6F52AE19CB1B5400B6D159 /* ZSPinAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E6F52AD19CB1B5400B6D159 /* ZSPinAnnotationView.m */; };
 		9E85D1BF19C1D89400C6C1E9 /* CustomTabBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E85D1BE19C1D89400C6C1E9 /* CustomTabBarView.m */; };
 		9E85D1C119C1D92500C6C1E9 /* CustomTabBarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9E85D1C019C1D92500C6C1E9 /* CustomTabBarView.xib */; };
 		9E85D1C419C1DC1A00C6C1E9 /* ShellViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E85D1C319C1DC1A00C6C1E9 /* ShellViewController.m */; };
@@ -100,6 +101,8 @@
 		9E6B9AF319C5496500B47D22 /* MKPolyline+Info.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MKPolyline+Info.m"; sourceTree = "<group>"; };
 		9E6B9AFE19C7599E00B47D22 /* SideBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SideBarViewController.h; sourceTree = "<group>"; };
 		9E6B9AFF19C7599E00B47D22 /* SideBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SideBarViewController.m; sourceTree = "<group>"; };
+		9E6F52AC19CB1B5300B6D159 /* ZSPinAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZSPinAnnotationView.h; sourceTree = "<group>"; };
+		9E6F52AD19CB1B5400B6D159 /* ZSPinAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZSPinAnnotationView.m; sourceTree = "<group>"; };
 		9E85D1BD19C1D89400C6C1E9 /* CustomTabBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTabBarView.h; sourceTree = "<group>"; };
 		9E85D1BE19C1D89400C6C1E9 /* CustomTabBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTabBarView.m; sourceTree = "<group>"; };
 		9E85D1C019C1D92500C6C1E9 /* CustomTabBarView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomTabBarView.xib; sourceTree = "<group>"; };
@@ -363,6 +366,8 @@
 		9ED6BFFB19B9F59F00EFAF4A /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				9E6F52AC19CB1B5300B6D159 /* ZSPinAnnotationView.h */,
+				9E6F52AD19CB1B5400B6D159 /* ZSPinAnnotationView.m */,
 				9ED6C00019B9F59F00EFAF4A /* GPLocationHelper.h */,
 				9ED6C00119B9F59F00EFAF4A /* GPLocationHelper.m */,
 				9ED6C00419B9F59F00EFAF4A /* MKAdditions */,
@@ -509,6 +514,7 @@
 				9E85D1C419C1DC1A00C6C1E9 /* ShellViewController.m in Sources */,
 				9E85D1DE19C212C300C6C1E9 /* Annotation.m in Sources */,
 				9E0EA98F19B8BCD60072166D /* main.m in Sources */,
+				9E6F52AE19CB1B5400B6D159 /* ZSPinAnnotationView.m in Sources */,
 				9EFC7F2F19BF696400E6A2AE /* ProfileTableViewController.m in Sources */,
 				9E85D1ED19C2190000C6C1E9 /* Farm.m in Sources */,
 				9ED6C02019B9F59F00EFAF4A /* NSObject+MKBlockAdditions.m in Sources */,
