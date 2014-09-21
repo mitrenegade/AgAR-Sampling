@@ -32,4 +32,6 @@ typedef enum AnnotationTypeEnum {
 @property (nonatomic) AnnotationType type;
 @property (nonatomic) NSString *titleString;
 @property (nonatomic) id object;
+@property (nonatomic) MKAnnotationView *annotationView;
+
 @end

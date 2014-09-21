@@ -15,6 +15,7 @@
 #import "Annotation.h"
 #import "MKPolyline+Info.h"
 #import "ZSPinAnnotationView.h"
+#import "Polyline+Helper.h"
 
 @interface FieldsViewController ()
 
@@ -125,7 +126,7 @@
 
     // jumps to middle of farm
     CLLocationCoordinate2D currentLocation = CLLocationCoordinate2DMake([self.currentFarm.latitude doubleValue], [self.currentFarm.longitude doubleValue]);
-    [self centerOnCoordinate:currentLocation];
+    [self centerOnCoordinate:currentLocation resize:YES];
 
     [self reloadMap];
 }
@@ -141,7 +142,7 @@
     if (isEditingField && currentField) {
         // jumps to middle of field
         CLLocationCoordinate2D currentLocation = CLLocationCoordinate2DMake([currentField.latitude doubleValue], [currentField.longitude doubleValue]);
-        [self centerOnCoordinate:currentLocation];
+        [self centerOnCoordinate:currentLocation resize:NO];
     }
 }
 
@@ -225,6 +226,10 @@
 -(void)drawFields {
     NSArray *fields = [[self fieldFetcher] fetchedObjects];
     for (Field *field in fields) {
+        if (field == currentField && isEditingField) {
+            // currentField is replaced by a floating marker
+            continue;
+        }
         [self addAnnotationForField:field];
         [self addBoundaryForField:field];
     }
@@ -245,16 +250,20 @@
 -(void)didClickCheck {
     if (isAddingField) {
         // field center set, start creating boundary
-        [self createField];
+        [self updateField:YES];
+        [centerPin setHidden:YES];
         isAddingField = NO;
-        isEditingField = YES;
+
+        [self addBoundary];
     }
     else if (currentField) {
         if (isEditingField) {
+            [self hideAllButtons];
+            [centerPin setHidden:YES];
+            [self updateField:NO];
+
             isEditingField = NO;
             currentField = nil;
-            [self hideAllButtons];
-            // todo: update pointer
             [self reloadMap];
         }
         else if (isDrawingMode) {
@@ -338,6 +347,7 @@
             [UIAlertView alertViewWithTitle:@"Redraw boundary" message:@"Are you sure you want to delete the current field's boundary and redraw it?" cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Redraw"] onDismiss:^(int buttonIndex) {
                 [_appDelegate.managedObjectContext deleteObject:currentField.boundary];
                 currentField.boundary = nil;
+                [self reloadMap];
                 [self addBoundary];
             } onCancel:nil];
         }
@@ -366,15 +376,27 @@
     [self setCurrentFarm:farm];
 }
 
--(void)createField {
+-(void)updateField:(BOOL)newField {
     if (!self.currentFarm) {
         [UIAlertView alertViewWithTitle:@"Invalid farm" message:@"Uh oh, for some reason there is no current farm. Please add a farm first."];
         return;
     }
 
-    currentField = [self newField];
-
     CLLocationCoordinate2D currentCoordinate = [mapView centerCoordinate];
+    CLLocationCoordinate2D oldCoordinate;
+    if (newField) {
+        currentField = [self newField];
+        oldCoordinate = currentCoordinate;
+    }
+    else {
+        oldCoordinate = CLLocationCoordinate2DMake([currentField.latitude floatValue], [currentField.longitude floatValue]);
+        float latChange = currentCoordinate.latitude - oldCoordinate.latitude;
+        float lonChange = currentCoordinate.longitude - oldCoordinate.longitude;
+        if (currentField.boundary) {
+            [currentField.boundary shiftCoordinatesByLatitude:latChange longitude:lonChange];
+        }
+    }
+
     currentField.latitude = @(currentCoordinate.latitude);
     currentField.longitude = @(currentCoordinate.longitude);
     currentField.farm = [self currentFarm];
@@ -382,10 +404,6 @@
 
     [_appDelegate.managedObjectContext save:nil];
     [[self fieldFetcher] performFetch:nil];
-
-    [self addAnnotationForField:currentField];
-    [centerPin setHidden:YES];
-    [self addBoundary];
 }
 
 #pragma mark MKMapViewDelegate
@@ -409,14 +427,21 @@
 
 -(void) mapView:(MKMapView *)_mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
     if (shouldCenterOnUser) {
-        [self centerOnCoordinate:mapView.userLocation.coordinate];
+        [self centerOnCoordinate:mapView.userLocation.coordinate resize:YES];
     }
 }
 
--(void)centerOnCoordinate:(CLLocationCoordinate2D)coordinate{
-    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(coordinate, 0.05*METERS_PER_MILE, 0.05*METERS_PER_MILE);
-    MKCoordinateRegion adjustedRegion = [mapView regionThatFits:viewRegion];
-    [mapView setRegion:adjustedRegion animated:YES];
+-(void)centerOnCoordinate:(CLLocationCoordinate2D)coordinate resize:(BOOL)resize {
+    MKCoordinateRegion viewRegion;
+    MKCoordinateRegion adjustedRegion;
+    if (resize) {
+        viewRegion = MKCoordinateRegionMakeWithDistance(coordinate, 0.05*METERS_PER_MILE, 0.05*METERS_PER_MILE);
+        adjustedRegion = [mapView regionThatFits:viewRegion];
+        [mapView setRegion:adjustedRegion animated:YES];
+    }
+    else {
+        [mapView setCenterCoordinate:coordinate];
+    }
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
@@ -437,6 +462,8 @@
         annotationView.draggable = NO;
         annotationView.enabled = YES;
         annotationView.canShowCallout = NO;
+
+        a.annotationView = annotationView;
 
         UILabel *label = (UILabel *)[annotationView viewWithTag:1];
         if (a.type == AnnotationTypeCurrentFarmCenter) {
@@ -489,10 +516,10 @@
         return;
     }
 
+    isDrawingMode = NO;
     if (!currentField) {
         if (annotation.type == AnnotationTypeOtherFieldCenter) {
             // select field as current field
-            isDrawingMode = NO;
             currentField = annotation.object;
             [self reloadMap];
         }
@@ -506,7 +533,7 @@
         else {
             // second click on the current field centers it
             CLLocationCoordinate2D currentLocation = CLLocationCoordinate2DMake([currentField.latitude doubleValue], [currentField.longitude doubleValue]);
-            [self centerOnCoordinate:currentLocation];
+            [self centerOnCoordinate:currentLocation resize:NO];
         }
     }
 }
@@ -671,7 +698,13 @@
 -(void)editField {
     if (currentField) {
         isEditingField = YES;
+        [self reloadMap];
+
+        CLLocationCoordinate2D currentLocation = CLLocationCoordinate2DMake([currentField.latitude doubleValue], [currentField.longitude doubleValue]);
+        [self centerOnCoordinate:currentLocation resize:NO];
+
         [self hideAllButtons];
+        [centerPin setHidden:NO];
         [buttonCancel setHidden:NO];
         [buttonCheck setHidden:NO];
     }
@@ -705,7 +738,10 @@
 
     [UIAlertView alertViewWithTitle:@"Add field boundary" message:@"Use the mouse to click on points along your field's boundary. Click the check mark to save."];
     isDrawingMode = YES;
+    isEditingField = NO;
+
     [self reloadMap];
+    [self addAnnotationForField:currentField];
 
     // start drawing
     // todo: make mouse look different to look like a boundary drawing
