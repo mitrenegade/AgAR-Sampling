@@ -10,6 +10,7 @@
 #define AgAR_Constants_h
 
 #define TESTING 1
+#define AIRPLANE_MODE 1
 
 #define FONT_REGULAR(x) [UIFont fontWithName:@"AvenirNext-Regular" size:(x)]
 #define FONT_MEDIUM(x) [UIFont fontWithName:@"AvenirNext-Medium" size:(x)]

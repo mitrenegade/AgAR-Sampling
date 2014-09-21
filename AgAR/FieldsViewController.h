@@ -33,12 +33,14 @@
     BOOL shouldCenterOnUser;
     BOOL isEditingFarm;
     NSString *farmName;
-    BOOL isEditingField;
+    BOOL isAddingField; // creating a new field
+    BOOL isEditingField; // moving the current selected field
 
     CLLocationCoordinate2D fieldCoordinates[1000];
     int fieldCoordinateCount;
 
     BOOL isDrawingMode;
+    BOOL isDraggingPin;
 
     Farm *currentFarm;
     Field *currentField; // being edited for coordinates

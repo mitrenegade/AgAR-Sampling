@@ -71,6 +71,9 @@
     sidebar.delegate = self;
     [self.view.superview addSubview:sidebar.view];
      */
+
+    UITapGestureRecognizer *maptap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleGesture:)];
+    [mapView addGestureRecognizer:maptap];
 }
 
 - (void)didReceiveMemoryWarning
@@ -124,10 +127,6 @@
     CLLocationCoordinate2D currentLocation = CLLocationCoordinate2DMake([self.currentFarm.latitude doubleValue], [self.currentFarm.longitude doubleValue]);
     [self centerOnCoordinate:currentLocation];
 
-    // add farm pin
-    [self addAnnotationForFarm:self.currentFarm];
-
-    [self drawFields];
     [self reloadMap];
 }
 
@@ -135,15 +134,9 @@
     [mapView removeOverlays:mapView.overlays];
     [mapView removeAnnotations:mapView.annotations];
 
-    for (Annotation *annotation in annotations) {
-        if (annotation.type == AnnotationTypeCurrentFieldCenter || annotation.type == AnnotationTypeOtherFieldCenter) {
-            [self updateStatusForAnnotation:annotation];
-            Field *field = annotation.object;
-            [self addBoundaryForField:field];
-        }
-
-        [mapView addAnnotation:annotation];
-    }
+    [annotations removeAllObjects];
+    [self addAnnotationForFarm:self.currentFarm];
+    [self drawFields];
 
     if (isEditingField && currentField) {
         // jumps to middle of field
@@ -213,7 +206,7 @@
     // draw field boundary
     if (field.boundary) {
         MKPolyline *line = [field.boundary polyLine];
-        if (isEditingField) {
+        if (currentField) {
             if (isDrawingMode)
                 [line setStatus:BoundaryStatusDimmed];
             else {
@@ -250,87 +243,77 @@
 }
 
 -(void)didClickCheck {
-    if (isEditingField || isEditingFarm) {
+    if (isAddingField) {
+        // field center set, start creating boundary
+        [self createField];
+        isAddingField = NO;
+        isEditingField = YES;
+    }
+    else if (currentField) {
         if (isEditingField) {
-            if (!isDrawingMode) {
-                // field center set, start creating boundary
-                [self createField];
-            }
-            else {
-                // boundary set, stop drawing
-                isDrawingMode = NO;
-                isEditingField = NO;
-
-                [centerPin setHidden:YES];
-                [self hideAllButtons];
-                [buttonCreate setHidden:NO];
-                for (UIGestureRecognizer *gesture in mapView.gestureRecognizers)
-                    [mapView removeGestureRecognizer:gesture];
-
-                if (!currentField.boundary) {
-                    currentField.boundary = [self newPolyline];
-                }
-                // close the loop
-                if (fieldCoordinateCount > 0) {
-                    fieldCoordinates[fieldCoordinateCount++] = fieldCoordinates[0];
-                }
-                [currentField.boundary setCoordinatesFromCoordinates:fieldCoordinates totalPoints:fieldCoordinateCount];
-                [_appDelegate saveContext];
-
-                currentField = nil;
-                [self.fieldFetcher performFetch:nil];
-                [self reloadMap];
-            }
+            isEditingField = NO;
+            currentField = nil;
+            [self hideAllButtons];
+            // todo: update pointer
+            [self reloadMap];
         }
-        else if (isEditingFarm) {
-            // end edit
+        else if (isDrawingMode) {
+            // boundary set, stop drawing
+            isDrawingMode = NO;
+            isEditingField = NO;
+
             [centerPin setHidden:YES];
             [self hideAllButtons];
-            [buttonCreate setHidden:NO];
+            if (!currentField.boundary) {
+                currentField.boundary = [self newPolyline];
+            }
+            // close the loop
+            if (fieldCoordinateCount > 0) {
+                fieldCoordinates[fieldCoordinateCount++] = fieldCoordinates[0];
+            }
+            [currentField.boundary setCoordinatesFromCoordinates:fieldCoordinates totalPoints:fieldCoordinateCount];
+            [_appDelegate saveContext];
 
-            isEditingFarm = NO;
-            [self createFarm:farmName];
+            currentField = nil;
+            [self.fieldFetcher performFetch:nil];
+            [self reloadMap];
         }
     }
-}
-
--(void)didClickCancel {
-    if (isEditingFarm || isEditingField) {
-        // cancel edit
+    else if (isEditingFarm) {
+        // end edit
         [centerPin setHidden:YES];
         [self hideAllButtons];
         [buttonCreate setHidden:NO];
 
-        isEditingField = NO;
         isEditingFarm = NO;
-        isDrawingMode = NO;
-
-        for (UIGestureRecognizer *gesture in mapView.gestureRecognizers) {
-            [mapView removeGestureRecognizer: gesture];
-        }
-        fieldCoordinateCount = 0;
-
-        currentField = nil;
-        [self.fieldFetcher performFetch:nil];
-
-        [self reloadMap];
+        [self createFarm:farmName];
     }
+}
+
+-(void)didClickCancel {
+    // cancel edit
+    [centerPin setHidden:YES];
+    [self hideAllButtons];
+    [buttonCreate setHidden:NO];
+
+    isEditingField = NO;
+    isAddingField = NO;
+    isEditingFarm = NO;
+    isDrawingMode = NO;
+    isDraggingPin = NO;
+
+    fieldCoordinateCount = 0;
+
+    currentField = nil;
+    [self.fieldFetcher performFetch:nil];
+
+    [self reloadMap];
 }
 
 -(void)didClickTrash {
     if (isEditingField) {
         // delete current field
         [UIAlertView alertViewWithTitle:@"Delete field" message:@"Are you sure you want to delete the current field?" cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Delete"] onDismiss:^(int buttonIndex) {
-
-            Annotation *toDelete = nil;
-            for (Annotation *a in annotations) {
-                if (a.object == currentField) {
-                    toDelete = a;
-                    break;
-                }
-            }
-            if (toDelete)
-                [annotations removeObject:toDelete];
 
             if (currentField.boundary) {
                 [_appDelegate.managedObjectContext deleteObject:currentField.boundary];
@@ -500,45 +483,30 @@
     if (isDrawingMode) {
         return;
     }
+
     if (annotation.type == AnnotationTypeCurrentFarmCenter) {
-        currentField = nil;
-        isEditingField = NO;
-
-        [self hideAllButtons];
-        [buttonCreate setHidden:NO];
-
-        [self reloadMap];
+        [self didClickCancel];
         return;
     }
 
     if (!currentField) {
         if (annotation.type == AnnotationTypeOtherFieldCenter) {
-            // start editing field
-            isEditingField = YES;
+            // select field as current field
             isDrawingMode = NO;
             currentField = annotation.object;
             [self reloadMap];
-
-            [self hideAllButtons];
-            [buttonDraw setHidden:NO];
-            [buttonTrash setHidden:NO];
         }
     }
     else {
-        if (annotation.object == currentField) {
-            // cancel editing field
-            isEditingField = NO;
-            isDrawingMode = NO;
-            currentField = nil;
-
-            [self hideAllButtons];
-            [buttonCreate setHidden:NO];
-            [self reloadMap];
-        }
-        else {
+        if (annotation.object != currentField) {
             // switch current field
             currentField = annotation.object;
             [self reloadMap];
+        }
+        else {
+            // second click on the current field centers it
+            CLLocationCoordinate2D currentLocation = CLLocationCoordinate2DMake([currentField.latitude doubleValue], [currentField.longitude doubleValue]);
+            [self centerOnCoordinate:currentLocation];
         }
     }
 }
@@ -576,21 +544,23 @@
 }
 
 #pragma mark Gesture
--(void)handleMapGesture:(UITapGestureRecognizer *)gesture {
-    CGPoint touch = [gesture locationInView:mapView];
-    CLLocationCoordinate2D coord = [mapView convertPoint:touch toCoordinateFromView:mapView];
-    fieldCoordinates[fieldCoordinateCount++] = coord;
-    if (fieldCoordinateCount == 1) {
-        // add a second point to show the first point as a dot
+-(void)handleGesture:(UITapGestureRecognizer *)gesture {
+    if (isDrawingMode) {
+        CGPoint touch = [gesture locationInView:mapView];
+        CLLocationCoordinate2D coord = [mapView convertPoint:touch toCoordinateFromView:mapView];
         fieldCoordinates[fieldCoordinateCount++] = coord;
+        if (fieldCoordinateCount == 1) {
+            // add a second point to show the first point as a dot
+            fieldCoordinates[fieldCoordinateCount++] = coord;
+        }
+
+        [mapView removeOverlays:mapView.overlays];
+        [self drawFields];
+
+        MKPolyline *polyline = [MKPolyline polylineWithCoordinates:fieldCoordinates count:fieldCoordinateCount];
+        [polyline setStatus:BoundaryStatusNew];
+        [mapView addOverlay:polyline];
     }
-
-    [mapView removeOverlays:mapView.overlays];
-    [self drawFields];
-
-    MKPolyline *polyline = [MKPolyline polylineWithCoordinates:fieldCoordinates count:fieldCoordinateCount];
-    [polyline setStatus:BoundaryStatusNew];
-    [mapView addOverlay:polyline];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -682,14 +652,13 @@
         [_appDelegate saveContext];
 
         isEditingFarm = NO;
-        [annotations removeAllObjects];
         [self reloadMap];
     } onCancel:nil];
 }
 
 -(void)addField {
     // add a field
-    isEditingField = YES;
+    isAddingField = YES;
     [self hideAllButtons];
     [centerPin setHidden:NO];
     [buttonCheck setHidden:NO];
@@ -701,10 +670,14 @@
 
 -(void)editField {
     if (currentField) {
-        // todo: move field and boundaries
+        isEditingField = YES;
+        [self hideAllButtons];
+        [buttonCancel setHidden:NO];
+        [buttonCheck setHidden:NO];
     }
     else {
         // todo: add message to select a field to edit with the pointer
+        [UIAlertView alertViewWithTitle:@"Select a field to edit" message:@"Click on the center pin of the field you want to edit."];
     }
 }
 
@@ -716,9 +689,6 @@
             [_appDelegate saveContext];
 
             isEditingField = NO;
-            [annotations removeAllObjects];
-            [self addAnnotationForFarm:self.currentFarm];
-            [self drawFields];
             [self reloadMap];
         } onCancel:nil];
     }
@@ -739,8 +709,6 @@
 
     // start drawing
     // todo: make mouse look different to look like a boundary drawing
-    UITapGestureRecognizer *maptap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleMapGesture:)];
-    [mapView addGestureRecognizer:maptap];
     fieldCoordinateCount = 0;
 }
 
@@ -754,9 +722,6 @@
         currentField.boundary = nil;
         [_appDelegate saveContext];
 
-        [annotations removeAllObjects];
-        [self addAnnotationForFarm:self.currentFarm];
-        [self drawFields];
         [self reloadMap];
     } onCancel:nil];
 }

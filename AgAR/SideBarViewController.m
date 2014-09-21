@@ -40,6 +40,7 @@ static NSDictionary *actionsForOption;
                        kDeleteFarm:@"trash",
                        kAddField:@"add",
                        kEditField:@"hand",
+                       kMoveField:@"hand",
                        kDeleteField:@"trash",
                        kAddBoundary:@"draw",
                        kEditBoundary:@"edit",
@@ -52,6 +53,7 @@ static NSDictionary *actionsForOption;
                          kDeleteFarm:@"deleteFarm",
                          kAddField:@"addField",
                          kEditField:@"editField",
+                         kMoveField:@"editField",
                          kDeleteField:@"deleteField",
                          kAddBoundary:@"addBoundary",
                          kEditBoundary:@"editBoundary",
@@ -187,11 +189,11 @@ static NSDictionary *actionsForOption;
             break;
 
         case SideBarModeFieldSelected:
-            options = @[kDeleteField, kAddBoundary];
+            options = @[kMoveField, kDeleteField, kAddBoundary];
             break;
 
         case SideBarModeBoundarySelected:
-            options = @[kDeleteField, kEditBoundary, kDeleteBoundary, kAddGrid];
+            options = @[kMoveField, kDeleteField, kEditBoundary, kDeleteBoundary, kAddGrid];
             break;
 
         case SideBarModeGridSelected:
