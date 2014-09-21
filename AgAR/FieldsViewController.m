@@ -513,6 +513,8 @@
 
     if (annotation.type == AnnotationTypeCurrentFarmCenter) {
         [self didClickCancel];
+        if (sidebar)
+            [self setupSidebar];
         return;
     }
 
@@ -535,6 +537,10 @@
             CLLocationCoordinate2D currentLocation = CLLocationCoordinate2DMake([currentField.latitude doubleValue], [currentField.longitude doubleValue]);
             [self centerOnCoordinate:currentLocation resize:NO];
         }
+    }
+
+    if (sidebar) {
+        [self setupSidebar];
     }
 }
 
@@ -612,6 +618,9 @@
         viewBG.frame = frame;
         [buttonSidebar setAlpha:(frame.origin.x==0)?1:0];
     } completion:^(BOOL finished) {
+        if (viewBG.frame.origin.x == 0) {
+            sidebar = nil;
+        }
     }];
 }
 
