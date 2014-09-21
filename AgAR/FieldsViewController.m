@@ -144,6 +144,24 @@
         CLLocationCoordinate2D currentLocation = CLLocationCoordinate2DMake([currentField.latitude doubleValue], [currentField.longitude doubleValue]);
         [self centerOnCoordinate:currentLocation resize:NO];
     }
+
+    if (isEditingBoundary) {
+        // add annotations for current boundary points
+        NSArray *locations = currentField.boundary.coordinates;
+        NSMutableArray *boundaryAnnotations = currentField.boundary.annotations;
+        [boundaryAnnotations removeAllObjects];
+
+        for (CLLocation *loc in locations) {
+            CLLocationCoordinate2D borderCoord = loc.coordinate;
+            Annotation *annotation = [[Annotation alloc] init];
+            annotation.type = AnnotationTypeBorder;
+            [annotation setCoordinate:borderCoord];
+            annotation.object = currentField.boundary; // keeps a reference to the polyline it belongs to
+            [mapView addAnnotation:annotation];
+            [annotations addObject:annotation];
+            [boundaryAnnotations addObject:annotation];
+        }
+    }
 }
 
 -(void)addAnnotationForFarm:(Farm *)farm {
@@ -219,6 +237,7 @@
                 }
             }
         }
+        [field.boundary setPolyLine:line];
         [mapView addOverlay:line];
     }
 }
@@ -287,6 +306,10 @@
             [self.fieldFetcher performFetch:nil];
             [self reloadMap];
         }
+        else if (isEditingBoundary) {
+            [self stopEditingBoundary:YES];
+            [self didClickCancel];
+        }
     }
     else if (isEditingFarm) {
         // end edit
@@ -309,7 +332,10 @@
     isAddingField = NO;
     isEditingFarm = NO;
     isDrawingMode = NO;
-    isDraggingPin = NO;
+
+    if (isEditingBoundary) {
+        [self stopEditingBoundary:NO];
+    }
 
     fieldCoordinateCount = 0;
 
@@ -487,6 +513,11 @@
             if (a.titleString)
                 label.text = a.titleString;
         }
+        else if (a.type == AnnotationTypeBorder) {
+            annotationView.annotationType = ZSPinAnnotationTypeStandard;
+            annotationView.annotationColor = AnnotationColorCurrentField;
+            label.text = nil;
+        }
 
         // must set label center last after view frame is set
         label.center = CGPointMake(annotationView.frame.size.width/2, annotationView.frame.size.height/2+15);
@@ -515,6 +546,15 @@
         [self didClickCancel];
         if (sidebar)
             [self setupSidebar];
+        return;
+    }
+
+    if (draggingBoundary)
+        return;
+
+    if (annotation.type == AnnotationTypeBorder && isEditingBoundary) {
+        draggingBoundary = annotation;
+        [self selectBoundaryPoint];
         return;
     }
 
@@ -577,23 +617,59 @@
 }
 
 #pragma mark Gesture
--(void)handleGesture:(UITapGestureRecognizer *)gesture {
-    if (isDrawingMode) {
-        CGPoint touch = [gesture locationInView:mapView];
-        CLLocationCoordinate2D coord = [mapView convertPoint:touch toCoordinateFromView:mapView];
-        fieldCoordinates[fieldCoordinateCount++] = coord;
-        if (fieldCoordinateCount == 1) {
-            // add a second point to show the first point as a dot
+-(void)handleGesture:(UIGestureRecognizer *)gesture {
+    if ([gesture isKindOfClass:[UITapGestureRecognizer class]]) {
+        if (isDrawingMode) {
+            CGPoint touch = [gesture locationInView:mapView];
+            CLLocationCoordinate2D coord = [mapView convertPoint:touch toCoordinateFromView:mapView];
             fieldCoordinates[fieldCoordinateCount++] = coord;
+            if (fieldCoordinateCount == 1) {
+                // add a second point to show the first point as a dot
+                fieldCoordinates[fieldCoordinateCount++] = coord;
+            }
+
+            [mapView removeOverlays:mapView.overlays];
+            [self drawFields];
+
+            MKPolyline *polyline = [MKPolyline polylineWithCoordinates:fieldCoordinates count:fieldCoordinateCount];
+            [polyline setStatus:BoundaryStatusNew];
+            [mapView addOverlay:polyline];
         }
-
-        [mapView removeOverlays:mapView.overlays];
-        [self drawFields];
-
-        MKPolyline *polyline = [MKPolyline polylineWithCoordinates:fieldCoordinates count:fieldCoordinateCount];
-        [polyline setStatus:BoundaryStatusNew];
-        [mapView addOverlay:polyline];
     }
+    else if ([gesture isKindOfClass:[UIPanGestureRecognizer class]]) {
+        CGPoint touch = [gesture locationInView:mapView];
+        if (gesture.state == UIGestureRecognizerStateBegan) {
+            NSLog(@"Started");
+            if (CGRectContainsPoint(draggingBoundary.annotationView.frame, touch)) {
+                firstTouch = touch;
+            }
+            else {
+                firstTouch = CGPointZero;
+            }
+        }
+        else if (gesture.state == UIGestureRecognizerStateChanged) {
+            NSLog(@"Changed");
+            if (CGPointZero.x == firstTouch.x && CGPointZero.y == firstTouch.y)
+                return;
+
+            CLLocationCoordinate2D coord = [mapView convertPoint:touch toCoordinateFromView:mapView];
+            draggingBoundary.coordinate = coord;
+            [self updateBoundary];
+        }
+        else if (gesture.state == UIGestureRecognizerStateEnded) {
+            NSLog(@"Ended");
+            [self updateBoundary];
+        }
+    }
+}
+
+-(void)updateBoundary {
+    [mapView removeOverlay:currentField.boundary.polyLine];
+
+    Polyline *polyline = draggingBoundary.object;
+    [polyline updateCoordinateForAnnotation:draggingBoundary];
+
+    [self addBoundaryForField:currentField];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -758,7 +834,8 @@
 }
 
 -(void)editBoundary {
-
+    isEditingBoundary = YES;
+    [self reloadMap];
 }
 
 -(void)deleteBoundary {
@@ -769,6 +846,43 @@
 
         [self reloadMap];
     } onCancel:nil];
+}
+
+-(void)selectBoundaryPoint {
+    Annotation *annotation = draggingBoundary;
+    annotation.type = AnnotationTypeBorderSelected;
+    ZSPinAnnotationView *annotationView = annotation.annotationView;
+    annotationView.annotationColor = BoundaryColorEditing;
+    mapView.userInteractionEnabled = NO;
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleGesture:)];
+    [self.view addGestureRecognizer:pan];
+
+    [self hideAllButtons];
+    [buttonCheck setHidden:NO];
+    [buttonCancel setHidden:NO];
+}
+
+-(void)stopEditingBoundary:(BOOL)save {
+    isEditingBoundary = NO;
+
+    // clear out cached polyline coordinates, then refresh from context
+    if (!save) {
+        Polyline *polyline = currentField.boundary;
+        polyline.polyLine = nil;
+        polyline.coordinates = nil;
+        [_appDelegate.managedObjectContext refreshObject:polyline mergeChanges:NO];
+    }
+    else {
+        [_appDelegate.managedObjectContext save:nil];
+    }
+
+    draggingBoundary = nil;
+    for (UIGestureRecognizer *gesture in self.view.gestureRecognizers) {
+        if ([gesture isKindOfClass:[UIPanGestureRecognizer class]]) {
+            [self.view removeGestureRecognizer:gesture];
+        }
+    }
+    mapView.userInteractionEnabled = YES;
 }
 
 -(void)addGrid {

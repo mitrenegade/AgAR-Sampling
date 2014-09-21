@@ -8,6 +8,8 @@
 
 #import "Polyline+Helper.h"
 #import "Polyline+TransformableAttributes.h"
+#import "Annotation.h"
+
 @implementation Polyline (Helper)
 
 -(void)shiftCoordinatesByLatitude:(float)latitudeChange longitude:(float)longitudeChange {
@@ -21,5 +23,21 @@
         ct++;
     }
     [self setCoordinatesFromCoordinates:coordinates totalPoints:ct];
+}
+
+-(void)updateCoordinateForAnnotation:(Annotation *)annotation {
+    NSMutableArray *annotations = self.annotations;
+    NSMutableArray *coordinates = self.coordinates;
+
+    for (int i=0; i<annotations.count; i++) {
+        Annotation *a = annotations[i];
+        if (a == annotation) {
+            CLLocation *loc = [[CLLocation alloc] initWithLatitude:a.coordinate.latitude longitude:a.coordinate.longitude];
+            [coordinates replaceObjectAtIndex:i withObject:loc];
+            break;
+        }
+    }
+    [self setCoordinates:coordinates];
+    [self setPolyLine:nil];
 }
 @end
