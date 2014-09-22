@@ -8,7 +8,9 @@
 
 #import "Polyline.h"
 
+@class Annotation;
 @interface Polyline (Helper)
 
 -(void)shiftCoordinatesByLatitude:(float)latitudeChange longitude:(float)longitudeChange;
+-(void)updateCoordinateForAnnotation:(Annotation *)annotation;
 @end

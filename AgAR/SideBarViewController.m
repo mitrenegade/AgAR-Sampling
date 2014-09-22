@@ -196,6 +196,10 @@ static NSDictionary *actionsForOption;
             options = @[kMoveField, kDeleteField, kEditBoundary, kDeleteBoundary, kAddGrid];
             break;
 
+        case SideBarModeBoundaryEditing:
+            options = @[kDeleteBoundary];
+            break;
+
         case SideBarModeGridSelected:
             options = @[kEditGrid, kDeleteGrid];
             break;

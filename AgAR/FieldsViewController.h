@@ -13,6 +13,7 @@
 @class Farm;
 @class Field;
 @class Polyline;
+@class Annotation;
 @interface FieldsViewController : UIViewController <MKMapViewDelegate, UIAlertViewDelegate, SideBarDelegate>
 {
     NSFetchedResultsController *fieldFetcher;
@@ -40,7 +41,11 @@
     int fieldCoordinateCount;
 
     BOOL isDrawingMode;
-    BOOL isDraggingPin;
+    BOOL isEditingBoundary;
+
+    // dragging boundary
+    Annotation *draggingBoundary;
+    CGPoint firstTouch;
 
     Farm *currentFarm;
     Field *currentField; // being edited for coordinates
