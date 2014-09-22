@@ -694,9 +694,6 @@
         viewBG.frame = frame;
         [buttonSidebar setAlpha:(frame.origin.x==0)?1:0];
     } completion:^(BOOL finished) {
-        if (viewBG.frame.origin.x == 0) {
-            sidebar = nil;
-        }
     }];
 }
 
@@ -714,11 +711,16 @@
     else if (!currentField) {
         [sidebar setupWithMode:SideBarModeFieldUnselected];
     }
-    else if (!currentField.boundary) {
+    else if (!currentField.boundary || [currentField.boundary.coordinates count] == 0) {
         [sidebar setupWithMode:SideBarModeFieldSelected];
     }
-    else if (currentField.boundary) { //(!currentField.grid) {
-        [sidebar setupWithMode:SideBarModeBoundarySelected];
+    else if (currentField.boundary && [currentField.boundary.coordinates count]) {
+        if (!isEditingBoundary) {
+            [sidebar setupWithMode:SideBarModeBoundarySelected];
+        }
+        else {
+            [sidebar setupWithMode:SideBarModeBoundaryEditing];
+        }
     }
     else {
         [sidebar setupWithMode:SideBarModeGridSelected];
@@ -842,7 +844,12 @@
     [UIAlertView alertViewWithTitle:@"Are you sure?" message:@"Do you really want to delete the current field's boundary?" cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Delete"] onDismiss:^(int buttonIndex) {
         [_appDelegate.managedObjectContext deleteObject:currentField.boundary];
         currentField.boundary = nil;
+        fieldCoordinateCount = 0;
+
         [_appDelegate saveContext];
+
+        [self hideAllButtons];
+        isEditingBoundary = NO;
 
         [self reloadMap];
     } onCancel:nil];

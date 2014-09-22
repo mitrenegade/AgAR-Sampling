@@ -22,10 +22,12 @@
     return results;
 }
 
--(void)setCoordinates:(id)coordinates {
+-(void)setCoordinates:(id)newCoordinates {
     // coordinates should be an NSArray of CLLocation objects
-    NSData *coordinates_data = [NSKeyedArchiver archivedDataWithRootObject:coordinates];
+    NSData *coordinates_data = [NSKeyedArchiver archivedDataWithRootObject:newCoordinates];
     [self setValue:coordinates_data forKey:@"coordinates_data"];
+    NSObject *coord = self.coordinates;
+    NSLog(@"Coord: %@ %@", coord.class, coord);
 }
 
 -(void)setCoordinatesFromCoordinates:(CLLocationCoordinate2D *)coordinates totalPoints:(int)ct {
@@ -37,6 +39,8 @@
         [array addObject:loc];
     }
     [self setCoordinates:array];
+    [self setPolyLine:nil];
+    [self setAnnotations:nil];
 }
 
 #pragma mark Instance variable for category

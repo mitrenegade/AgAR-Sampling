@@ -13,7 +13,8 @@ typedef enum SideBarModeEnum {
     SideBarModeFarmOnly,
     SideBarModeFieldUnselected,
     SideBarModeFieldSelected,
-    SideBarModeBoundarySelected,
+    SideBarModeBoundarySelected, // field has a boundary
+    SideBarModeBoundaryEditing, // editing field boundary
     SideBarModeGridSelected
 } SideBarMode;
 
