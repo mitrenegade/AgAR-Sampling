@@ -65,14 +65,6 @@
         labelFarm.text = @"No farm selected";
     }
 
-    /*
-    sidebar = [_storyboard instantiateViewControllerWithIdentifier:@"SideBarViewController"];
-    CGRect frame = CGRectMake(320-SIDEBAR_WIDTH, 0, SIDEBAR_WIDTH, self.view.frame.size.height);
-    sidebar.view.frame = frame;
-    sidebar.delegate = self;
-    [self.view.superview addSubview:sidebar.view];
-     */
-
     UITapGestureRecognizer *maptap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleGesture:)];
     [mapView addGestureRecognizer:maptap];
 }
@@ -515,7 +507,7 @@
         }
         else if (a.type == AnnotationTypeBorder) {
             annotationView.annotationType = ZSPinAnnotationTypeStandard;
-            annotationView.annotationColor = AnnotationColorCurrentField;
+            annotationView.annotationColor = AnnotationColorCurrentBoundary;
             label.text = nil;
         }
 
@@ -551,12 +543,6 @@
 
     if (draggingBoundary)
         return;
-
-    if (annotation.type == AnnotationTypeBorder && isEditingBoundary) {
-        draggingBoundary = annotation;
-        [self selectBoundaryPoint];
-        return;
-    }
 
     isDrawingMode = NO;
     if (!currentField) {
@@ -640,12 +626,20 @@
         CGPoint touch = [gesture locationInView:mapView];
         if (gesture.state == UIGestureRecognizerStateBegan) {
             NSLog(@"Started");
-            if (CGRectContainsPoint(draggingBoundary.annotationView.frame, touch)) {
-                firstTouch = touch;
+            BOOL dragging = NO;
+            for (Annotation *a in currentField.boundary.annotations) {
+                if (CGRectContainsPoint(a.annotationView.frame, touch)) {
+                    draggingBoundary = a;
+                    dragging = YES;
+                    firstTouch = touch;
+
+                    a.type = AnnotationTypeBorderSelected;
+                    ZSPinAnnotationView *annotationView = a.annotationView;
+                    annotationView.annotationColor = AnnotationColorEditingBoundary;
+                }
             }
-            else {
+            if (!dragging)
                 firstTouch = CGPointZero;
-            }
         }
         else if (gesture.state == UIGestureRecognizerStateChanged) {
             NSLog(@"Changed");
@@ -658,6 +652,10 @@
         }
         else if (gesture.state == UIGestureRecognizerStateEnded) {
             NSLog(@"Ended");
+            draggingBoundary.type = AnnotationTypeBorderSelected;
+            ZSPinAnnotationView *annotationView = draggingBoundary.annotationView;
+            annotationView.annotationColor = AnnotationColorCurrentBoundary;
+
             [self updateBoundary];
         }
     }
@@ -838,6 +836,14 @@
 -(void)editBoundary {
     isEditingBoundary = YES;
     [self reloadMap];
+
+    mapView.userInteractionEnabled = NO;
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleGesture:)];
+    [self.view addGestureRecognizer:pan];
+
+    [self hideAllButtons];
+    [buttonCheck setHidden:NO];
+    [buttonCancel setHidden:NO];
 }
 
 -(void)deleteBoundary {
@@ -853,20 +859,6 @@
 
         [self reloadMap];
     } onCancel:nil];
-}
-
--(void)selectBoundaryPoint {
-    Annotation *annotation = draggingBoundary;
-    annotation.type = AnnotationTypeBorderSelected;
-    ZSPinAnnotationView *annotationView = annotation.annotationView;
-    annotationView.annotationColor = BoundaryColorEditing;
-    mapView.userInteractionEnabled = NO;
-    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleGesture:)];
-    [self.view addGestureRecognizer:pan];
-
-    [self hideAllButtons];
-    [buttonCheck setHidden:NO];
-    [buttonCancel setHidden:NO];
 }
 
 -(void)stopEditingBoundary:(BOOL)save {

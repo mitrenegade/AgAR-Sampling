@@ -22,6 +22,8 @@ typedef enum AnnotationTypeEnum {
 #define AnnotationColorCurrentField [UIColor blueColor]
 #define AnnotationColorOtherField [UIColor colorWithRed:0 green:0 blue:128.0/255.0 alpha:1]
 #define AnnotationColorDim [UIColor lightGrayColor]
+#define AnnotationColorCurrentBoundary [UIColor blueColor]
+#define AnnotationColorEditingBoundary [UIColor greenColor]
 
 #define BoundaryColorNormal [UIColor grayColor]
 #define BoundaryColorSelected [UIColor greenColor]
