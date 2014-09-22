@@ -287,10 +287,7 @@
             if (!currentField.boundary) {
                 currentField.boundary = [self newPolyline];
             }
-            // close the loop
-            if (fieldCoordinateCount > 0) {
-                fieldCoordinates[fieldCoordinateCount++] = fieldCoordinates[0];
-            }
+            currentField.boundary.closed = @YES;
             [currentField.boundary setCoordinatesFromCoordinates:fieldCoordinates totalPoints:fieldCoordinateCount];
             [_appDelegate saveContext];
 
@@ -609,17 +606,25 @@
             CGPoint touch = [gesture locationInView:mapView];
             CLLocationCoordinate2D coord = [mapView convertPoint:touch toCoordinateFromView:mapView];
             fieldCoordinates[fieldCoordinateCount++] = coord;
-            if (fieldCoordinateCount == 1) {
-                // add a second point to show the first point as a dot
-                fieldCoordinates[fieldCoordinateCount++] = coord;
-            }
 
             [mapView removeOverlays:mapView.overlays];
             [self drawFields];
 
-            MKPolyline *polyline = [MKPolyline polylineWithCoordinates:fieldCoordinates count:fieldCoordinateCount];
-            [polyline setStatus:BoundaryStatusNew];
-            [mapView addOverlay:polyline];
+            // update drawing polyline - is not actually affected
+            // todo: should subclass mkoverlayPathRenderer but it seems too complicated
+            if (fieldCoordinateCount == 1) {
+                CLLocationCoordinate2D coords[2];
+                coords[0] = coord;
+                coords[1] = coord;
+                MKPolyline *polyline = [MKPolyline polylineWithCoordinates:coords count:2];
+                [polyline setStatus:BoundaryStatusNew];
+                [mapView addOverlay:polyline];
+            }
+            else {
+                MKPolyline *polyline = [MKPolyline polylineWithCoordinates:fieldCoordinates count:fieldCoordinateCount];
+                [polyline setStatus:BoundaryStatusNew];
+                [mapView addOverlay:polyline];
+            }
         }
     }
     else if ([gesture isKindOfClass:[UIPanGestureRecognizer class]]) {

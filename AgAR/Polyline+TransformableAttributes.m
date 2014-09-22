@@ -54,6 +54,12 @@
             NSLog(@"loc: %@", loc);
             coordinates[ct++] = loc.coordinate;
         }
+
+        // close the loop
+        if ([self.closed boolValue]) {
+            coordinates[ct++] = coordinates[0];
+        }
+
         polyLine = [MKPolyline polylineWithCoordinates:coordinates count:ct];
         [self setPolyLine:polyLine];
     }
