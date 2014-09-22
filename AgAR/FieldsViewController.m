@@ -14,6 +14,8 @@
 #import "UIActionSheet+MKBlockAdditions.h"
 #import "Annotation.h"
 #import "MKPolyline+Info.h"
+#import "ZSPinAnnotationView.h"
+#import "Polyline+Helper.h"
 
 @interface FieldsViewController ()
 
@@ -62,6 +64,17 @@
         shouldCenterOnUser = YES;
         labelFarm.text = @"No farm selected";
     }
+
+    /*
+    sidebar = [_storyboard instantiateViewControllerWithIdentifier:@"SideBarViewController"];
+    CGRect frame = CGRectMake(320-SIDEBAR_WIDTH, 0, SIDEBAR_WIDTH, self.view.frame.size.height);
+    sidebar.view.frame = frame;
+    sidebar.delegate = self;
+    [self.view.superview addSubview:sidebar.view];
+     */
+
+    UITapGestureRecognizer *maptap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleGesture:)];
+    [mapView addGestureRecognizer:maptap];
 }
 
 - (void)didReceiveMemoryWarning
@@ -113,12 +126,8 @@
 
     // jumps to middle of farm
     CLLocationCoordinate2D currentLocation = CLLocationCoordinate2DMake([self.currentFarm.latitude doubleValue], [self.currentFarm.longitude doubleValue]);
-    [self centerOnCoordinate:currentLocation];
+    [self centerOnCoordinate:currentLocation resize:YES];
 
-    // add farm pin
-    [self addAnnotationForFarm:self.currentFarm];
-
-    [self drawFields];
     [self reloadMap];
 }
 
@@ -126,20 +135,14 @@
     [mapView removeOverlays:mapView.overlays];
     [mapView removeAnnotations:mapView.annotations];
 
-    for (Annotation *annotation in annotations) {
-        if (annotation.type == AnnotationTypeCurrentFieldCenter || annotation.type == AnnotationTypeOtherFieldCenter) {
-            [self updateStatusForAnnotation:annotation];
-            Field *field = annotation.object;
-            [self addBoundaryForField:field];
-        }
+    [annotations removeAllObjects];
+    [self addAnnotationForFarm:self.currentFarm];
+    [self drawFields];
 
-        [mapView addAnnotation:annotation];
-    }
-
-    if (isEditingField) {
+    if (isEditingField && currentField) {
         // jumps to middle of field
         CLLocationCoordinate2D currentLocation = CLLocationCoordinate2DMake([currentField.latitude doubleValue], [currentField.longitude doubleValue]);
-        [self centerOnCoordinate:currentLocation];
+        [self centerOnCoordinate:currentLocation resize:NO];
     }
 }
 
@@ -204,7 +207,7 @@
     // draw field boundary
     if (field.boundary) {
         MKPolyline *line = [field.boundary polyLine];
-        if (isEditingField) {
+        if (currentField) {
             if (isDrawingMode)
                 [line setStatus:BoundaryStatusDimmed];
             else {
@@ -223,150 +226,103 @@
 -(void)drawFields {
     NSArray *fields = [[self fieldFetcher] fetchedObjects];
     for (Field *field in fields) {
+        if (field == currentField && isEditingField) {
+            // currentField is replaced by a floating marker
+            continue;
+        }
         [self addAnnotationForField:field];
         [self addBoundaryForField:field];
     }
 }
 
-#pragma mark editing
 -(IBAction)didClickButton:(id)sender {
-    if (sender == buttonCreate) {
-        [self didClickEdit];
-    }
-    else if (sender == buttonCheck) {
+    if (sender == buttonCheck) {
         [self didClickCheck];
     }
     else if (sender == buttonCancel) {
         [self didClickCancel];
     }
-    else if (sender == buttonTrash) {
-        [self didClickTrash];
-    }
-    else if (sender == buttonDraw) {
-        [self didClickDraw];
-    }
-}
-
--(void)didClickEdit {
-    if (!isEditingField && !isEditingFarm) {
-        // for now, use actionsheet
-        if ([[[self farmFetcher] fetchedObjects] count] == 0) {
-            [UIActionSheet actionSheetWithTitle:nil message:nil buttons:@[@"Add a farm"] showInView:_appDelegate.window onDismiss:^(int buttonIndex) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Please enter farm name" message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Create farm", nil];
-                alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-                alert.tag = 2;
-                [alert show];
-            } onCancel:^{
-
-            }];
-        }
-        else /* if ([[[self fieldFetcher] fetchedObjects] count] == 0) */ {
-            [UIActionSheet actionSheetWithTitle:nil message:nil buttons:@[@"Edit farm", @"Add a field"] showInView:_appDelegate.window onDismiss:^(int buttonIndex) {
-                if (buttonIndex == 0) {
-                    // update farm
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Please enter farm name" message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Update farm", nil];
-                    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-                    alert.tag = 1;
-                    [alert show];
-                }
-                else if (buttonIndex == 1) {
-                    // add a field
-                    isEditingField = YES;
-                    [self hideAllButtons];
-                    [centerPin setHidden:NO];
-                    [buttonCheck setHidden:NO];
-                    [buttonCancel setHidden:NO];
-                    [UIAlertView alertViewWithTitle:@"Set the location of your field" message:@"Move the map until the blue pin matches the center of your field, then click the check mark"];
-                }
-            } onCancel:^{
-                
-            }];
-        }
+    else if (sender == buttonSidebar) {
+        [self toggleSidebar];
     }
 }
 
 -(void)didClickCheck {
-    if (isEditingField || isEditingFarm) {
+    if (isAddingField) {
+        // field center set, start creating boundary
+        [self updateField:YES];
+        [centerPin setHidden:YES];
+        isAddingField = NO;
+
+        [self addBoundary];
+    }
+    else if (currentField) {
         if (isEditingField) {
-            if (!isDrawingMode) {
-                // field center set, start creating boundary
-                [self addField];
-            }
-            else {
-                // boundary set, stop drawing
-                isDrawingMode = NO;
-                isEditingField = NO;
+            [self hideAllButtons];
+            [centerPin setHidden:YES];
+            [self updateField:NO];
 
-                [centerPin setHidden:YES];
-                [self hideAllButtons];
-                [buttonCreate setHidden:NO];
-                for (UIGestureRecognizer *gesture in mapView.gestureRecognizers)
-                    [mapView removeGestureRecognizer:gesture];
-
-                if (!currentField.boundary) {
-                    currentField.boundary = [self newPolyline];
-                }
-                // close the loop
-                if (fieldCoordinateCount > 0) {
-                    fieldCoordinates[fieldCoordinateCount++] = fieldCoordinates[0];
-                }
-                [currentField.boundary setCoordinatesFromCoordinates:fieldCoordinates totalPoints:fieldCoordinateCount];
-                [_appDelegate saveContext];
-
-                currentField = nil;
-                [self.fieldFetcher performFetch:nil];
-                [self reloadMap];
-            }
+            isEditingField = NO;
+            currentField = nil;
+            [self reloadMap];
         }
-        else if (isEditingFarm) {
-            // end edit
+        else if (isDrawingMode) {
+            // boundary set, stop drawing
+            isDrawingMode = NO;
+            isEditingField = NO;
+
             [centerPin setHidden:YES];
             [self hideAllButtons];
-            [buttonCreate setHidden:NO];
+            if (!currentField.boundary) {
+                currentField.boundary = [self newPolyline];
+            }
+            // close the loop
+            if (fieldCoordinateCount > 0) {
+                fieldCoordinates[fieldCoordinateCount++] = fieldCoordinates[0];
+            }
+            [currentField.boundary setCoordinatesFromCoordinates:fieldCoordinates totalPoints:fieldCoordinateCount];
+            [_appDelegate saveContext];
 
-            isEditingFarm = NO;
-            [self addFarm:farmName];
+            currentField = nil;
+            [self.fieldFetcher performFetch:nil];
+            [self reloadMap];
         }
     }
-}
-
--(void)didClickCancel {
-    if (isEditingFarm || isEditingField) {
-        // cancel edit
+    else if (isEditingFarm) {
+        // end edit
         [centerPin setHidden:YES];
         [self hideAllButtons];
         [buttonCreate setHidden:NO];
 
-        isEditingField = NO;
         isEditingFarm = NO;
-        isDrawingMode = NO;
-
-        for (UIGestureRecognizer *gesture in mapView.gestureRecognizers) {
-            [mapView removeGestureRecognizer: gesture];
-        }
-        fieldCoordinateCount = 0;
-
-        currentField = nil;
-        [self.fieldFetcher performFetch:nil];
-
-        [self reloadMap];
+        [self createFarm:farmName];
     }
+}
+
+-(void)didClickCancel {
+    // cancel edit
+    [centerPin setHidden:YES];
+    [self hideAllButtons];
+    [buttonCreate setHidden:NO];
+
+    isEditingField = NO;
+    isAddingField = NO;
+    isEditingFarm = NO;
+    isDrawingMode = NO;
+    isDraggingPin = NO;
+
+    fieldCoordinateCount = 0;
+
+    currentField = nil;
+    [self.fieldFetcher performFetch:nil];
+
+    [self reloadMap];
 }
 
 -(void)didClickTrash {
     if (isEditingField) {
         // delete current field
         [UIAlertView alertViewWithTitle:@"Delete field" message:@"Are you sure you want to delete the current field?" cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Delete"] onDismiss:^(int buttonIndex) {
-
-            Annotation *toDelete = nil;
-            for (Annotation *a in annotations) {
-                if (a.object == currentField) {
-                    toDelete = a;
-                    break;
-                }
-            }
-            if (toDelete)
-                [annotations removeObject:toDelete];
 
             if (currentField.boundary) {
                 [_appDelegate.managedObjectContext deleteObject:currentField.boundary];
@@ -391,32 +347,17 @@
             [UIAlertView alertViewWithTitle:@"Redraw boundary" message:@"Are you sure you want to delete the current field's boundary and redraw it?" cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Redraw"] onDismiss:^(int buttonIndex) {
                 [_appDelegate.managedObjectContext deleteObject:currentField.boundary];
                 currentField.boundary = nil;
-                [self startDrawingBoundary];
+                [self reloadMap];
+                [self addBoundary];
             } onCancel:nil];
         }
         else {
-            [self startDrawingBoundary];
+            [self addBoundary];
         }
     }
 }
 
--(void)startDrawingBoundary {
-    [self hideAllButtons];
-    [buttonCheck setHidden:NO];
-    [buttonCancel setHidden:NO];
-
-    [UIAlertView alertViewWithTitle:@"Add field boundary" message:@"Use the mouse to click on points along your field's boundary. Click the check mark to save."];
-    isDrawingMode = YES;
-    [self reloadMap];
-
-    // start drawing
-    // todo: make mouse look different to look like a boundary drawing
-    UITapGestureRecognizer *maptap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleMapGesture:)];
-    [mapView addGestureRecognizer:maptap];
-    fieldCoordinateCount = 0;
-}
-
--(void)addFarm:(NSString *)name {
+-(void)createFarm:(NSString *)name {
     if (name.length == 0) {
         [UIAlertView alertViewWithTitle:@"Invalid farm name" message:@"You must enter a name for your new farm."];
         return;
@@ -435,15 +376,27 @@
     [self setCurrentFarm:farm];
 }
 
--(void)addField {
+-(void)updateField:(BOOL)newField {
     if (!self.currentFarm) {
         [UIAlertView alertViewWithTitle:@"Invalid farm" message:@"Uh oh, for some reason there is no current farm. Please add a farm first."];
         return;
     }
 
-    currentField = [self newField];
-
     CLLocationCoordinate2D currentCoordinate = [mapView centerCoordinate];
+    CLLocationCoordinate2D oldCoordinate;
+    if (newField) {
+        currentField = [self newField];
+        oldCoordinate = currentCoordinate;
+    }
+    else {
+        oldCoordinate = CLLocationCoordinate2DMake([currentField.latitude floatValue], [currentField.longitude floatValue]);
+        float latChange = currentCoordinate.latitude - oldCoordinate.latitude;
+        float lonChange = currentCoordinate.longitude - oldCoordinate.longitude;
+        if (currentField.boundary) {
+            [currentField.boundary shiftCoordinatesByLatitude:latChange longitude:lonChange];
+        }
+    }
+
     currentField.latitude = @(currentCoordinate.latitude);
     currentField.longitude = @(currentCoordinate.longitude);
     currentField.farm = [self currentFarm];
@@ -451,43 +404,6 @@
 
     [_appDelegate.managedObjectContext save:nil];
     [[self fieldFetcher] performFetch:nil];
-
-    [self addAnnotationForField:currentField];
-    [centerPin setHidden:YES];
-    [self startDrawingBoundary];
-}
-
--(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 0) {
-        // cancel
-        return;
-    }
-
-    if (alertView.tag == 1) {
-        // edit farm name
-        NSString *name = [[alertView textFieldAtIndex:0] text];
-        if (name.length == 0) {
-            [UIAlertView alertViewWithTitle:@"Invalid farm name" message:@"You must enter a valid name."];
-            return;
-        }
-        currentFarm.name = name;
-        [_appDelegate saveContext];
-    }
-    if (alertView.tag == 2) {
-        // create new farm
-        // edit farm name
-        NSString *name = [[alertView textFieldAtIndex:0] text];
-        if (name.length == 0) {
-            [UIAlertView alertViewWithTitle:@"Invalid farm name" message:@"You must enter a valid name."];
-            return;
-        }
-        isEditingFarm = YES;
-        farmName = name;
-        [self hideAllButtons];
-        [centerPin setHidden:NO];
-        [buttonCheck setHidden:NO];
-        [UIAlertView alertViewWithTitle:@"Set the location of your farm" message:@"Move the map until the blue pin matches the center of your farm, then click the check mark"];
-    }
 }
 
 #pragma mark MKMapViewDelegate
@@ -497,11 +413,11 @@
         MKPolylineRenderer *renderer = [[MKPolylineRenderer alloc] initWithPolyline:overlay];
         renderer.lineWidth = 4;
         if ([polyline status] == BoundaryStatusNormal)
-            renderer.strokeColor = [UIColor redColor];
+            renderer.strokeColor = BoundaryColorNormal;
         else if ([polyline status] == BoundaryStatusNew)
-            renderer.strokeColor = [UIColor greenColor];
+            renderer.strokeColor = BoundaryColorSelected;
         else if ([polyline status] == BoundaryStatusDimmed)
-            renderer.strokeColor = [UIColor grayColor];
+            renderer.strokeColor = BoundaryColorEditing;
 
         renderer.lineCap = kCGLineCapRound;
         return renderer;
@@ -511,14 +427,21 @@
 
 -(void) mapView:(MKMapView *)_mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
     if (shouldCenterOnUser) {
-        [self centerOnCoordinate:mapView.userLocation.coordinate];
+        [self centerOnCoordinate:mapView.userLocation.coordinate resize:YES];
     }
 }
 
--(void)centerOnCoordinate:(CLLocationCoordinate2D)coordinate{
-    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(coordinate, 0.05*METERS_PER_MILE, 0.05*METERS_PER_MILE);
-    MKCoordinateRegion adjustedRegion = [mapView regionThatFits:viewRegion];
-    [mapView setRegion:adjustedRegion animated:YES];
+-(void)centerOnCoordinate:(CLLocationCoordinate2D)coordinate resize:(BOOL)resize {
+    MKCoordinateRegion viewRegion;
+    MKCoordinateRegion adjustedRegion;
+    if (resize) {
+        viewRegion = MKCoordinateRegionMakeWithDistance(coordinate, 0.05*METERS_PER_MILE, 0.05*METERS_PER_MILE);
+        adjustedRegion = [mapView regionThatFits:viewRegion];
+        [mapView setRegion:adjustedRegion animated:YES];
+    }
+    else {
+        [mapView setCenterCoordinate:coordinate];
+    }
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
@@ -526,13 +449,12 @@
     if ([annotation isKindOfClass:[Annotation class]]) {
         Annotation *a = (Annotation *)annotation;
 
-        MKPinAnnotationView * annotationView = (MKAnnotationView *) [mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
+        ZSPinAnnotationView * annotationView = (ZSPinAnnotationView *) [mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
         if (annotationView == nil) {
-            annotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:identifier];
+            annotationView = [[ZSPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:identifier];
             UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 80, 30)];
             label.font = FONT_REGULAR(12);
             label.textAlignment = NSTextAlignmentCenter;
-            label.center = CGPointMake(annotationView.frame.size.width/2, annotationView.frame.size.height+5);
             [label setTag:1];
             [annotationView addSubview:label];
         }
@@ -540,21 +462,34 @@
         annotationView.draggable = NO;
         annotationView.enabled = YES;
         annotationView.canShowCallout = NO;
+
+        a.annotationView = annotationView;
+
         UILabel *label = (UILabel *)[annotationView viewWithTag:1];
         if (a.type == AnnotationTypeCurrentFarmCenter) {
-            ((MKPinAnnotationView*)annotationView).pinColor = MKPinAnnotationColorPurple;
+            annotationView.annotationType = ZSPinAnnotationTypeStandard;
+            annotationView.annotationColor = AnnotationColorCurrentFarm;
+            if (isEditingField)
+                annotationView.annotationColor = AnnotationColorDim;
             label.text = @"Farm center";
         }
         else if (a.type == AnnotationTypeCurrentFieldCenter) {
-            ((MKPinAnnotationView*)annotationView).pinColor = MKPinAnnotationColorRed;
+            annotationView.annotationType = ZSPinAnnotationTypeTag;
+            annotationView.annotationColor = AnnotationColorCurrentField;
             if (a.titleString)
                 label.text = a.titleString;
         }
         else if (a.type == AnnotationTypeOtherFieldCenter) {
-            ((MKPinAnnotationView*)annotationView).pinColor = MKPinAnnotationColorGreen;
+            annotationView.annotationType = ZSPinAnnotationTypeStandard;
+            annotationView.annotationColor = AnnotationColorOtherField;
+            if (isEditingField)
+                annotationView.annotationColor = AnnotationColorDim;
             if (a.titleString)
                 label.text = a.titleString;
         }
+
+        // must set label center last after view frame is set
+        label.center = CGPointMake(annotationView.frame.size.width/2, annotationView.frame.size.height/2+15);
         return annotationView;
     }
     return nil;
@@ -575,46 +510,37 @@
     if (isDrawingMode) {
         return;
     }
+
     if (annotation.type == AnnotationTypeCurrentFarmCenter) {
-        currentField = nil;
-        isEditingField = NO;
-
-        [self hideAllButtons];
-        [buttonCreate setHidden:NO];
-
-        [self reloadMap];
+        [self didClickCancel];
+        if (sidebar)
+            [self setupSidebar];
         return;
     }
 
+    isDrawingMode = NO;
     if (!currentField) {
         if (annotation.type == AnnotationTypeOtherFieldCenter) {
-            // start editing field
-            isEditingField = YES;
-            isDrawingMode = NO;
+            // select field as current field
             currentField = annotation.object;
             [self reloadMap];
-
-            [self hideAllButtons];
-            [buttonDraw setHidden:NO];
-            [buttonTrash setHidden:NO];
         }
     }
     else {
-        if (annotation.object == currentField) {
-            // cancel editing field
-            isEditingField = NO;
-            isDrawingMode = NO;
-            currentField = nil;
-
-            [self hideAllButtons];
-            [buttonCreate setHidden:NO];
-            [self reloadMap];
-        }
-        else {
+        if (annotation.object != currentField) {
             // switch current field
             currentField = annotation.object;
             [self reloadMap];
         }
+        else {
+            // second click on the current field centers it
+            CLLocationCoordinate2D currentLocation = CLLocationCoordinate2DMake([currentField.latitude doubleValue], [currentField.longitude doubleValue]);
+            [self centerOnCoordinate:currentLocation resize:NO];
+        }
+    }
+
+    if (sidebar) {
+        [self setupSidebar];
     }
 }
 
@@ -651,20 +577,209 @@
 }
 
 #pragma mark Gesture
--(void)handleMapGesture:(UITapGestureRecognizer *)gesture {
-    CGPoint touch = [gesture locationInView:mapView];
-    CLLocationCoordinate2D coord = [mapView convertPoint:touch toCoordinateFromView:mapView];
-    fieldCoordinates[fieldCoordinateCount++] = coord;
-    if (fieldCoordinateCount == 1) {
-        // add a second point to show the first point as a dot
+-(void)handleGesture:(UITapGestureRecognizer *)gesture {
+    if (isDrawingMode) {
+        CGPoint touch = [gesture locationInView:mapView];
+        CLLocationCoordinate2D coord = [mapView convertPoint:touch toCoordinateFromView:mapView];
         fieldCoordinates[fieldCoordinateCount++] = coord;
+        if (fieldCoordinateCount == 1) {
+            // add a second point to show the first point as a dot
+            fieldCoordinates[fieldCoordinateCount++] = coord;
+        }
+
+        [mapView removeOverlays:mapView.overlays];
+        [self drawFields];
+
+        MKPolyline *polyline = [MKPolyline polylineWithCoordinates:fieldCoordinates count:fieldCoordinateCount];
+        [polyline setStatus:BoundaryStatusNew];
+        [mapView addOverlay:polyline];
+    }
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([[segue identifier] isEqualToString:@"SideBarSegue"]) {
+        sidebar = (SideBarViewController *)[segue destinationViewController];
+        [sidebar setupWithOptions:nil actions:nil];
+        sidebar.delegate = self;
+    }
+}
+
+#pragma mark sidebar
+-(void)toggleSidebar {
+    CGRect frame = viewBG.frame;
+    if (frame.origin.x == 0) {
+        frame.origin.x = -SIDEBAR_WIDTH;
+        [self setupSidebar]; // setup sidebar
+    }
+    else {
+        frame.origin.x = 0;
+    }
+    [UIView animateWithDuration:.25 animations:^{
+        viewBG.frame = frame;
+        [buttonSidebar setAlpha:(frame.origin.x==0)?1:0];
+    } completion:^(BOOL finished) {
+        if (viewBG.frame.origin.x == 0) {
+            sidebar = nil;
+        }
+    }];
+}
+
+-(void)closeSidebar {
+    [self toggleSidebar];
+}
+
+-(void)setupSidebar{
+    if (!currentFarm) {
+        [sidebar setupWithMode:SideBarModeEmpty];
+    }
+    else if (![currentFarm.fields count]) {
+        [sidebar setupWithMode:SideBarModeFarmOnly];
+    }
+    else if (!currentField) {
+        [sidebar setupWithMode:SideBarModeFieldUnselected];
+    }
+    else if (!currentField.boundary) {
+        [sidebar setupWithMode:SideBarModeFieldSelected];
+    }
+    else if (currentField.boundary) { //(!currentField.grid) {
+        [sidebar setupWithMode:SideBarModeBoundarySelected];
+    }
+    else {
+        [sidebar setupWithMode:SideBarModeGridSelected];
+    }
+}
+
+#pragma mark Sidebar delegate
+-(void)addFarm {
+    UIAlertView __block *alertView = [UIAlertView alertViewWithInputWithTitle:@"Please enter farm name" message:nil cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Create farm"] onDismiss:^(int buttonIndex) {
+        // create new farm
+        // edit farm name
+        NSString *name = [[alertView textFieldAtIndex:0] text];
+        if (name.length == 0) {
+            [UIAlertView alertViewWithTitle:@"Invalid farm name" message:@"You must enter a valid name."];
+            return;
+        }
+        isEditingFarm = YES;
+        farmName = name;
+        [self hideAllButtons];
+        [centerPin setHidden:NO];
+        [buttonCheck setHidden:NO];
+        [UIAlertView alertViewWithTitle:@"Set the location of your farm" message:@"Move the map until the blue pin matches the center of your farm, then click the check mark"];
+    } onCancel:nil];
+}
+
+-(void)editFarm {
+    UIAlertView __block *alertView = [UIAlertView alertViewWithInputWithTitle:@"Please enter farm name" message:nil cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Create farm"] onDismiss:^(int buttonIndex) {
+        // edit farm name
+        NSString *name = [[alertView textFieldAtIndex:0] text];
+        if (name.length == 0) {
+            [UIAlertView alertViewWithTitle:@"Invalid farm name" message:@"You must enter a valid name."];
+            return;
+        }
+        currentFarm.name = name;
+        [_appDelegate saveContext];
+    } onCancel:nil];
+}
+
+-(void)deleteFarm {
+    [UIAlertView alertViewWithTitle:@"Are you sure?" message:[NSString stringWithFormat:@"Do you really want to delete the farm %@?", currentFarm.name] cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Delete"] onDismiss:^(int buttonIndex) {
+        [_appDelegate.managedObjectContext deleteObject:currentFarm];
+        currentFarm = nil;
+        [_appDelegate saveContext];
+
+        isEditingFarm = NO;
+        [self reloadMap];
+    } onCancel:nil];
+}
+
+-(void)addField {
+    // add a field
+    isAddingField = YES;
+    [self hideAllButtons];
+    [centerPin setHidden:NO];
+    [buttonCheck setHidden:NO];
+    [buttonCancel setHidden:NO];
+    [UIAlertView alertViewWithTitle:@"Set the location of your field" message:@"Move the map until the blue pin matches the center of your field, then click the check mark"];
+
+    [self reloadMap];
+}
+
+-(void)editField {
+    if (currentField) {
+        isEditingField = YES;
+        [self reloadMap];
+
+        CLLocationCoordinate2D currentLocation = CLLocationCoordinate2DMake([currentField.latitude doubleValue], [currentField.longitude doubleValue]);
+        [self centerOnCoordinate:currentLocation resize:NO];
+
+        [self hideAllButtons];
+        [centerPin setHidden:NO];
+        [buttonCancel setHidden:NO];
+        [buttonCheck setHidden:NO];
+    }
+    else {
+        // todo: add message to select a field to edit with the pointer
+        [UIAlertView alertViewWithTitle:@"Select a field to edit" message:@"Click on the center pin of the field you want to edit."];
+    }
+}
+
+-(void)deleteField {
+    if (currentField) {
+        [UIAlertView alertViewWithTitle:@"Are you sure?" message:@"Do you really want to delete the currently selected field?" cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Delete"] onDismiss:^(int buttonIndex) {
+            [_appDelegate.managedObjectContext deleteObject:currentField];
+            currentField = nil;
+            [_appDelegate saveContext];
+
+            isEditingField = NO;
+            [self reloadMap];
+        } onCancel:nil];
+    }
+    else {
+        // todo: display a message to select a field to delete with the pointer
     }
 
-    [mapView removeOverlays:mapView.overlays];
-    [self drawFields];
+}
 
-    MKPolyline *polyline = [MKPolyline polylineWithCoordinates:fieldCoordinates count:fieldCoordinateCount];
-    [polyline setStatus:BoundaryStatusNew];
-    [mapView addOverlay:polyline];
+-(void)addBoundary {
+    [self hideAllButtons];
+    [buttonCheck setHidden:NO];
+    [buttonCancel setHidden:NO];
+
+    [UIAlertView alertViewWithTitle:@"Add field boundary" message:@"Use the mouse to click on points along your field's boundary. Click the check mark to save."];
+    isDrawingMode = YES;
+    isEditingField = NO;
+
+    [self reloadMap];
+    [self addAnnotationForField:currentField];
+
+    // start drawing
+    // todo: make mouse look different to look like a boundary drawing
+    fieldCoordinateCount = 0;
+}
+
+-(void)editBoundary {
+
+}
+
+-(void)deleteBoundary {
+    [UIAlertView alertViewWithTitle:@"Are you sure?" message:@"Do you really want to delete the current field's boundary?" cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Delete"] onDismiss:^(int buttonIndex) {
+        [_appDelegate.managedObjectContext deleteObject:currentField.boundary];
+        currentField.boundary = nil;
+        [_appDelegate saveContext];
+
+        [self reloadMap];
+    } onCancel:nil];
+}
+
+-(void)addGrid {
+
+}
+
+-(void)editGrid {
+
+}
+
+-(void)deleteGrid {
+
 }
 @end

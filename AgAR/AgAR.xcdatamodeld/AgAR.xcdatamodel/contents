@@ -4,10 +4,10 @@
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="boundary" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Polyline" inverseName="area" inverseEntity="Polyline" syncable="YES"/>
+        <relationship name="boundary" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Polyline" inverseName="area" inverseEntity="Polyline" syncable="YES"/>
     </entity>
     <entity name="Farm" representedClassName="Farm" parentEntity="Area" syncable="YES">
-        <relationship name="fields" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Field" inverseName="farm" inverseEntity="Field" syncable="YES"/>
+        <relationship name="fields" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Field" inverseName="farm" inverseEntity="Field" syncable="YES"/>
     </entity>
     <entity name="Field" representedClassName="Field" parentEntity="Area" syncable="YES">
         <attribute name="farmName" optional="YES" attributeType="String" syncable="YES"/>
@@ -20,9 +20,9 @@
         <relationship name="area" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Area" inverseName="boundary" inverseEntity="Area" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Farm" positionX="-54" positionY="0" width="128" height="58"/>
+        <element name="Area" positionX="-45" positionY="54" width="128" height="103"/>
+        <element name="Farm" positionX="-54" positionY="0" width="128" height="60"/>
         <element name="Field" positionX="-63" positionY="-18" width="128" height="73"/>
         <element name="Polyline" positionX="-54" positionY="18" width="128" height="103"/>
-        <element name="Area" positionX="-45" positionY="54" width="128" height="103"/>
     </elements>
 </model>

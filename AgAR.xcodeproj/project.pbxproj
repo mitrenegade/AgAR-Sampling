@@ -24,6 +24,8 @@
 		9E0EA9AA19B8BCD60072166D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9E0EA9A819B8BCD60072166D /* InfoPlist.strings */; };
 		9E0EA9AC19B8BCD60072166D /* AgARTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0EA9AB19B8BCD60072166D /* AgARTests.m */; };
 		9E6B9AF419C5496500B47D22 /* MKPolyline+Info.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E6B9AF319C5496500B47D22 /* MKPolyline+Info.m */; };
+		9E6B9B0019C7599E00B47D22 /* SideBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E6B9AFF19C7599E00B47D22 /* SideBarViewController.m */; };
+		9E6F52AE19CB1B5400B6D159 /* ZSPinAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E6F52AD19CB1B5400B6D159 /* ZSPinAnnotationView.m */; };
 		9E85D1BF19C1D89400C6C1E9 /* CustomTabBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E85D1BE19C1D89400C6C1E9 /* CustomTabBarView.m */; };
 		9E85D1C119C1D92500C6C1E9 /* CustomTabBarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9E85D1C019C1D92500C6C1E9 /* CustomTabBarView.xib */; };
 		9E85D1C419C1DC1A00C6C1E9 /* ShellViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E85D1C319C1DC1A00C6C1E9 /* ShellViewController.m */; };
@@ -61,6 +63,7 @@
 		9ED6C03A19B9F6A000EFAF4A /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED6C03919B9F6A000EFAF4A /* StoreKit.framework */; };
 		9ED6C03C19B9F6A700EFAF4A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED6C03B19B9F6A700EFAF4A /* SystemConfiguration.framework */; };
 		9ED6C03E19B9F6AB00EFAF4A /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED6C03D19B9F6AB00EFAF4A /* Social.framework */; };
+		9EEF360819CE773200CF3BB8 /* Polyline+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EEF360719CE773200CF3BB8 /* Polyline+Helper.m */; };
 		9EFC7F2F19BF696400E6A2AE /* ProfileTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFC7F2E19BF696400E6A2AE /* ProfileTableViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -97,6 +100,10 @@
 		9E0EA9AB19B8BCD60072166D /* AgARTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AgARTests.m; sourceTree = "<group>"; };
 		9E6B9AF219C5496500B47D22 /* MKPolyline+Info.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MKPolyline+Info.h"; sourceTree = "<group>"; };
 		9E6B9AF319C5496500B47D22 /* MKPolyline+Info.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MKPolyline+Info.m"; sourceTree = "<group>"; };
+		9E6B9AFE19C7599E00B47D22 /* SideBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SideBarViewController.h; sourceTree = "<group>"; };
+		9E6B9AFF19C7599E00B47D22 /* SideBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SideBarViewController.m; sourceTree = "<group>"; };
+		9E6F52AC19CB1B5300B6D159 /* ZSPinAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZSPinAnnotationView.h; sourceTree = "<group>"; };
+		9E6F52AD19CB1B5400B6D159 /* ZSPinAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZSPinAnnotationView.m; sourceTree = "<group>"; };
 		9E85D1BD19C1D89400C6C1E9 /* CustomTabBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTabBarView.h; sourceTree = "<group>"; };
 		9E85D1BE19C1D89400C6C1E9 /* CustomTabBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTabBarView.m; sourceTree = "<group>"; };
 		9E85D1C019C1D92500C6C1E9 /* CustomTabBarView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomTabBarView.xib; sourceTree = "<group>"; };
@@ -157,6 +164,8 @@
 		9ED6C03919B9F6A000EFAF4A /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		9ED6C03B19B9F6A700EFAF4A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		9ED6C03D19B9F6AB00EFAF4A /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		9EEF360619CE773200CF3BB8 /* Polyline+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Polyline+Helper.h"; sourceTree = "<group>"; };
+		9EEF360719CE773200CF3BB8 /* Polyline+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Polyline+Helper.m"; sourceTree = "<group>"; };
 		9EFC7F2C19BF614500E6A2AE /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		9EFC7F2D19BF696400E6A2AE /* ProfileTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileTableViewController.h; sourceTree = "<group>"; };
 		9EFC7F2E19BF696400E6A2AE /* ProfileTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileTableViewController.m; sourceTree = "<group>"; };
@@ -227,6 +236,8 @@
 				9E85D1E919C2189700C6C1E9 /* Area.m */,
 				9E85D1C719C1F9AD00C6C1E9 /* Polyline+TransformableAttributes.h */,
 				9E85D1C819C1F9AD00C6C1E9 /* Polyline+TransformableAttributes.m */,
+				9EEF360619CE773200CF3BB8 /* Polyline+Helper.h */,
+				9EEF360719CE773200CF3BB8 /* Polyline+Helper.m */,
 			);
 			name = "Core Data";
 			sourceTree = "<group>";
@@ -285,6 +296,7 @@
 				9ED6BF9019B9F39000EFAF4A /* iPhone.storyboard */,
 				9ED6BF9219B9F3CE00EFAF4A /* Login */,
 				3F2FC24F19BB9CF700124ACB /* Tab Controllers */,
+				9E6B9AF519C74EA800B47D22 /* Side navigation */,
 				9E85D1DB19C212A900C6C1E9 /* Views */,
 				9E0EA98919B8BCD60072166D /* Supporting Files */,
 			);
@@ -322,6 +334,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		9E6B9AF519C74EA800B47D22 /* Side navigation */ = {
+			isa = PBXGroup;
+			children = (
+				9E6B9AFE19C7599E00B47D22 /* SideBarViewController.h */,
+				9E6B9AFF19C7599E00B47D22 /* SideBarViewController.m */,
+			);
+			name = "Side navigation";
+			sourceTree = "<group>";
+		};
 		9E85D1DB19C212A900C6C1E9 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -350,6 +371,8 @@
 		9ED6BFFB19B9F59F00EFAF4A /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				9E6F52AC19CB1B5300B6D159 /* ZSPinAnnotationView.h */,
+				9E6F52AD19CB1B5400B6D159 /* ZSPinAnnotationView.m */,
 				9ED6C00019B9F59F00EFAF4A /* GPLocationHelper.h */,
 				9ED6C00119B9F59F00EFAF4A /* GPLocationHelper.m */,
 				9ED6C00419B9F59F00EFAF4A /* MKAdditions */,
@@ -496,10 +519,12 @@
 				9E85D1C419C1DC1A00C6C1E9 /* ShellViewController.m in Sources */,
 				9E85D1DE19C212C300C6C1E9 /* Annotation.m in Sources */,
 				9E0EA98F19B8BCD60072166D /* main.m in Sources */,
+				9E6F52AE19CB1B5400B6D159 /* ZSPinAnnotationView.m in Sources */,
 				9EFC7F2F19BF696400E6A2AE /* ProfileTableViewController.m in Sources */,
 				9E85D1ED19C2190000C6C1E9 /* Farm.m in Sources */,
 				9ED6C02019B9F59F00EFAF4A /* NSObject+MKBlockAdditions.m in Sources */,
 				3F2FC25219BB9D3B00124ACB /* FieldsViewController.m in Sources */,
+				9EEF360819CE773200CF3BB8 /* Polyline+Helper.m in Sources */,
 				9E85D1C919C1F9AD00C6C1E9 /* Polyline+TransformableAttributes.m in Sources */,
 				9ED6C02719B9F59F00EFAF4A /* UIImage+Alpha.m in Sources */,
 				9ED6C02919B9F59F00EFAF4A /* UIImage+RoundedCorner.m in Sources */,
@@ -508,6 +533,7 @@
 				9E0EA99619B8BCD60072166D /* AgAR.xcdatamodeld in Sources */,
 				9E85D1BF19C1D89400C6C1E9 /* CustomTabBarView.m in Sources */,
 				9ED6BF9819B9F3EB00EFAF4A /* SignupViewController.m in Sources */,
+				9E6B9B0019C7599E00B47D22 /* SideBarViewController.m in Sources */,
 				9E85D1F319C2191A00C6C1E9 /* Polyline.m in Sources */,
 				9ED6C02619B9F59F00EFAF4A /* Query.m in Sources */,
 				9ED6C02419B9F59F00EFAF4A /* NSManagedObject+Query.m in Sources */,

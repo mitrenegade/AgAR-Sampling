@@ -7,6 +7,7 @@
 //
 
 #import "ShellViewController.h"
+#import "SideBarViewController.h"
 
 @interface ShellViewController ()
 

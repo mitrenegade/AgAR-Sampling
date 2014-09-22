@@ -22,10 +22,13 @@
 
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
 
+#if AIRPLANE_MODE
+    [self goToMainView:NO];
+#else
     if ([PFUser currentUser]) {
         [self goToMainView:NO];
     }
-
+#endif
     return YES;
 }
 
