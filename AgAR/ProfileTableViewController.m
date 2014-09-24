@@ -47,13 +47,50 @@
 {
     // Return the number of sections.
     // todo: add sections for Profile and fields
-    return 1;
+    return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return 10;
+    int row = 0;
+    switch(section) {
+        case 0:
+            row = 2;
+            break;
+            
+        case 1:
+            row = 7;
+            break;
+            
+        case 2:
+            row = 5;
+            break;
+            
+       defaut:
+            row = 0;
+            break;
+    }
+    return row;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    NSString *head;
+    switch (section) {
+        case 0:
+            head = @"Login info";
+            break;
+            
+        case 1:
+            head = @"Profile";
+            break;
+
+        case 2:
+            head = @"Customer type";
+            break;
+    }
+    return head;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -64,54 +101,92 @@
     
     // Configure the cell...
     NSString *title;
+    NSString *detail;
+    int section = indexPath.section;
     int row = indexPath.row;
-    switch (row) {
+    
+    switch( section) {
         case 0:
-            title = @"Email";
-            
+           switch(row) {
+                case 0:
+                    title = @"Email";
+                    detail = _currentUser.email;
+                    break;
+                case 1:
+                    title = @"Password";
+                    break;
+            }
             break;
-            
         case 1:
-            title = @"Password";
+            switch(row) {
+                case 0:
+                    title = @"Name";
+                    detail = _currentUser.username;
+                    break;
+                    
+                case 1:
+                    title = @"Address";
+                    
+                    _currentUser[@"address"]=@"331 Felspar Way";
+                    [_currentUser saveInBackground];
+                    break;
+                    
+                case 2:
+                    title = @"Address2";
+                    break;
+                    
+                case 3:
+                    title = @"City";
+                    break;
+                    
+                case 4:
+                    title = @"State";
+                    break;
+                    
+                case 5:
+                    title = @"Zip";
+                    break;
+                    
+                case 6:
+                    title = @"County";
+                    break;
+                    
+                default:
+                    break;
+            }
             break;
-            
         case 2:
-            title = @"Name";
+            switch(row) {
+                case 0:
+                    title = @"Customer type";
+                    //detail = _currentUser.;
+                    break;
+                case 1:
+                    title = @"Field size";
+                    break;
+                    
+                case 2:
+                    title = @"Grid size";
+                    break;
+                    
+                case 3:
+                    title = @"Log out";
+                    break;
+                    
+                case 4:
+                    title = @"";
+                    break;
+                    
+                default:
+                    break;
+           }
             break;
-            
-        case 3:
-            title = @"Address";
-            break;
-            
-        case 4:
-            title = @"Address2";
-            break;
-            
-        case 5:
-            title = @"City";
-            break;
-            
-        case 6:
-            title = @"State";
-            break;
-            
-        case 7:
-            title = @"Zip";
-            break;
-            
-        case 8:
-            title = @"Category";
-            break;
-            
-        case 9:
-            title = @"Log out";
-            break;
-            
         default:
             break;
     }
     
     cell.textLabel.text = title;
+    cell.detailTextLabel.text = detail;
     return cell;
 }
 
@@ -134,7 +209,7 @@
             // todo: build UserInfoViewController to edit every field for a user
             UIAlertView *alert = [[UIAlertView alloc]
                                   initWithTitle:[NSString stringWithFormat:@""]
-                                  message:@""
+                                  message:@"Enter new password:"
                                   delegate:self cancelButtonTitle:@"Cancel"
                                   otherButtonTitles:@"Update", nil];
             
