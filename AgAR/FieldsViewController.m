@@ -299,6 +299,9 @@
             [self stopEditingBoundary:YES];
             [self didClickCancel];
         }
+        else if (isAddingGrid) {
+            [self didClickCancel];
+        }
     }
     else if (isEditingFarm) {
         // end edit
@@ -324,6 +327,10 @@
 
     if (isEditingBoundary) {
         [self stopEditingBoundary:NO];
+    }
+
+    if (isAddingGrid) {
+        [self clearGrid];
     }
 
     fieldCoordinateCount = 0;
@@ -648,7 +655,7 @@
         }
         else if (gesture.state == UIGestureRecognizerStateChanged) {
             NSLog(@"Changed");
-            if (CGPointZero.x == firstTouch.x && CGPointZero.y == firstTouch.y)
+            if (CGPointEqualToPoint(CGPointZero, firstTouch))
                 return;
 
             CLLocationCoordinate2D coord = [mapView convertPoint:touch toCoordinateFromView:mapView];
@@ -890,7 +897,14 @@
 }
 
 -(void)addGrid {
-
+    if (!grid) {
+        grid = [[GridOverlay alloc] initWithFrame:self.view.frame];
+        grid.delegate = self;
+        grid.backgroundColor = [UIColor clearColor];
+        [self.view addSubview:grid];
+    }
+    isAddingGrid = YES;
+    [grid setupGridFrame];
 }
 
 -(void)editGrid {
@@ -900,4 +914,34 @@
 -(void)deleteGrid {
 
 }
+
+-(void)clearGrid {
+    [grid removeFromSuperview];
+    grid = nil;
+}
+
+#pragma mark GridOverlayDelegate
+-(void)didSelectGridTopLeft:(CGPoint)topLeft {
+    NSLog(@"Top left");
+}
+
+-(void)didSelectGridBottomRight:(CGPoint)bottomRight {
+    NSLog(@"Bottom left");
+    [grid createGridlines];
+    [self hideAllButtons];
+    [buttonCancel setHidden:NO];
+    [buttonCheck setHidden:NO];
+}
+
+-(BOOL)clickOnButton:(CGPoint)touch {
+    if (CGRectContainsPoint(buttonCancel.frame, touch) || CGRectContainsPoint(buttonCheck.frame, touch))
+        return YES;
+
+    if (CGRectContainsPoint(buttonSidebar.frame, touch))
+        return YES;
+
+    return NO;
+}
+
+
 @end
