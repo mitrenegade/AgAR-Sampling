@@ -25,7 +25,6 @@
     IBOutlet UILabel *labelFarm;
     IBOutlet UIImageView *centerPin;
 
-    IBOutlet UIButton *buttonCreate;
     IBOutlet UIButton *buttonCancel;
     IBOutlet UIButton *buttonCheck;
     IBOutlet UIButton *buttonDraw;

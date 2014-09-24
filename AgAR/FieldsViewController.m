@@ -52,7 +52,6 @@
 
     [centerPin setHidden:YES];
     [self hideAllButtons];
-    [buttonCreate setHidden:NO];
 
     annotations = [NSMutableArray array];
 
@@ -76,7 +75,6 @@
 }
 
 -(void)hideAllButtons {
-    [buttonCreate setHidden:YES];
     [buttonCheck setHidden:YES];
     [buttonCancel setHidden:YES];
     [buttonDraw setHidden:YES];
@@ -307,7 +305,6 @@
         // end edit
         [centerPin setHidden:YES];
         [self hideAllButtons];
-        [buttonCreate setHidden:NO];
 
         isEditingFarm = NO;
         [self createFarm:farmName];
@@ -318,7 +315,6 @@
     // cancel edit
     [centerPin setHidden:YES];
     [self hideAllButtons];
-    [buttonCreate setHidden:NO];
 
     isEditingField = NO;
     isAddingField = NO;
@@ -330,15 +326,18 @@
     }
 
     if (isAddingGrid) {
+        isEditingField = YES;
         [self clearGrid];
     }
 
     fieldCoordinateCount = 0;
 
-    currentField = nil;
-    [self.fieldFetcher performFetch:nil];
+    if (!isAddingGrid) {
+        currentField = nil;
+        [self.fieldFetcher performFetch:nil];
 
-    [self reloadMap];
+        [self reloadMap];
+    }
 }
 
 -(void)didClickTrash {
@@ -357,7 +356,6 @@
             currentField = nil;
             isEditingField = NO;
             [self hideAllButtons];
-            [buttonCreate setHidden:NO];
             [self reloadMap];
         } onCancel:nil];
     }
@@ -897,6 +895,7 @@
 }
 
 -(void)addGrid {
+    [UIAlertView alertViewWithTitle:@"Draw grid boundaries" message:@"Click on two opposite corners or drag a box around the location for your boundary."];
     if (!grid) {
         grid = [[GridOverlay alloc] initWithFrame:self.view.frame];
         grid.delegate = self;
