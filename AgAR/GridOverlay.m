@@ -7,6 +7,23 @@
 //
 
 #import "GridOverlay.h"
+#import "Area.h"
+#import "Polyline+TransformableAttributes.h"
+
+@interface Box : NSObject
+
+@property float x0;
+@property float y0;
+@property float x1;
+@property float y1;
+
+@end
+
+@implementation Box {
+
+}
+
+@end
 
 @implementation GridOverlay
 
@@ -85,9 +102,68 @@
         [self removeGestureRecognizer:gesture];
     }
 
+    // allow user to move the map and rotate
     passThroughTouch = YES;
 
-    NSLog(@"Create grid lines and allow user to rotate");
+    // draw grid lines
+    if (!boxes) {
+        boxes = [NSMutableArray array];
+    }
+    [boxes removeAllObjects];
+
+    float x0 = topLeft.x;
+    float x1 = bottomRight.x;
+    float y0 = topLeft.y;
+    float y1 = bottomRight.y;
+
+    int pixelsPerGrid = floor((x1-x0)/4);
+    for (int x = x0; x < x1; x += pixelsPerGrid) {
+        for (int y = y0; y < y1; y +=pixelsPerGrid) {
+            Box *box = [[Box alloc] init];
+            box.x0 = x;
+            box.y0 = y;
+            box.x1 = MIN(x1, x + pixelsPerGrid);
+            box.y1 = MIN(y1, y + pixelsPerGrid);
+
+            [boxes addObject:box];
+        }
+    }
+    // todo: trim boxes on the edge that are too small
+
+    [self setNeedsDisplay];
+}
+
+-(void)saveGrid {
+    CLLocationCoordinate2D coordinates[5];
+    for (Box *box in boxes) {
+        Area *area = [self newArea];
+        area.boundary = [self newPolyline];
+
+        coordinates[0] = [self.delegate locationForPoint:(CGPointMake(box.x0, box.y0))];
+        coordinates[1] = [self.delegate locationForPoint:(CGPointMake(box.x1, box.y0))];
+        coordinates[2] = [self.delegate locationForPoint:(CGPointMake(box.x1, box.y1))];
+        coordinates[3] = [self.delegate locationForPoint:(CGPointMake(box.x0, box.y1))];
+        coordinates[4] = [self.delegate locationForPoint:(CGPointMake(box.x0, box.y0))];
+        [area.boundary setCoordinatesFromCoordinates:coordinates totalPoints:5];
+
+        CGPoint center = CGPointMake((box.x0+box.x1)/2, (box.y0+box.y1)/2);
+        CLLocationCoordinate2D centerCoord = [self.delegate locationForPoint:center];
+        area.latitude = @(centerCoord.latitude);
+        area.longitude = @(centerCoord.longitude);
+
+        [areas addObject:area];
+    }
+    
+}
+
+-(Area *)newArea {
+    NSManagedObject *object = [NSEntityDescription insertNewObjectForEntityForName:@"Area" inManagedObjectContext:_appDelegate.managedObjectContext];
+    return (Area *)object;
+}
+
+-(Polyline *)newPolyline {
+    NSManagedObject *object = [NSEntityDescription insertNewObjectForEntityForName:@"Polyline" inManagedObjectContext:_appDelegate.managedObjectContext];
+    return (Polyline *)object;
 }
 
 -(void)dealloc {
@@ -102,7 +178,6 @@
     // Drawing code
     if (CGPointEqualToPoint(CGPointZero, topLeft))
         return;
-
 
     // (y1 - y0) = m(x1 - x0) + b
     float x0 = topLeft.x;
@@ -148,7 +223,36 @@
 
     CGFloat dash1[] = {10.0, 5.0};
     CGContextSetLineDash(context, 0.0, dash1, 2);
+
     CGContextStrokePath(context);
+
+    if ([boxes count]) {
+        for (Box *box in boxes)
+            [self drawBox:box rect:rect xmin:x0 ymin:y0];
+    }
+}
+
+-(void)drawBox:(Box *)box rect:(CGRect)rect xmin:(float)xmin ymin:(float)ymin {
+    float x0 = box.x0;
+    float y0 = box.y0;
+    float x1 = box.x1;
+    float y1 = box.y1;
+
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetStrokeColorWithColor(context, [[UIColor blueColor] CGColor]);
+    CGContextSetFillColorWithColor(context, [[UIColor blueColor] CGColor]);
+    CGContextSetLineWidth(context, 3);
+
+    // draw boundary line
+    CGContextBeginPath(context);
+    if (x0  > xmin) {
+        CGContextMoveToPoint(context, x0, y0);
+        CGContextAddLineToPoint(context, x0, y1);
+    }
+    if (y0 > ymin) {
+        CGContextMoveToPoint(context, x0, y0);
+        CGContextAddLineToPoint(context, x1, y0);
+    }
 
     CGContextStrokePath(context);
 }

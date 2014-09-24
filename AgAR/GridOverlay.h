@@ -7,12 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Polyline+Helper.h"
+#import <CoreLocation/CoreLocation.h>
 
 @protocol GridOverlayDelegate <NSObject>
 
 -(void)didSelectGridTopLeft:(CGPoint)topLeft;
 -(void)didSelectGridBottomRight:(CGPoint)bottomRight;
 -(BOOL)clickOnButton:(CGPoint)touch;
+-(CLLocationCoordinate2D)locationForPoint:(CGPoint)point;
 
 @end
 
@@ -22,10 +25,15 @@
     CGPoint bottomRight;
 
     BOOL passThroughTouch;
+
+    NSMutableArray *boxes; // array of quads of cgpoints - coordinate is in pixels
+    NSMutableArray *areas; // array of areas (polylines) - coordinate is in lat/long
 }
 
 @property (nonatomic, weak) id delegate;
+@property (nonatomic, weak) Polyline *boundary;
 
 -(void)setupGridFrame;
 -(void)createGridlines;
+-(void)saveGrid;
 @end

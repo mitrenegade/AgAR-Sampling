@@ -298,6 +298,7 @@
             [self didClickCancel];
         }
         else if (isAddingGrid) {
+            [self saveGrid];
             [self didClickCancel];
         }
     }
@@ -903,6 +904,7 @@
         [self.view addSubview:grid];
     }
     isAddingGrid = YES;
+    grid.boundary = currentField.boundary;
     [grid setupGridFrame];
 }
 
@@ -912,6 +914,10 @@
 
 -(void)deleteGrid {
 
+}
+
+-(void)saveGrid {
+    [grid saveGrid];
 }
 
 -(void)clearGrid {
@@ -942,5 +948,8 @@
     return NO;
 }
 
-
+-(CLLocationCoordinate2D)locationForPoint:(CGPoint)point {
+    CLLocationCoordinate2D coord = [mapView convertPoint:point toCoordinateFromView:mapView];
+    return coord;
+}
 @end
