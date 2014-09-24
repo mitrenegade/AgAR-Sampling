@@ -23,6 +23,7 @@
 		9E0EA9A219B8BCD60072166D /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E0EA98619B8BCD60072166D /* CoreData.framework */; };
 		9E0EA9AA19B8BCD60072166D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9E0EA9A819B8BCD60072166D /* InfoPlist.strings */; };
 		9E0EA9AC19B8BCD60072166D /* AgARTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0EA9AB19B8BCD60072166D /* AgARTests.m */; };
+		9E3188A519D356CA009305DB /* Polyline.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E3188A419D356CA009305DB /* Polyline.m */; };
 		9E6B9AF419C5496500B47D22 /* MKPolyline+Info.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E6B9AF319C5496500B47D22 /* MKPolyline+Info.m */; };
 		9E6B9B0019C7599E00B47D22 /* SideBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E6B9AFF19C7599E00B47D22 /* SideBarViewController.m */; };
 		9E6F52AE19CB1B5400B6D159 /* ZSPinAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E6F52AD19CB1B5400B6D159 /* ZSPinAnnotationView.m */; };
@@ -36,8 +37,9 @@
 		9E85D1EA19C2189700C6C1E9 /* Area.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E85D1E919C2189700C6C1E9 /* Area.m */; };
 		9E85D1ED19C2190000C6C1E9 /* Farm.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E85D1EC19C2190000C6C1E9 /* Farm.m */; };
 		9E85D1F019C2190D00C6C1E9 /* Field.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E85D1EF19C2190D00C6C1E9 /* Field.m */; };
-		9E85D1F319C2191A00C6C1E9 /* Polyline.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E85D1F219C2191A00C6C1E9 /* Polyline.m */; };
 		9ECBA02B19D3242C00EFC641 /* GridOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECBA02A19D3242C00EFC641 /* GridOverlay.m */; };
+		9ECBA02E19D3552B00EFC641 /* GridArea.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECBA02D19D3552B00EFC641 /* GridArea.m */; };
+		9ECBA03119D3552C00EFC641 /* Grid.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECBA03019D3552C00EFC641 /* Grid.m */; };
 		9ED6BF9119B9F39000EFAF4A /* iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9ED6BF9019B9F39000EFAF4A /* iPhone.storyboard */; };
 		9ED6BF9719B9F3EB00EFAF4A /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED6BF9419B9F3EB00EFAF4A /* LoginViewController.m */; };
 		9ED6BF9819B9F3EB00EFAF4A /* SignupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED6BF9619B9F3EB00EFAF4A /* SignupViewController.m */; };
@@ -99,6 +101,8 @@
 		9E0EA9A719B8BCD60072166D /* AgARTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AgARTests-Info.plist"; sourceTree = "<group>"; };
 		9E0EA9A919B8BCD60072166D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9E0EA9AB19B8BCD60072166D /* AgARTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AgARTests.m; sourceTree = "<group>"; };
+		9E3188A319D356CA009305DB /* Polyline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Polyline.h; sourceTree = "<group>"; };
+		9E3188A419D356CA009305DB /* Polyline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Polyline.m; sourceTree = "<group>"; };
 		9E6B9AF219C5496500B47D22 /* MKPolyline+Info.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MKPolyline+Info.h"; sourceTree = "<group>"; };
 		9E6B9AF319C5496500B47D22 /* MKPolyline+Info.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MKPolyline+Info.m"; sourceTree = "<group>"; };
 		9E6B9AFE19C7599E00B47D22 /* SideBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SideBarViewController.h; sourceTree = "<group>"; };
@@ -122,10 +126,12 @@
 		9E85D1EC19C2190000C6C1E9 /* Farm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Farm.m; sourceTree = "<group>"; };
 		9E85D1EE19C2190D00C6C1E9 /* Field.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Field.h; sourceTree = "<group>"; };
 		9E85D1EF19C2190D00C6C1E9 /* Field.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Field.m; sourceTree = "<group>"; };
-		9E85D1F119C2191A00C6C1E9 /* Polyline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Polyline.h; sourceTree = "<group>"; };
-		9E85D1F219C2191A00C6C1E9 /* Polyline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Polyline.m; sourceTree = "<group>"; };
 		9ECBA02919D3242C00EFC641 /* GridOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GridOverlay.h; sourceTree = "<group>"; };
 		9ECBA02A19D3242C00EFC641 /* GridOverlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GridOverlay.m; sourceTree = "<group>"; };
+		9ECBA02C19D3552B00EFC641 /* GridArea.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GridArea.h; sourceTree = "<group>"; };
+		9ECBA02D19D3552B00EFC641 /* GridArea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GridArea.m; sourceTree = "<group>"; };
+		9ECBA02F19D3552C00EFC641 /* Grid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Grid.h; sourceTree = "<group>"; };
+		9ECBA03019D3552C00EFC641 /* Grid.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Grid.m; sourceTree = "<group>"; };
 		9ED6BF9019B9F39000EFAF4A /* iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = iPhone.storyboard; sourceTree = "<group>"; };
 		9ED6BF9319B9F3EB00EFAF4A /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		9ED6BF9419B9F3EB00EFAF4A /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
@@ -229,8 +235,12 @@
 			isa = PBXGroup;
 			children = (
 				9E0EA99419B8BCD60072166D /* AgAR.xcdatamodeld */,
-				9E85D1F119C2191A00C6C1E9 /* Polyline.h */,
-				9E85D1F219C2191A00C6C1E9 /* Polyline.m */,
+				9E3188A319D356CA009305DB /* Polyline.h */,
+				9E3188A419D356CA009305DB /* Polyline.m */,
+				9ECBA02F19D3552C00EFC641 /* Grid.h */,
+				9ECBA03019D3552C00EFC641 /* Grid.m */,
+				9ECBA02C19D3552B00EFC641 /* GridArea.h */,
+				9ECBA02D19D3552B00EFC641 /* GridArea.m */,
 				9E85D1EE19C2190D00C6C1E9 /* Field.h */,
 				9E85D1EF19C2190D00C6C1E9 /* Field.m */,
 				9E85D1EB19C2190000C6C1E9 /* Farm.h */,
@@ -517,6 +527,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9E85D1EA19C2189700C6C1E9 /* Area.m in Sources */,
+				9E3188A519D356CA009305DB /* Polyline.m in Sources */,
 				9ED6BF9719B9F3EB00EFAF4A /* LoginViewController.m in Sources */,
 				9E0EA99319B8BCD60072166D /* AppDelegate.m in Sources */,
 				9E6B9AF419C5496500B47D22 /* MKPolyline+Info.m in Sources */,
@@ -533,14 +544,15 @@
 				9E85D1C919C1F9AD00C6C1E9 /* Polyline+TransformableAttributes.m in Sources */,
 				9ED6C02719B9F59F00EFAF4A /* UIImage+Alpha.m in Sources */,
 				9ECBA02B19D3242C00EFC641 /* GridOverlay.m in Sources */,
+				9ECBA02E19D3552B00EFC641 /* GridArea.m in Sources */,
 				9ED6C02919B9F59F00EFAF4A /* UIImage+RoundedCorner.m in Sources */,
 				9ED6C02819B9F59F00EFAF4A /* UIImage+Resize.m in Sources */,
 				9ED6C02319B9F59F00EFAF4A /* NSManagedObject+Entity.m in Sources */,
 				9E0EA99619B8BCD60072166D /* AgAR.xcdatamodeld in Sources */,
 				9E85D1BF19C1D89400C6C1E9 /* CustomTabBarView.m in Sources */,
+				9ECBA03119D3552C00EFC641 /* Grid.m in Sources */,
 				9ED6BF9819B9F3EB00EFAF4A /* SignupViewController.m in Sources */,
 				9E6B9B0019C7599E00B47D22 /* SideBarViewController.m in Sources */,
-				9E85D1F319C2191A00C6C1E9 /* Polyline.m in Sources */,
 				9ED6C02619B9F59F00EFAF4A /* Query.m in Sources */,
 				9ED6C02419B9F59F00EFAF4A /* NSManagedObject+Query.m in Sources */,
 				9ED6C01E19B9F59F00EFAF4A /* GPLocationHelper.m in Sources */,

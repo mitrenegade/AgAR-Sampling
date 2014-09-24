@@ -10,6 +10,7 @@
 #import "Polyline+Helper.h"
 #import <CoreLocation/CoreLocation.h>
 
+@class Grid;
 @protocol GridOverlayDelegate <NSObject>
 
 -(void)didSelectGridTopLeft:(CGPoint)topLeft;
@@ -27,7 +28,7 @@
     BOOL passThroughTouch;
 
     NSMutableArray *boxes; // array of quads of cgpoints - coordinate is in pixels
-    NSMutableArray *areas; // array of areas (polylines) - coordinate is in lat/long
+    Grid *grid;
 }
 
 @property (nonatomic, weak) id delegate;

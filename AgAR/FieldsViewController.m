@@ -16,6 +16,8 @@
 #import "MKPolyline+Info.h"
 #import "ZSPinAnnotationView.h"
 #import "Polyline+Helper.h"
+#import "GridArea.h"
+#import "Grid.h"
 
 @interface FieldsViewController ()
 
@@ -232,6 +234,17 @@
     }
 }
 
+-(void)addGridForField:(Field *)field {
+    if (field.boundary.grid) {
+        // draw all areas
+        for (GridArea *area in field.boundary.grid.areas) {
+            Polyline *areaBounds = area.boundary;
+            MKPolyline *line = [areaBounds polyLine];
+            [mapView addOverlay:line];
+        }
+    }
+}
+
 -(void)drawFields {
     NSArray *fields = [[self fieldFetcher] fetchedObjects];
     for (Field *field in fields) {
@@ -240,7 +253,10 @@
             continue;
         }
         [self addAnnotationForField:field];
-        [self addBoundaryForField:field];
+        if (field.boundary.grid)
+            [self addGridForField:field];
+        else
+            [self addBoundaryForField:field];
     }
 }
 
@@ -918,6 +934,7 @@
 
 -(void)saveGrid {
     [grid saveGrid];
+    [self reloadMap];
 }
 
 -(void)clearGrid {

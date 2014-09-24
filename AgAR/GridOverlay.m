@@ -9,6 +9,8 @@
 #import "GridOverlay.h"
 #import "Area.h"
 #import "Polyline+TransformableAttributes.h"
+#import "GridArea.h"
+#import "Grid.h"
 
 @interface Box : NSObject
 
@@ -134,10 +136,15 @@
 }
 
 -(void)saveGrid {
+    if (!grid) {
+        grid = [NSEntityDescription insertNewObjectForEntityForName:@"Grid" inManagedObjectContext:_appDelegate.managedObjectContext];
+    }
+    grid.boundary = self.boundary;
+
     CLLocationCoordinate2D coordinates[5];
     for (Box *box in boxes) {
-        Area *area = [self newArea];
-        area.boundary = [self newPolyline];
+        GridArea *area = [NSEntityDescription insertNewObjectForEntityForName:@"GridArea" inManagedObjectContext:_appDelegate.managedObjectContext];
+        area.boundary = [NSEntityDescription insertNewObjectForEntityForName:@"Polyline" inManagedObjectContext:_appDelegate.managedObjectContext];
 
         coordinates[0] = [self.delegate locationForPoint:(CGPointMake(box.x0, box.y0))];
         coordinates[1] = [self.delegate locationForPoint:(CGPointMake(box.x1, box.y0))];
@@ -151,19 +158,10 @@
         area.latitude = @(centerCoord.latitude);
         area.longitude = @(centerCoord.longitude);
 
-        [areas addObject:area];
+        area.grid = grid;
     }
-    
-}
 
--(Area *)newArea {
-    NSManagedObject *object = [NSEntityDescription insertNewObjectForEntityForName:@"Area" inManagedObjectContext:_appDelegate.managedObjectContext];
-    return (Area *)object;
-}
-
--(Polyline *)newPolyline {
-    NSManagedObject *object = [NSEntityDescription insertNewObjectForEntityForName:@"Polyline" inManagedObjectContext:_appDelegate.managedObjectContext];
-    return (Polyline *)object;
+    [_appDelegate.managedObjectContext save:nil];
 }
 
 -(void)dealloc {
