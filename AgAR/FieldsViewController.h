@@ -9,12 +9,13 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import "SideBarViewController.h"
+#import "GridOverlay.h"
 
 @class Farm;
 @class Field;
 @class Polyline;
 @class Annotation;
-@interface FieldsViewController : UIViewController <MKMapViewDelegate, UIAlertViewDelegate, SideBarDelegate>
+@interface FieldsViewController : UIViewController <MKMapViewDelegate, UIAlertViewDelegate, SideBarDelegate, GridOverlayDelegate>
 {
     NSFetchedResultsController *fieldFetcher;
     NSFetchedResultsController *farmFetcher;
@@ -24,7 +25,6 @@
     IBOutlet UILabel *labelFarm;
     IBOutlet UIImageView *centerPin;
 
-    IBOutlet UIButton *buttonCreate;
     IBOutlet UIButton *buttonCancel;
     IBOutlet UIButton *buttonCheck;
     IBOutlet UIButton *buttonDraw;
@@ -36,6 +36,7 @@
     NSString *farmName;
     BOOL isAddingField; // creating a new field
     BOOL isEditingField; // moving the current selected field
+    BOOL isAddingGrid;
 
     CLLocationCoordinate2D fieldCoordinates[1000];
     int fieldCoordinateCount;
@@ -53,6 +54,7 @@
     NSMutableArray *annotations;
 
     SideBarViewController *sidebar;
+    GridOverlay *grid;
 }
 
 @property (nonatomic, readonly) Farm *currentFarm;

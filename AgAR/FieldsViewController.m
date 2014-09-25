@@ -16,6 +16,8 @@
 #import "MKPolyline+Info.h"
 #import "ZSPinAnnotationView.h"
 #import "Polyline+Helper.h"
+#import "GridArea.h"
+#import "Grid.h"
 
 @interface FieldsViewController ()
 
@@ -52,7 +54,6 @@
 
     [centerPin setHidden:YES];
     [self hideAllButtons];
-    [buttonCreate setHidden:NO];
 
     annotations = [NSMutableArray array];
 
@@ -76,7 +77,6 @@
 }
 
 -(void)hideAllButtons {
-    [buttonCreate setHidden:YES];
     [buttonCheck setHidden:YES];
     [buttonCancel setHidden:YES];
     [buttonDraw setHidden:YES];
@@ -234,6 +234,17 @@
     }
 }
 
+-(void)addGridForField:(Field *)field {
+    if (field.boundary.grid) {
+        // draw all areas
+        for (GridArea *area in field.boundary.grid.areas) {
+            Polyline *areaBounds = area.boundary;
+            MKPolyline *line = [areaBounds polyLine];
+            [mapView addOverlay:line];
+        }
+    }
+}
+
 -(void)drawFields {
     NSArray *fields = [[self fieldFetcher] fetchedObjects];
     for (Field *field in fields) {
@@ -242,7 +253,10 @@
             continue;
         }
         [self addAnnotationForField:field];
-        [self addBoundaryForField:field];
+        if (field.boundary.grid)
+            [self addGridForField:field];
+        else
+            [self addBoundaryForField:field];
     }
 }
 
@@ -299,12 +313,15 @@
             [self stopEditingBoundary:YES];
             [self didClickCancel];
         }
+        else if (isAddingGrid) {
+            [self saveGrid];
+            [self didClickCancel];
+        }
     }
     else if (isEditingFarm) {
         // end edit
         [centerPin setHidden:YES];
         [self hideAllButtons];
-        [buttonCreate setHidden:NO];
 
         isEditingFarm = NO;
         [self createFarm:farmName];
@@ -315,7 +332,6 @@
     // cancel edit
     [centerPin setHidden:YES];
     [self hideAllButtons];
-    [buttonCreate setHidden:NO];
 
     isEditingField = NO;
     isAddingField = NO;
@@ -326,12 +342,19 @@
         [self stopEditingBoundary:NO];
     }
 
+    if (isAddingGrid) {
+        isEditingField = YES;
+        [self clearGrid];
+    }
+
     fieldCoordinateCount = 0;
 
-    currentField = nil;
-    [self.fieldFetcher performFetch:nil];
+    if (!isAddingGrid) {
+        currentField = nil;
+        [self.fieldFetcher performFetch:nil];
 
-    [self reloadMap];
+        [self reloadMap];
+    }
 }
 
 -(void)didClickTrash {
@@ -350,7 +373,6 @@
             currentField = nil;
             isEditingField = NO;
             [self hideAllButtons];
-            [buttonCreate setHidden:NO];
             [self reloadMap];
         } onCancel:nil];
     }
@@ -648,7 +670,7 @@
         }
         else if (gesture.state == UIGestureRecognizerStateChanged) {
             NSLog(@"Changed");
-            if (CGPointZero.x == firstTouch.x && CGPointZero.y == firstTouch.y)
+            if (CGPointEqualToPoint(CGPointZero, firstTouch))
                 return;
 
             CLLocationCoordinate2D coord = [mapView convertPoint:touch toCoordinateFromView:mapView];
@@ -890,7 +912,16 @@
 }
 
 -(void)addGrid {
-
+    [UIAlertView alertViewWithTitle:@"Draw grid boundaries" message:@"Click on two opposite corners or drag a box around the location for your boundary."];
+    if (!grid) {
+        grid = [[GridOverlay alloc] initWithFrame:self.view.frame];
+        grid.delegate = self;
+        grid.backgroundColor = [UIColor clearColor];
+        [self.view addSubview:grid];
+    }
+    isAddingGrid = YES;
+    grid.boundary = currentField.boundary;
+    [grid setupGridFrame];
 }
 
 -(void)editGrid {
@@ -899,5 +930,43 @@
 
 -(void)deleteGrid {
 
+}
+
+-(void)saveGrid {
+    [grid saveGrid];
+    [self reloadMap];
+}
+
+-(void)clearGrid {
+    [grid removeFromSuperview];
+    grid = nil;
+}
+
+#pragma mark GridOverlayDelegate
+-(void)didSelectGridTopLeft:(CGPoint)topLeft {
+    NSLog(@"Top left");
+}
+
+-(void)didSelectGridBottomRight:(CGPoint)bottomRight {
+    NSLog(@"Bottom left");
+    [grid createGridlines];
+    [self hideAllButtons];
+    [buttonCancel setHidden:NO];
+    [buttonCheck setHidden:NO];
+}
+
+-(BOOL)clickOnButton:(CGPoint)touch {
+    if (CGRectContainsPoint(buttonCancel.frame, touch) || CGRectContainsPoint(buttonCheck.frame, touch))
+        return YES;
+
+    if (CGRectContainsPoint(buttonSidebar.frame, touch))
+        return YES;
+
+    return NO;
+}
+
+-(CLLocationCoordinate2D)locationForPoint:(CGPoint)point {
+    CLLocationCoordinate2D coord = [mapView convertPoint:point toCoordinateFromView:mapView];
+    return coord;
 }
 @end

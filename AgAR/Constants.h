@@ -17,6 +17,7 @@
 #define FONT_LIGHT(x) [UIFont fontWithName:@"AvenirNext-UltraLight" size:(x)]
 
 #define METERS_PER_MILE 1609.344
+#define METERS_PER_GRID 64 // default grid size is about 1 acre ~= 63x63 m^2
 
 #define SIDEBAR_WIDTH 120
 #endif

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13E28" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6244" systemVersion="13E28" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Area" representedClassName="Area" isAbstract="YES" syncable="YES">
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
@@ -13,16 +13,26 @@
         <attribute name="farmName" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="farm" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Farm" inverseName="fields" inverseEntity="Farm" syncable="YES"/>
     </entity>
+    <entity name="Grid" representedClassName="Grid" syncable="YES">
+        <relationship name="areas" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="GridArea" inverseName="grid" inverseEntity="GridArea" syncable="YES"/>
+        <relationship name="boundary" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Polyline" inverseName="grid" inverseEntity="Polyline" syncable="YES"/>
+    </entity>
+    <entity name="GridArea" representedClassName="GridArea" parentEntity="Area" syncable="YES">
+        <relationship name="grid" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Grid" inverseName="areas" inverseEntity="Grid" syncable="YES"/>
+    </entity>
     <entity name="Polyline" representedClassName="Polyline" syncable="YES">
         <attribute name="closed" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="coordinates" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="coordinates_data" optional="YES" attributeType="Binary" syncable="YES"/>
         <relationship name="area" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Area" inverseName="boundary" inverseEntity="Area" syncable="YES"/>
+        <relationship name="grid" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Grid" inverseName="boundary" inverseEntity="Grid" syncable="YES"/>
     </entity>
     <elements>
         <element name="Area" positionX="-45" positionY="54" width="128" height="103"/>
         <element name="Farm" positionX="-54" positionY="0" width="128" height="60"/>
         <element name="Field" positionX="-63" positionY="-18" width="128" height="73"/>
-        <element name="Polyline" positionX="-54" positionY="18" width="128" height="103"/>
+        <element name="Polyline" positionX="-54" positionY="18" width="128" height="118"/>
+        <element name="Grid" positionX="-54" positionY="54" width="128" height="73"/>
+        <element name="GridArea" positionX="-45" positionY="63" width="128" height="58"/>
     </elements>
 </model>
