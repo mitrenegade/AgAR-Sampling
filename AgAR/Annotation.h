@@ -14,7 +14,8 @@ typedef enum AnnotationTypeEnum {
     AnnotationTypeCurrentFieldCenter,
     AnnotationTypeOtherFieldCenter,
     AnnotationTypeBorder,
-    AnnotationTypeBorderSelected
+    AnnotationTypeBorderSelected,
+    AnnotationTypeGridCenter
 } AnnotationType;
 
 #define AnnotationColorCurrentFarm [UIColor greenColor]

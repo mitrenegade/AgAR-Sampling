@@ -82,6 +82,11 @@
     int pixelsPerGrid = floor((x1-x0)/4);
     for (int x = x0; x < x1; x += pixelsPerGrid) {
         for (int y = y0; y < y1; y +=pixelsPerGrid) {
+            float width = MIN(x1, x + pixelsPerGrid) - x;
+            float height = MIN(y1, y + pixelsPerGrid) - y;
+            if (width < pixelsPerGrid/3 || height < pixelsPerGrid/3)
+                continue;
+            
             Box *box = [[Box alloc] init];
             box.x0 = x;
             box.y0 = y;

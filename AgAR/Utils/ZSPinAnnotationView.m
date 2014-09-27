@@ -321,7 +321,8 @@
         CGFloat shadow2BlurRadius = 3;
         
         //// Disc Drawing
-        UIBezierPath* discPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(6.5, 6, 21, 21)];
+//        UIBezierPath* discPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(6.5, 6, 21, 21)];
+        UIBezierPath* discPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(12.5, 12, 15, 15)];
         CGContextSaveGState(context);
         CGContextSetShadowWithColor(context, shadowOffset, shadowBlurRadius, shadow.CGColor);
         [fillColor setFill];
@@ -403,7 +404,35 @@
         //return the image
         return result;
         
+    }  else if (type == ZSPinAnnotationTypeCrosshair) {
+
+        CGSize size = CGSizeMake(20, 20);
+        UIGraphicsBeginImageContextWithOptions(size, NO, 0.0f);
+
+        //// Color Declarations
+        UIColor* fillColor = color;
+
+        //// Tag Drawing
+        UIBezierPath* tagPath = [UIBezierPath bezierPath];
+        tagPath.lineWidth = 2;
+        [tagPath moveToPoint: CGPointMake(10, 5)];
+        [tagPath addLineToPoint:CGPointMake(10, 15)];
+        [tagPath moveToPoint: CGPointMake(5, 10)];
+        [tagPath addLineToPoint:CGPointMake(15, 10)];
+        [fillColor setStroke];
+        [tagPath stroke];
+
+        UIImage* result = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+
+        // Save to cache
+        [pn.imageCache setObject:result forKey:colorString];
+
+        //return the image
+        return result;
+
     }
+
     
     return nil;
 	

@@ -206,6 +206,26 @@
     [self updateStatusForAnnotation:fieldAnnotation];
 }
 
+-(void)addAnnotationForGridArea:(GridArea *)gridArea {
+    // draw field pin
+    CLLocationCoordinate2D center = CLLocationCoordinate2DMake([gridArea.latitude doubleValue], [gridArea.longitude doubleValue]);
+    Annotation *annotation;
+    for (Annotation *a in annotations) {
+        if (a.object == gridArea) {
+            annotation = a;
+        }
+    }
+    if (!annotation) {
+        annotation = [[Annotation alloc] init];
+        [annotations addObject:annotation];
+    }
+
+    annotation.coordinate = center;
+    annotation.object = gridArea;
+    annotation.type = AnnotationTypeGridCenter;
+    [mapView addAnnotation:annotation];
+}
+
 -(void)updateStatusForAnnotation:(Annotation *)annotation {
     if (annotation.type == AnnotationTypeCurrentFarmCenter) {
         return;
@@ -257,6 +277,8 @@
             MKPolyline *line = [areaBounds polyLine];
             [line setStatus:BoundaryStatusGrid];
             [mapView addOverlay:line];
+
+            [self addAnnotationForGridArea:area];
         }
     }
 }
@@ -547,6 +569,11 @@
         else if (a.type == AnnotationTypeBorder) {
             annotationView.annotationType = ZSPinAnnotationTypeStandard;
             annotationView.annotationColor = AnnotationColorCurrentBoundary;
+            label.text = nil;
+        }
+        else if (a.type == AnnotationTypeGridCenter) {
+            annotationView.annotationType = ZSPinAnnotationTypeCrosshair;
+            annotationView.annotationColor = AnnotationColorDim;
             label.text = nil;
         }
 

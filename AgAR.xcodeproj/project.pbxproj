@@ -108,8 +108,8 @@
 		9E6B9AF319C5496500B47D22 /* MKPolyline+Info.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MKPolyline+Info.m"; sourceTree = "<group>"; };
 		9E6B9AFE19C7599E00B47D22 /* SideBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SideBarViewController.h; sourceTree = "<group>"; };
 		9E6B9AFF19C7599E00B47D22 /* SideBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SideBarViewController.m; sourceTree = "<group>"; };
-		9E6F52AC19CB1B5300B6D159 /* ZSPinAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZSPinAnnotationView.h; sourceTree = "<group>"; };
-		9E6F52AD19CB1B5400B6D159 /* ZSPinAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZSPinAnnotationView.m; sourceTree = "<group>"; };
+		9E6F52AC19CB1B5300B6D159 /* ZSPinAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZSPinAnnotationView.h; path = Utils/ZSPinAnnotationView.h; sourceTree = "<group>"; };
+		9E6F52AD19CB1B5400B6D159 /* ZSPinAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZSPinAnnotationView.m; path = Utils/ZSPinAnnotationView.m; sourceTree = "<group>"; };
 		9E85D1BD19C1D89400C6C1E9 /* CustomTabBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTabBarView.h; sourceTree = "<group>"; };
 		9E85D1BE19C1D89400C6C1E9 /* CustomTabBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTabBarView.m; sourceTree = "<group>"; };
 		9E85D1C019C1D92500C6C1E9 /* CustomTabBarView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomTabBarView.xib; sourceTree = "<group>"; };
@@ -364,6 +364,8 @@
 		9E85D1DB19C212A900C6C1E9 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				9E6F52AC19CB1B5300B6D159 /* ZSPinAnnotationView.h */,
+				9E6F52AD19CB1B5400B6D159 /* ZSPinAnnotationView.m */,
 				9E85D1BD19C1D89400C6C1E9 /* CustomTabBarView.h */,
 				9E85D1BE19C1D89400C6C1E9 /* CustomTabBarView.m */,
 				9E85D1C019C1D92500C6C1E9 /* CustomTabBarView.xib */,
@@ -391,8 +393,6 @@
 		9ED6BFFB19B9F59F00EFAF4A /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				9E6F52AC19CB1B5300B6D159 /* ZSPinAnnotationView.h */,
-				9E6F52AD19CB1B5400B6D159 /* ZSPinAnnotationView.m */,
 				9ED6C00019B9F59F00EFAF4A /* GPLocationHelper.h */,
 				9ED6C00119B9F59F00EFAF4A /* GPLocationHelper.m */,
 				9ED6C00419B9F59F00EFAF4A /* MKAdditions */,
