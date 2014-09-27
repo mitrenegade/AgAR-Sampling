@@ -11,6 +11,7 @@
 #import "Polyline+TransformableAttributes.h"
 #import "GridArea.h"
 #import "Grid.h"
+#import "Polyline+Helper.h"
 
 @interface Box : NSObject
 
@@ -38,58 +39,15 @@
     return self;
 }
 
--(void)setupGridFrame {
+-(void)setupGridFrameInMap:(MKMapView *)mapView {
     topLeft = CGPointZero;
     bottomRight = CGPointZero;
-//    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleGesture:)];
-//    [self addGestureRecognizer:tap];
-//    tap.delegate = self;
 
-    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleGesture:)];
-    [self addGestureRecognizer:pan];
-}
-
--(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    /*
-    CGPoint location = [touch locationInView:self.superview];
-    if ([self.delegate clickOnButton:location])
-        return NO;
-     */
-    return YES;
-}
-
--(void)handleGesture:(id)sender {
-    UIGestureRecognizer *recognizer = (UIGestureRecognizer *)sender;
-    CGPoint touch = [recognizer locationInView:self];
-    if ([recognizer isKindOfClass:[UITapGestureRecognizer class]]) {
-        if (CGPointEqualToPoint(CGPointZero, topLeft) || !CGPointEqualToPoint(CGPointZero, bottomRight)) {
-            // first tap
-            topLeft = touch;
-            bottomRight = CGPointZero;
-            [self updateGridFrame:NO];
-            [self.delegate didSelectGridTopLeft:topLeft];
-        }
-        else if (CGPointEqualToPoint(CGPointZero, bottomRight)) {
-            // second tap
-            bottomRight = touch;
-            [self updateGridFrame:YES];
-        }
-    }
-    else if ([recognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
-        if (recognizer.state == UIGestureRecognizerStateBegan) {
-            topLeft = touch;
-            bottomRight = CGPointZero;
-            [self.delegate didSelectGridTopLeft:topLeft];
-        }
-        else if (recognizer.state == UIGestureRecognizerStateChanged) {
-            bottomRight = touch;
-            [self updateGridFrame:NO];
-        }
-        else if (recognizer.state == UIGestureRecognizerStateEnded) {
-            bottomRight = touch;
-            [self updateGridFrame:YES];
-        }
-    }
+    // auto generate grid
+    CGRect bounds = [self.boundary boundingRectangleInMap:mapView];
+    topLeft = bounds.origin;
+    bottomRight = CGPointMake(bounds.origin.x + bounds.size.width, bounds.origin.y + bounds.size.height);
+    [self updateGridFrame:YES];
 }
 
 -(void)updateGridFrame:(BOOL)final {
@@ -97,7 +55,8 @@
     [self setNeedsDisplay];
 
     if (final) {
-        [self.delegate didSelectGridBottomRight:bottomRight];
+        [self createGridlines];
+        [self.delegate didSelectGrid];
     }
 }
 
@@ -115,10 +74,10 @@
     }
     [boxes removeAllObjects];
 
-    float x0 = topLeft.x;
-    float x1 = bottomRight.x;
-    float y0 = topLeft.y;
-    float y1 = bottomRight.y;
+    float x0 = MIN(topLeft.x, bottomRight.x);
+    float x1 = MAX(topLeft.x, bottomRight.x);
+    float y0 = MIN(topLeft.y, bottomRight.y);
+    float y1 = MAX(topLeft.y, bottomRight.y);
 
     int pixelsPerGrid = floor((x1-x0)/4);
     for (int x = x0; x < x1; x += pixelsPerGrid) {
@@ -180,10 +139,10 @@
         return;
 
     // (y1 - y0) = m(x1 - x0) + b
-    float x0 = topLeft.x;
-    float x1 = bottomRight.x;
-    float y0 = topLeft.y;
-    float y1 = bottomRight.y;
+    float x0 = MIN(topLeft.x, bottomRight.x);
+    float x1 = MAX(topLeft.x, bottomRight.x);
+    float y0 = MIN(topLeft.y, bottomRight.y);
+    float y1 = MAX(topLeft.y, bottomRight.y);
 
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSetStrokeColorWithColor(context, [[UIColor blueColor] CGColor]);
@@ -191,7 +150,7 @@
     CGContextSetLineWidth(context, 5);
 
     // draw circles at tap corners
-    CGPoint center = topLeft;
+    CGPoint center = CGPointMake(x0, y0);
     CGFloat radius = 8; // little scaling needed
     CGFloat startAngle = -((float)M_PI / 2); // 90 degrees
     CGFloat endAngle = ((2 * (float)M_PI) + startAngle);
@@ -255,6 +214,59 @@
     }
 
     CGContextStrokePath(context);
+}
+
+#pragma mark gestures
+-(void)manualGrid {
+    // not used
+
+    //    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleGesture:)];
+    //    [self addGestureRecognizer:tap];
+    //    tap.delegate = self;
+
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleGesture:)];
+    [self addGestureRecognizer:pan];
+}
+
+-(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    /*
+     CGPoint location = [touch locationInView:self.superview];
+     if ([self.delegate clickOnButton:location])
+     return NO;
+     */
+    return YES;
+}
+
+-(void)handleGesture:(id)sender {
+    UIGestureRecognizer *recognizer = (UIGestureRecognizer *)sender;
+    CGPoint touch = [recognizer locationInView:self];
+    if ([recognizer isKindOfClass:[UITapGestureRecognizer class]]) {
+        if (CGPointEqualToPoint(CGPointZero, topLeft) || !CGPointEqualToPoint(CGPointZero, bottomRight)) {
+            // first tap
+            topLeft = touch;
+            bottomRight = CGPointZero;
+            [self updateGridFrame:NO];
+        }
+        else if (CGPointEqualToPoint(CGPointZero, bottomRight)) {
+            // second tap
+            bottomRight = touch;
+            [self updateGridFrame:YES];
+        }
+    }
+    else if ([recognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+        if (recognizer.state == UIGestureRecognizerStateBegan) {
+            topLeft = touch;
+            bottomRight = CGPointZero;
+        }
+        else if (recognizer.state == UIGestureRecognizerStateChanged) {
+            bottomRight = touch;
+            [self updateGridFrame:NO];
+        }
+        else if (recognizer.state == UIGestureRecognizerStateEnded) {
+            bottomRight = touch;
+            [self updateGridFrame:YES];
+        }
+    }
 }
 
 #pragma mark hittest

@@ -11,10 +11,10 @@
 #import <CoreLocation/CoreLocation.h>
 
 @class Grid;
+@class MKMapView;
 @protocol GridOverlayDelegate <NSObject>
 
--(void)didSelectGridTopLeft:(CGPoint)topLeft;
--(void)didSelectGridBottomRight:(CGPoint)bottomRight;
+-(void)didSelectGrid;
 -(BOOL)clickOnButton:(CGPoint)touch;
 -(CLLocationCoordinate2D)locationForPoint:(CGPoint)point;
 
@@ -34,7 +34,7 @@
 @property (nonatomic, weak) id delegate;
 @property (nonatomic, weak) Polyline *boundary;
 
--(void)setupGridFrame;
+-(void)setupGridFrameInMap:(MKMapView *)mapView;
 -(void)createGridlines;
 -(void)saveGrid;
 @end

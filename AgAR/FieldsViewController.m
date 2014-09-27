@@ -915,16 +915,17 @@
         [UIAlertView alertViewWithTitle:@"Please select a field" message:@"Select a field with a boundary then select add grid to create a grid."];
         return;
     }
-    [UIAlertView alertViewWithTitle:@"Draw grid boundaries" message:@"Drag a box around the location for your boundary."];
-    if (!grid) {
-        grid = [[GridOverlay alloc] initWithFrame:self.view.frame];
-        grid.delegate = self;
-        grid.backgroundColor = [UIColor clearColor];
-        [self.view addSubview:grid];
-    }
-    isAddingGrid = YES;
-    grid.boundary = currentField.boundary;
-    [grid setupGridFrame];
+    [UIAlertView alertViewWithTitle:@"Generating grid" message:@"The grid will be generated based on your field boundary." cancelButtonTitle:@"OK" otherButtonTitles:nil onDismiss:nil onCancel:^{
+        if (!grid) {
+            grid = [[GridOverlay alloc] initWithFrame:self.view.frame];
+            grid.delegate = self;
+            grid.backgroundColor = [UIColor clearColor];
+            [self.view addSubview:grid];
+        }
+        isAddingGrid = YES;
+        grid.boundary = currentField.boundary;
+        [grid setupGridFrameInMap:mapView];
+    }];
 }
 
 -(void)editGrid {
@@ -946,13 +947,8 @@
 }
 
 #pragma mark GridOverlayDelegate
--(void)didSelectGridTopLeft:(CGPoint)topLeft {
-    NSLog(@"Top left");
-}
-
--(void)didSelectGridBottomRight:(CGPoint)bottomRight {
+-(void)didSelectGrid {
     NSLog(@"Bottom left");
-    [grid createGridlines];
     [self hideAllButtons];
     [buttonCancel setHidden:NO];
     [buttonCheck setHidden:NO];
