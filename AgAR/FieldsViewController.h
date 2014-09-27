@@ -60,4 +60,6 @@
 @property (nonatomic, readonly) Farm *currentFarm;
 
 -(IBAction)didClickButton:(id)sender;
+
+-(void)actionAddGrid;
 @end

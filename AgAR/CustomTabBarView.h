@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol CustomTabBarDelegate <NSObject>
+
+-(void)didClickActionAtIndex:(int)index;
+
+@end
+
 typedef enum TabButtonEnum {
     TabButtonFields,
     TabButtonAction,
@@ -27,9 +33,11 @@ typedef enum TabButtonEnum {
 
     int lastTab;
 }
-@property (nonatomic, weak) id delegate;
 
--(void)setup;
+@property (nonatomic, weak) id delegate;
+@property (nonatomic, strong) NSArray *actionTitles;
+
+-(void)setupWithActions:(NSArray *)actions;
 -(IBAction)didClickButton:(id)sender;
 
 @end

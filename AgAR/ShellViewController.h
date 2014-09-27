@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "CustomTabBarView.h"
 
-@interface ShellViewController : UITabBarController
+@interface ShellViewController : UITabBarController <CustomTabBarDelegate>
 {
     CustomTabBarView *tabView;
 }

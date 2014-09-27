@@ -45,7 +45,6 @@ static NSDictionary *actionsForOption;
                        kAddBoundary:@"draw",
                        kEditBoundary:@"edit",
                        kDeleteBoundary:@"trash",
-                       kAddGrid:@"draw",
                        kEditGrid:@"edit",
                        kDeleteGrid:@"trash"};
     actionsForOption = @{kAddFarm:@"addFarm",
@@ -58,7 +57,6 @@ static NSDictionary *actionsForOption;
                          kAddBoundary:@"addBoundary",
                          kEditBoundary:@"editBoundary",
                          kDeleteBoundary:@"deleteBoundary",
-                         kAddGrid:@"addGrid",
                          kEditGrid:@"editGrid",
                          kDeleteGrid:@"deleteGrid"};
 }
@@ -193,7 +191,7 @@ static NSDictionary *actionsForOption;
             break;
 
         case SideBarModeBoundarySelected:
-            options = @[kMoveField, kDeleteField, kEditBoundary, kDeleteBoundary, kAddGrid];
+            options = @[kMoveField, kDeleteField, kEditBoundary, kDeleteBoundary];
             break;
 
         case SideBarModeBoundaryEditing:

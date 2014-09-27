@@ -8,6 +8,7 @@
 
 #import "ShellViewController.h"
 #import "SideBarViewController.h"
+#import "FieldsViewController.h"
 
 @interface ShellViewController ()
 
@@ -35,7 +36,7 @@
     tabView.backgroundColor = [UIColor greenColor];
     [self.view addSubview:tabView];
 
-    [tabView setup];
+    [tabView setupWithActions:@[@"Add grid"]];
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -48,6 +49,18 @@
     // Dispose of any resources that can be recreated.
 }
 
+-(void)didClickActionAtIndex:(int)index {
+    NSLog(@"Index: %d", index);
+    // always come back to fields
+    [self setSelectedIndex:TabButtonFields];
+
+    FieldsViewController *fieldController = self.viewControllers[TabButtonFields];
+
+    if (index == 0) {
+        // add grid
+        [fieldController actionAddGrid];
+    }
+}
 /*
 #pragma mark - Navigation
 

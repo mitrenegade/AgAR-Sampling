@@ -41,18 +41,20 @@
 -(void)setupGridFrame {
     topLeft = CGPointZero;
     bottomRight = CGPointZero;
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleGesture:)];
-    [self addGestureRecognizer:tap];
-    tap.delegate = self;
+//    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleGesture:)];
+//    [self addGestureRecognizer:tap];
+//    tap.delegate = self;
 
     UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleGesture:)];
     [self addGestureRecognizer:pan];
 }
 
 -(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    /*
     CGPoint location = [touch locationInView:self.superview];
     if ([self.delegate clickOnButton:location])
         return NO;
+     */
     return YES;
 }
 

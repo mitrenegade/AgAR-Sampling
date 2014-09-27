@@ -253,10 +253,8 @@
             continue;
         }
         [self addAnnotationForField:field];
-        if (field.boundary.grid)
-            [self addGridForField:field];
-        else
-            [self addBoundaryForField:field];
+        [self addBoundaryForField:field];
+        [self addGridForField:field];
     }
 }
 
@@ -911,8 +909,13 @@
     mapView.userInteractionEnabled = YES;
 }
 
--(void)addGrid {
-    [UIAlertView alertViewWithTitle:@"Draw grid boundaries" message:@"Click on two opposite corners or drag a box around the location for your boundary."];
+-(void)actionAddGrid {
+    // action triggered from center tab
+    if (!currentField) {
+        [UIAlertView alertViewWithTitle:@"Please select a field" message:@"Select a field with a boundary then select add grid to create a grid."];
+        return;
+    }
+    [UIAlertView alertViewWithTitle:@"Draw grid boundaries" message:@"Drag a box around the location for your boundary."];
     if (!grid) {
         grid = [[GridOverlay alloc] initWithFrame:self.view.frame];
         grid.delegate = self;
@@ -969,4 +972,5 @@
     CLLocationCoordinate2D coord = [mapView convertPoint:point toCoordinateFromView:mapView];
     return coord;
 }
+
 @end

@@ -29,7 +29,7 @@
     return self;
 }
 
--(void)setup {
+-(void)setupWithActions:(NSArray *)actions {
     // background
     opaqueBackground = [CALayer layer];
     CGRect frame = _appDelegate.window.bounds;
@@ -40,6 +40,7 @@
     opaqueBackground.opacity = 0;
 
     tabButtons = @[buttonFields, buttonAction, buttonProfile];
+    self.actionTitles = actions;
 
     lastTab = [[NSUserDefaults standardUserDefaults] integerForKey:@"tab:lastOpen"];
     [self didClickButton:tabButtons[lastTab]];
@@ -57,8 +58,9 @@
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     else if (pos == TabButtonAction) {
-        [UIActionSheet actionSheetWithTitle:nil message:nil buttons:@[@"Do this", @"Do that"] showInView:self.superview onDismiss:^(int buttonIndex) {
+        [UIActionSheet actionSheetWithTitle:nil message:nil buttons:self.actionTitles showInView:self.superview onDismiss:^(int buttonIndex) {
             NSLog(@"Button index: %d", buttonIndex);
+            [self.delegate didClickActionAtIndex:buttonIndex];
         } onCancel:^{
             // no nil cancel block
         }];
