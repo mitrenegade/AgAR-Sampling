@@ -83,6 +83,21 @@
     [buttonTrash setHidden:YES];
 }
 
+-(NSArray *)actionsAvailable {
+    if (!currentField) {
+        return nil;
+    }
+    if (!currentField.boundary) {
+        return nil;
+    }
+    if (!currentField.boundary.grid) {
+        return @[@"Add grid"];
+    }
+    else {
+        return nil;
+    }
+}
+
 -(Farm *)newFarm {
     NSManagedObject *object = [NSEntityDescription insertNewObjectForEntityForName:@"Farm" inManagedObjectContext:_appDelegate.managedObjectContext];
     return (Farm *)object;

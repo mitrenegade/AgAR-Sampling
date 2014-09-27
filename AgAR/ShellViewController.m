@@ -36,7 +36,7 @@
     tabView.backgroundColor = [UIColor greenColor];
     [self.view addSubview:tabView];
 
-    [tabView setupWithActions:@[@"Add grid"]];
+    [tabView setup];
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -47,6 +47,11 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(NSArray *)actionsAvailable {
+    FieldsViewController *fieldController = self.viewControllers[TabButtonFields];
+    return [fieldController actionsAvailable];
 }
 
 -(void)didClickActionAtIndex:(int)index {

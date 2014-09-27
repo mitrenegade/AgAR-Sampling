@@ -11,7 +11,7 @@
 @protocol CustomTabBarDelegate <NSObject>
 
 -(void)didClickActionAtIndex:(int)index;
-
+-(NSArray *)actionsAvailable;
 @end
 
 typedef enum TabButtonEnum {
@@ -37,7 +37,7 @@ typedef enum TabButtonEnum {
 @property (nonatomic, weak) id delegate;
 @property (nonatomic, strong) NSArray *actionTitles;
 
--(void)setupWithActions:(NSArray *)actions;
+-(void)setup;
 -(IBAction)didClickButton:(id)sender;
 
 @end

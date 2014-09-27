@@ -61,5 +61,6 @@
 
 -(IBAction)didClickButton:(id)sender;
 
+-(NSArray *)actionsAvailable;
 -(void)actionAddGrid;
 @end
