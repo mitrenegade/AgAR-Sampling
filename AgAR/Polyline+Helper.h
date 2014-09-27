@@ -18,4 +18,6 @@
 -(void)getBoundingLatitude:(float[2])latitudes longitude:(float[2])longitudes;
 -(CGRect)boundingRectangleInMap:(MKMapView *)mapView;
 
+-(BOOL)isFieldBoundary;
+-(BOOL)isGridAreaBoundary;
 @end

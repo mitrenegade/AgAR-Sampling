@@ -12,7 +12,8 @@
 typedef enum BoundaryStatusEnum {
     BoundaryStatusNormal,
     BoundaryStatusNew,
-    BoundaryStatusDimmed
+    BoundaryStatusDimmed,
+    BoundaryStatusGrid
 } BoundaryStatus;
 
 @interface MKPolyline (Info)

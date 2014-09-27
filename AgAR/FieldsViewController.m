@@ -255,6 +255,7 @@
         for (GridArea *area in field.boundary.grid.areas) {
             Polyline *areaBounds = area.boundary;
             MKPolyline *line = [areaBounds polyLine];
+            [line setStatus:BoundaryStatusGrid];
             [mapView addOverlay:line];
         }
     }
@@ -468,6 +469,12 @@
             renderer.strokeColor = BoundaryColorSelected;
         else if ([polyline status] == BoundaryStatusDimmed)
             renderer.strokeColor = BoundaryColorEditing;
+        else if ([polyline status] == BoundaryStatusGrid) {
+            // grid is rendered as an area
+            renderer.lineWidth = 1;
+            renderer.strokeColor = [UIColor colorWithWhite:15.0/255.0 alpha:.25];
+//            renderer.fillColor = [UIColor colorWithRed:55 green:255 blue:90 alpha:.25];
+        }
 
         renderer.lineCap = kCGLineCapRound;
         return renderer;

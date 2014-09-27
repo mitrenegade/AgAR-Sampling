@@ -80,4 +80,18 @@
     return bounding;
 }
 
+-(BOOL)isFieldBoundary {
+    if (self.grid) {
+        return YES;
+    }
+    return NO;
+}
+
+-(BOOL)isGridAreaBoundary {
+    if (self.area) {
+        return YES;
+    }
+    return NO;
+}
+
 @end

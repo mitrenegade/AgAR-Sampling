@@ -247,6 +247,7 @@
                                         <rect key="frame" x="270" y="101" width="30" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" image="cancel">
+                                            <color key="titleColor" red="0.21564210766423358" green="1" blue="0.34779881386861317" alpha="1" colorSpace="calibratedRGB"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
