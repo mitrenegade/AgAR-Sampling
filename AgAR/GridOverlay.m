@@ -83,21 +83,26 @@
     for (int x = x0; x < x1; x += pixelsPerGrid) {
         for (int y = y0; y < y1; y +=pixelsPerGrid) {
             float width = MIN(x1, x + pixelsPerGrid) - x;
+            if (x1 - (x + pixelsPerGrid) < pixelsPerGrid/3) {
+                width = x1 - x;
+            }
             float height = MIN(y1, y + pixelsPerGrid) - y;
+            if (y1 - (y + pixelsPerGrid) < pixelsPerGrid/3) {
+                height = y1 - y;
+            }
+
             if (width < pixelsPerGrid/3 || height < pixelsPerGrid/3)
                 continue;
             
             Box *box = [[Box alloc] init];
             box.x0 = x;
             box.y0 = y;
-            box.x1 = MIN(x1, x + pixelsPerGrid);
-            box.y1 = MIN(y1, y + pixelsPerGrid);
+            box.x1 = MIN(x1, x + width);
+            box.y1 = MIN(y1, y + width);
 
             [boxes addObject:box];
         }
     }
-    // todo: trim boxes on the edge that are too small
-
     [self setNeedsDisplay];
 }
 

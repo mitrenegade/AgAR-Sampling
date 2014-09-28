@@ -369,6 +369,13 @@
     [centerPin setHidden:YES];
     [self hideAllButtons];
 
+    BOOL shouldDeselectField = YES;
+
+    if (isAddingGrid) {
+        [self clearGrid];
+        isAddingGrid = NO;
+        shouldDeselectField = NO;
+    }
     isEditingField = NO;
     isAddingField = NO;
     isEditingFarm = NO;
@@ -376,21 +383,17 @@
 
     if (isEditingBoundary) {
         [self stopEditingBoundary:NO];
-    }
-
-    if (isAddingGrid) {
-        isEditingField = YES;
-        [self clearGrid];
+        isEditingBoundary = NO;
+        shouldDeselectField = NO;
     }
 
     fieldCoordinateCount = 0;
 
-    if (!isAddingGrid) {
+    if (shouldDeselectField) {
         currentField = nil;
-        [self.fieldFetcher performFetch:nil];
-
-        [self reloadMap];
     }
+    [self.fieldFetcher performFetch:nil];
+    [self reloadMap];
 }
 
 -(void)didClickTrash {
@@ -953,6 +956,7 @@
     for (UIGestureRecognizer *gesture in self.view.gestureRecognizers) {
         if ([gesture isKindOfClass:[UIPanGestureRecognizer class]]) {
             [self.view removeGestureRecognizer:gesture];
+            NSLog(@"Stop editing boundary - pan removed");
         }
     }
     mapView.userInteractionEnabled = YES;
@@ -963,6 +967,11 @@
     if (!currentField) {
         [UIAlertView alertViewWithTitle:@"Please select a field" message:@"Select a field with a boundary then select add grid to create a grid."];
         return;
+    }
+
+    CGRect frame = viewBG.frame;
+    if (frame.origin.x < 0) {
+        [self closeSidebar];
     }
     [UIAlertView alertViewWithTitle:@"Generating grid" message:@"The grid will be generated based on your field boundary." cancelButtonTitle:@"OK" otherButtonTitles:nil onDismiss:nil onCancel:^{
         if (!grid) {
