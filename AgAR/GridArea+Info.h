@@ -7,9 +7,8 @@
 //
 
 #import "GridArea.h"
+#import <MapKit/MapKit.h>
 
 @interface GridArea (Info)
-
--(BOOL)inside;
 
 @end

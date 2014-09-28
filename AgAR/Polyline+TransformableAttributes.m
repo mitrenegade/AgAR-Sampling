@@ -82,4 +82,5 @@
 -(void)setAnnotations:(NSMutableArray *)annotations {
     objc_setAssociatedObject(self, @"BoundaryAnnotationsKey", annotations, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
+
 @end

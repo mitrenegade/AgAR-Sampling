@@ -18,6 +18,7 @@
 #import "Polyline+Helper.h"
 #import "GridArea.h"
 #import "Grid.h"
+#import "Area+Polygon.h"
 
 @interface FieldsViewController ()
 
@@ -273,10 +274,8 @@
     if (field.boundary.grid) {
         // draw all areas
         for (GridArea *area in field.boundary.grid.areas) {
-            Polyline *areaBounds = area.boundary;
-            MKPolyline *line = [areaBounds polyLine];
-            [line setStatus:BoundaryStatusGrid];
-            [mapView addOverlay:line];
+            MKPolygon *polygon = [area polygon];
+            [mapView addOverlay:polygon];
 
             [self addAnnotationForGridArea:area];
         }
@@ -494,16 +493,21 @@
             renderer.strokeColor = BoundaryColorSelected;
         else if ([polyline status] == BoundaryStatusDimmed)
             renderer.strokeColor = BoundaryColorEditing;
-        else if ([polyline status] == BoundaryStatusGrid) {
-            // grid is rendered as an area
-            renderer.lineWidth = 1;
-            renderer.strokeColor = [UIColor colorWithWhite:15.0/255.0 alpha:.25];
-//            renderer.fillColor = [UIColor colorWithRed:55 green:255 blue:90 alpha:.25];
-        }
 
         renderer.lineCap = kCGLineCapRound;
         return renderer;
     }
+    else if ([overlay isKindOfClass:[MKPolygon class]])
+    {
+        MKPolygonRenderer *renderer = [[MKPolygonRenderer alloc] initWithPolygon:overlay];
+
+        renderer.fillColor   = [[UIColor cyanColor] colorWithAlphaComponent:0.1];
+        renderer.strokeColor = [[UIColor lightGrayColor] colorWithAlphaComponent:0.5];
+        renderer.lineWidth   = 2;
+
+        return renderer;
+    }
+        
     return nil;
 }
 

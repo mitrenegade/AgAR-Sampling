@@ -27,7 +27,7 @@ typedef enum AnnotationTypeEnum {
 #define AnnotationColorEditingBoundary [UIColor greenColor]
 
 #define BoundaryColorNormal [UIColor grayColor]
-#define BoundaryColorSelected [UIColor greenColor]
+#define BoundaryColorSelected [[UIColor blueColor] colorWithAlphaComponent:.5]
 #define BoundaryColorEditing [UIColor redColor]
 
 @interface Annotation : NSObject <MKAnnotation>

@@ -39,6 +39,7 @@
 		9E85D1F019C2190D00C6C1E9 /* Field.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E85D1EF19C2190D00C6C1E9 /* Field.m */; };
 		9EBC97F319D7542E00D8582D /* GridArea.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBC97F219D7542E00D8582D /* GridArea.m */; };
 		9EBC97F619D7546800D8582D /* GridArea+Info.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBC97F519D7546800D8582D /* GridArea+Info.m */; };
+		9EBC97F919D791DB00D8582D /* Area+Polygon.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBC97F819D791DB00D8582D /* Area+Polygon.m */; };
 		9ECBA02B19D3242C00EFC641 /* GridOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECBA02A19D3242C00EFC641 /* GridOverlay.m */; };
 		9ECBA03119D3552C00EFC641 /* Grid.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECBA03019D3552C00EFC641 /* Grid.m */; };
 		9ED6BF9119B9F39000EFAF4A /* iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9ED6BF9019B9F39000EFAF4A /* iPhone.storyboard */; };
@@ -131,6 +132,8 @@
 		9EBC97F219D7542E00D8582D /* GridArea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GridArea.m; sourceTree = "<group>"; };
 		9EBC97F419D7546800D8582D /* GridArea+Info.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GridArea+Info.h"; sourceTree = "<group>"; };
 		9EBC97F519D7546800D8582D /* GridArea+Info.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GridArea+Info.m"; sourceTree = "<group>"; };
+		9EBC97F719D791DB00D8582D /* Area+Polygon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Area+Polygon.h"; sourceTree = "<group>"; };
+		9EBC97F819D791DB00D8582D /* Area+Polygon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Area+Polygon.m"; sourceTree = "<group>"; };
 		9ECBA02919D3242C00EFC641 /* GridOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GridOverlay.h; sourceTree = "<group>"; };
 		9ECBA02A19D3242C00EFC641 /* GridOverlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GridOverlay.m; sourceTree = "<group>"; };
 		9ECBA02F19D3552C00EFC641 /* Grid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Grid.h; sourceTree = "<group>"; };
@@ -256,6 +259,8 @@
 				9EEF360719CE773200CF3BB8 /* Polyline+Helper.m */,
 				9EBC97F419D7546800D8582D /* GridArea+Info.h */,
 				9EBC97F519D7546800D8582D /* GridArea+Info.m */,
+				9EBC97F719D791DB00D8582D /* Area+Polygon.h */,
+				9EBC97F819D791DB00D8582D /* Area+Polygon.m */,
 			);
 			name = "Core Data";
 			sourceTree = "<group>";
@@ -532,6 +537,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9E85D1EA19C2189700C6C1E9 /* Area.m in Sources */,
+				9EBC97F919D791DB00D8582D /* Area+Polygon.m in Sources */,
 				9E3188A519D356CA009305DB /* Polyline.m in Sources */,
 				9ED6BF9719B9F3EB00EFAF4A /* LoginViewController.m in Sources */,
 				9E0EA99319B8BCD60072166D /* AppDelegate.m in Sources */,

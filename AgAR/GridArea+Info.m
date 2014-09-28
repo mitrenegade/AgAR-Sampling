@@ -11,11 +11,4 @@
 #import "Polyline.h"
 
 @implementation GridArea (Info)
-
--(BOOL)inside {
-    Polyline *boundary = self.grid.boundary;
-    
-    return YES;
-}
-
 @end
